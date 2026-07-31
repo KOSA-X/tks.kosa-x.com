@@ -282,6 +282,15 @@
     });
 
     // ------------------------------------------------------------
+    // POWTÓRKA NA TELEBIMIE (inkrementacja licznika w live_state)
+    // ------------------------------------------------------------
+    $('#lp-replay').on('click', function () {
+        api('replay_show', {}, function () {
+            toast(cfg.labels.replaySent);
+        });
+    });
+
+    // ------------------------------------------------------------
     // KONFIGURACJA MECZU
     // ------------------------------------------------------------
     $('#lp-save-teams').on('click', function () {

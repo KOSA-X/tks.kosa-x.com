@@ -14,6 +14,9 @@
  *   timer_start {half: 1|2}   timer_pause   timer_resume   timer_adjust {delta}   timer_reset
  *   board_toggle {sName, iVisible}   teams_set {iTeam1, iTeam2}   match_reset
  *   scorebar_pos {pos: 0|1} — pozycja paska wyniku (lewy/prawy górny róg)
+ *   replay_show — powtórka z OBS na telebimie (inkrementuje live_state.iReplayCount;
+ *                 telebim wykrywa zmianę licznika w state i odtwarza klip
+ *                 z lokalnego serwera replay buffera — plugins/live/replay/)
  *
  * Bezpieczeństwo (w odróżnieniu od starego _old/ajax.php): każdy zapis wymaga
  * sesji admina + CSRF, wszystkie zapytania przez prepared statements.
@@ -94,7 +97,10 @@ function liveApiState(Sql $oSql, int $iSince): array
         'SELECT e.id, e.iPlayer, e.iTeam, e.sAction, e.sMinute,
                 COALESCE(p.sName, "") AS sPlayerName, COALESCE(p.sNumber, "") AS sPlayerNumber,
                 COALESCE(( SELECT f.sFileName FROM files f WHERE f.iPage = e.iPlayer AND f.iSize > 0
-                           ORDER BY f.iDefault DESC, f.iPosition ASC LIMIT 1 ), "") AS sPlayerImage
+                           ORDER BY f.iDefault DESC, f.iPosition ASC LIMIT 1 ), "") AS sPlayerImage,
+                COALESCE(( SELECT f.sFileName FROM files f WHERE f.iPage = e.iPlayer AND f.iSize = 0
+                           AND (f.sFileName LIKE "%.mp4" OR f.sFileName LIKE "%.webm")
+                           ORDER BY f.iPosition ASC LIMIT 1 ), "") AS sPlayerVideo
          FROM live_events e LEFT JOIN pages p ON p.iPage = e.iPlayer
          WHERE e.id > :since ORDER BY e.id ASC'
     );
@@ -112,6 +118,7 @@ function liveApiState(Sql $oSql, int $iSince): array
                 'name'   => (string) $aRow['sPlayerName'],
                 'number' => (string) $aRow['sPlayerNumber'],
                 'photo'  => (string) $aRow['sPlayerImage'],
+                'video'  => (string) $aRow['sPlayerVideo'],
             ],
         ];
     }
@@ -126,6 +133,7 @@ function liveApiState(Sql $oSql, int $iSince): array
         'score'  => [(int) ($aState['iScore1'] ?? 0), (int) ($aState['iScore2'] ?? 0)],
         'teams'  => [(int) ($aState['iTeam1'] ?? 0), (int) ($aState['iTeam2'] ?? 0)],
         'scorebar' => (int) ($aState['iScorebarPos'] ?? 0),
+        'replay'   => (int) ($aState['iReplayCount'] ?? 0),
         'boards' => $aBoards,
         'events' => $aEvents,
         'last_event_id' => $iLastId,
@@ -337,6 +345,13 @@ switch ($sAction) {
         $oPos = $oSql->prepare('UPDATE live_state SET iScorebarPos = :pos WHERE id = 1');
         $oPos->execute([':pos' => $iPos]);
         liveApiOut(['ok' => true, 'scorebar' => $iPos]);
+    }
+
+    case 'replay_show': {
+        // powtórka z OBS: telebim porównuje licznik ze stanu i przy zmianie
+        // odtwarza świeży klip z lokalnego serwera replay buffera
+        $oSql->exec('UPDATE live_state SET iReplayCount = iReplayCount + 1 WHERE id = 1');
+        liveApiOut(['ok' => true, 'replay' => (int) $oSql->getColumn('SELECT iReplayCount FROM live_state WHERE id = 1')]);
     }
 
     // --------------------------------------------------------

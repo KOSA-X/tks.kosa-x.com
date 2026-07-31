@@ -182,6 +182,7 @@ if (!$bLiveAdmin) {
         <div class="livePanel__buttonRow mt-2">
             <button type="button" class="button" id="lp-scorebar-pos"
                     data-pos="<?php echo (int) ($aLive['iScorebarPos'] ?? 0); ?>"><?php echo $lang['live_scorebar_pos']; ?>: <span id="lp-scorebar-label">—</span></button>
+            <button type="button" class="button livePanel__replay" id="lp-replay">▶ <?php echo $lang['live_replay_button']; ?></button>
         </div>
     </div>
 
@@ -246,6 +247,7 @@ window.livePanelConfig = <?php echo json_encode(Array(
         'halfShort'       => $lang['live_half_short'],
         'posLeft'         => $lang['live_pos_left'],
         'posRight'        => $lang['live_pos_right'],
+        'replaySent'      => $lang['live_replay_sent'],
     ),
 ), JSON_UNESCAPED_UNICODE); ?>;
 </script>

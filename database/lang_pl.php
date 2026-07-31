@@ -221,4 +221,7 @@ $lang['live_stat_goals'] = "Gole";
 $lang['live_stat_yellow'] = "Żółte kartki";
 $lang['live_stat_red'] = "Czerwone kartki";
 $lang['live_stat_subs'] = "Zmiany";
+$lang['live_replay'] = "Powtórka";
+$lang['live_replay_button'] = "Powtórka na telebimie";
+$lang['live_replay_sent'] = "Powtórka wysłana na telebim.";
 ?>
