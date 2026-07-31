@@ -250,6 +250,9 @@ $config['squad_types'] = Array(
 $config['anthropic_api_key']  = '';   // Etap 1: import składu z protokołu (vision OCR)
 $config['elevenlabs_api_key'] = '';   // Etap 2: komunikaty głosowe (TTS)
 
+// Model vision do OCR protokołu (plugins/live/ocr.php)
+$config['anthropic_ocr_model'] = 'claude-opus-5';
+
 
 // @claude-lock
 // ============================================================

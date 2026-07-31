@@ -5,17 +5,20 @@ if( !defined( 'ADMIN_PAGE' ) ){
 
 /*
  * TRANSMISJA LIVE — Import składu z protokołu meczowego.
- * Krok 1 (ten plik): upload zdjęcia protokołu + wybór drużyny.
- * Kolejne kroki (OCR przez Anthropic vision → ekran korekty → zapis zawodników
- * przez PagesAdmin::savePage) dochodzą w następnych etapach na tej bazie.
+ * Przepływ: upload zdjęcia + wybór drużyny → OCR (Anthropic vision,
+ * plugins/live/ocr.php) → ekran korekty → zapis zawodników (następny krok).
  *
  * Drużyny = podstrony zakładki $config['teams_page'] (database/config_pl.php).
- * Wgrane protokoły lądują w plugins/live/cache/protocols/ (poza gitem,
- * katalog zablokowany po HTTP) — podgląd tylko przez ten moduł (admin).
+ * Wgrane protokoły i wyniki OCR ({token}.json) lądują w
+ * plugins/live/cache/protocols/ (poza gitem, katalog zablokowany po HTTP) —
+ * podgląd tylko przez ten moduł (admin).
  */
+
+require_once 'plugins/live/ocr.php';
 
 $sProtocolsDir = 'plugins/live/cache/protocols/';
 $iTeamsPage    = (int) ( $config['teams_page'] ?? 0 );
+$sFilePattern  = '/^[a-f0-9]{32}\.(jpg|jpeg|png|webp)$/';
 
 // ============================================================
 // PODGLĄD WGRANEGO PROTOKOŁU (tylko zalogowany admin — loginActions()
@@ -34,6 +37,58 @@ if( isset( $_GET['sAction'] ) && $_GET['sAction'] === 'preview' ){
     else{
         http_response_code( 404 );
     }
+    exit;
+}
+
+// ============================================================
+// OBSŁUGA OCR — wysyłka protokołu do Anthropic API (vision)
+// (CSRF sprawdzany globalnie w adm.php; żądanie może trwać do ~2 min)
+// ============================================================
+$sOcrError = '';
+
+if( ( $_SERVER['REQUEST_METHOD'] ?? 'GET' ) === 'POST' && ( $_POST['sAction'] ?? '' ) === 'ocr' ){
+
+    $sFile = (string) ( $_POST['sFile'] ?? '' );
+    $iTeam = (int) ( $_POST['iTeam'] ?? 0 );
+
+    if( !preg_match( $sFilePattern, $sFile ) || !is_file( $sProtocolsDir.$sFile ) ){
+        $sOcrError = 'Plik protokołu nie istnieje — wgraj go ponownie.';
+    }
+    else{
+        @set_time_limit( 300 );
+        $sTeamName = (string) ( getData( $iTeam, 'sName' ) ?? '' );
+        $aOcr = liveOcrProtocol( $sProtocolsDir.$sFile, $sTeamName );
+
+        if( $aOcr['ok'] ){
+            $sJsonFile = preg_replace( '/\.(jpg|jpeg|png|webp)$/', '.json', $sFile );
+            file_put_contents( $sProtocolsDir.$sJsonFile, json_encode( Array(
+                'iTeam'   => $iTeam,
+                'sFile'   => $sFile,
+                'sDate'   => date( 'Y-m-d H:i:s' ),
+                'players' => $aOcr['data']['players'],
+                'staff'   => $aOcr['data']['staff'],
+            ), JSON_UNESCAPED_UNICODE ) );
+
+            header( 'Location: '.$config['admin_file'].'?p=squad-import&sOption=review&sFile='.$sFile );
+            exit;
+        }
+        $sOcrError = $aOcr['error'];
+    }
+    // błąd → strona renderuje się dalej jako widok potwierdzenia (sOption=uploaded
+    // w GET) z alertem $sOcrError
+}
+
+// ============================================================
+// ZAPIS DO BAZY — celowo jeszcze NIE zaimplementowany (następny krok);
+// stub przyjmuje POST z ekranu korekty i informuje o statusie
+// ============================================================
+if( ( $_SERVER['REQUEST_METHOD'] ?? 'GET' ) === 'POST' && ( $_POST['sAction'] ?? '' ) === 'save' ){
+    $sFile = (string) ( $_POST['sFile'] ?? '' );
+    if( preg_match( $sFilePattern, $sFile ) ){
+        header( 'Location: '.$config['admin_file'].'?p=squad-import&sOption=review&sFile='.$sFile.'&sNotice=save_pending' );
+        exit;
+    }
+    header( 'Location: '.$config['admin_file'].'?p=squad-import' );
     exit;
 }
 
@@ -120,9 +175,170 @@ require_once 'templates/admin/_header.php';
 require_once 'templates/admin/_menu.php';
 
 // ============================================================
-// WIDOK: POTWIERDZENIE PO UPLOADZIE
+// WIDOK: EKRAN KOREKTY PO OCR
 // ============================================================
-if( ( $_GET['sOption'] ?? '' ) === 'uploaded' && preg_match( '/^[a-f0-9]{32}\.(jpg|jpeg|png|webp)$/', (string) ( $_GET['sFile'] ?? '' ) ) ){
+$sReviewFile = (string) ( $_GET['sFile'] ?? '' );
+$sReviewJson = preg_match( $sFilePattern, $sReviewFile )
+    ? $sProtocolsDir.preg_replace( '/\.(jpg|jpeg|png|webp)$/', '.json', $sReviewFile )
+    : '';
+
+if( ( $_GET['sOption'] ?? '' ) === 'review' && $sReviewJson !== '' && is_file( $sReviewJson ) ){
+
+    $aReview   = json_decode( file_get_contents( $sReviewJson ), true ) ?: Array( );
+    $iTeam     = (int) ( $aReview['iTeam'] ?? 0 );
+    $sTeamName = (string) ( getData( $iTeam, 'sName' ) ?? '' );
+    $aPlayers  = (array) ( $aReview['players'] ?? Array( ) );
+    $aStaff    = (array) ( $aReview['staff'] ?? Array( ) );
+
+    // opcje selecta składu — słownik $config['squad_types']
+    $fSquadSelect = function( $iSelected ) use ( $config ){
+        $sOptions = '';
+        foreach( $config['squad_types'] as $iKey => $sLabel ){
+            $sOptions .= '<option value="'.$iKey.'"'.( (int) $iSelected === (int) $iKey ? ' selected="selected"' : '' ).'>'.html( $sLabel ).'</option>';
+        }
+        return $sOptions;
+    };
+    ?>
+
+    <header class="mainPage__header">
+        <h1 class="mainPage__title">Korekta składu — <?php echo html( $sTeamName !== '' ? $sTeamName : ( 'ID '.$iTeam ) ); ?></h1>
+    </header>
+
+    <div class="alert alert-success mb-3">
+        Rozpoznano <strong><?php echo count( $aPlayers ); ?></strong> zawodników
+        i <strong><?php echo count( $aStaff ); ?></strong> osób sztabu.
+        <strong>Sprawdź i popraw dane przed zapisem</strong> — OCR może się mylić (numery, pisownia nazwisk).
+    </div>
+
+    <?php if( ( $_GET['sNotice'] ?? '' ) === 'save_pending' ): ?>
+        <div class="alert alert-danger mb-3">Zapis do bazy to następny krok wdrożenia — dane z formularza jeszcze nie są zapisywane.</div>
+    <?php endif; ?>
+
+    <form action="?p=squad-import" method="post" class="main-form" id="squad-review-form">
+
+        <div class="card mb-4">
+            <header class="card__header">
+                <h4 class="card__title">Zawodnicy</h4>
+            </header>
+            <div class="table-responsive">
+                <table class="list pages table" cellpadding="0" cellspacing="0" border="0">
+                    <thead>
+                        <tr>
+                            <th style="width:90px">Numer</th>
+                            <th>Imię i nazwisko</th>
+                            <th style="width:180px">Skład</th>
+                            <th style="width:70px"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="players-rows">
+                        <?php foreach( $aPlayers as $i => $aPlayer ): ?>
+                        <tr>
+                            <td><input type="text" name="aPlayers[<?php echo $i; ?>][sNumber]" value="<?php echo html( (string) $aPlayer['number'] ); ?>" class="form-control" maxlength="4" /></td>
+                            <td><input type="text" name="aPlayers[<?php echo $i; ?>][sName]" value="<?php echo html( (string) $aPlayer['name'] ); ?>" class="form-control" maxlength="120" /></td>
+                            <td><select name="aPlayers[<?php echo $i; ?>][sSquad]" class="form-control"><?php echo $fSquadSelect( $aPlayer['squad'] ); ?></select></td>
+                            <td><button type="button" class="button button-sm row-remove" title="Usuń wiersz">&times;</button></td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+            <div class="card__wrapper"><div class="card__content">
+                <button type="button" class="button" id="add-player">+ Dodaj zawodnika</button>
+            </div></div>
+        </div>
+
+        <div class="card mb-4">
+            <header class="card__header">
+                <h4 class="card__title">Sztab szkoleniowy</h4>
+            </header>
+            <div class="table-responsive">
+                <table class="list pages table" cellpadding="0" cellspacing="0" border="0">
+                    <thead>
+                        <tr>
+                            <th style="width:250px">Funkcja</th>
+                            <th>Imię i nazwisko</th>
+                            <th style="width:70px"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="staff-rows">
+                        <?php foreach( $aStaff as $i => $aMember ): ?>
+                        <tr>
+                            <td><input type="text" name="aStaff[<?php echo $i; ?>][sRole]" value="<?php echo html( (string) $aMember['role'] ); ?>" class="form-control" maxlength="80" /></td>
+                            <td><input type="text" name="aStaff[<?php echo $i; ?>][sName]" value="<?php echo html( (string) $aMember['name'] ); ?>" class="form-control" maxlength="120" /></td>
+                            <td><button type="button" class="button button-sm row-remove" title="Usuń wiersz">&times;</button></td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+            <div class="card__wrapper"><div class="card__content">
+                <button type="button" class="button" id="add-staff">+ Dodaj osobę sztabu</button>
+            </div></div>
+        </div>
+
+        <div class="card mb-4">
+            <header class="card__header">
+                <h4 class="card__title">Protokół (oryginał)</h4>
+            </header>
+            <div class="card__wrapper"><div class="card__content">
+                <img src="<?php echo $config['admin_file']; ?>?p=squad-import&amp;sAction=preview&amp;sFile=<?php echo html( $sReviewFile ); ?>"
+                     alt="Protokół meczowy" style="max-width:100%;height:auto" />
+            </div></div>
+        </div>
+
+        <input type="hidden" name="sAction" value="save" />
+        <input type="hidden" name="sFile" value="<?php echo html( $sReviewFile ); ?>" />
+        <input type="hidden" name="iTeam" value="<?php echo $iTeam; ?>" />
+        <input type="hidden" name="sTokenCsrf" value="<?php echo html( getCsrfToken( ) ); ?>" />
+
+        <div class="form-button flex align-center">
+            <input type="submit" class="button main mr-2" value="Zapisz do bazy" />
+            <a href="?p=squad-import">Wgraj inny protokół</a>
+        </div>
+
+    </form>
+
+    <script>
+        $( function( ){
+            var iPlayerIdx = <?php echo count( $aPlayers ); ?>;
+            var iStaffIdx  = <?php echo count( $aStaff ); ?>;
+            var sSquadOptions = '<?php echo str_replace( "'", "\\'", str_replace( ' selected="selected"', '', $fSquadSelect( 0 ) ) ); ?>';
+
+            $( '#add-player' ).on( 'click', function( ){
+                $( '#players-rows' ).append(
+                    '<tr>'
+                    + '<td><input type="text" name="aPlayers[' + iPlayerIdx + '][sNumber]" class="form-control" maxlength="4" /></td>'
+                    + '<td><input type="text" name="aPlayers[' + iPlayerIdx + '][sName]" class="form-control" maxlength="120" /></td>'
+                    + '<td><select name="aPlayers[' + iPlayerIdx + '][sSquad]" class="form-control">' + sSquadOptions + '</select></td>'
+                    + '<td><button type="button" class="button button-sm row-remove" title="Usuń wiersz">&times;</button></td>'
+                    + '</tr>'
+                );
+                iPlayerIdx++;
+            } );
+
+            $( '#add-staff' ).on( 'click', function( ){
+                $( '#staff-rows' ).append(
+                    '<tr>'
+                    + '<td><input type="text" name="aStaff[' + iStaffIdx + '][sRole]" class="form-control" maxlength="80" /></td>'
+                    + '<td><input type="text" name="aStaff[' + iStaffIdx + '][sName]" class="form-control" maxlength="120" /></td>'
+                    + '<td><button type="button" class="button button-sm row-remove" title="Usuń wiersz">&times;</button></td>'
+                    + '</tr>'
+                );
+                iStaffIdx++;
+            } );
+
+            $( '#squad-review-form' ).on( 'click', '.row-remove', function( ){
+                $( this ).closest( 'tr' ).remove( );
+            } );
+        } );
+    </script>
+
+    <?php
+}
+// ============================================================
+// WIDOK: POTWIERDZENIE PO UPLOADZIE (+ start OCR)
+// ============================================================
+elseif( ( $_GET['sOption'] ?? '' ) === 'uploaded' && preg_match( $sFilePattern, (string) ( $_GET['sFile'] ?? '' ) ) ){
 
     $sFile     = (string) $_GET['sFile'];
     $iTeam     = (int) ( $_GET['iTeam'] ?? 0 );
@@ -133,9 +349,13 @@ if( ( $_GET['sOption'] ?? '' ) === 'uploaded' && preg_match( '/^[a-f0-9]{32}\.(j
         <h1 class="mainPage__title">Import składu — protokół wgrany</h1>
     </header>
 
+    <?php if( $sOcrError !== '' ): ?>
+        <div class="alert alert-danger mb-3"><?php echo html( $sOcrError ); ?></div>
+    <?php endif; ?>
+
     <div class="alert alert-success mb-3">
         Protokół dla drużyny <strong><?php echo html( $sTeamName !== '' ? $sTeamName : ( 'ID '.$iTeam ) ); ?></strong> został wgrany.
-        Rozpoznawanie składu (OCR) i ekran korekty — w następnym etapie.
+        Kliknij „Rozpoznaj skład", żeby wysłać go do rozpoznania (OCR).
     </div>
 
     <div class="card mb-4">
@@ -147,8 +367,16 @@ if( ( $_GET['sOption'] ?? '' ) === 'uploaded' && preg_match( '/^[a-f0-9]{32}\.(j
                 <img src="<?php echo $config['admin_file']; ?>?p=squad-import&amp;sAction=preview&amp;sFile=<?php echo html( $sFile ); ?>"
                      alt="Protokół meczowy" style="max-width:100%;height:auto" />
             </div>
-            <footer class="card__footer">
-                <a href="?p=squad-import" class="button main">Wgraj kolejny protokół</a>
+            <footer class="card__footer flex align-center">
+                <form action="?p=squad-import&amp;sOption=uploaded&amp;sFile=<?php echo html( $sFile ); ?>&amp;iTeam=<?php echo $iTeam; ?>" method="post" class="mr-2" id="ocr-form">
+                    <input type="hidden" name="sAction" value="ocr" />
+                    <input type="hidden" name="sFile" value="<?php echo html( $sFile ); ?>" />
+                    <input type="hidden" name="iTeam" value="<?php echo $iTeam; ?>" />
+                    <input type="hidden" name="sTokenCsrf" value="<?php echo html( getCsrfToken( ) ); ?>" />
+                    <input type="submit" class="button main" value="Rozpoznaj skład (OCR)"
+                           onclick="this.value='Rozpoznawanie… (do 2 min)';this.disabled=true;this.form.submit();" />
+                </form>
+                <a href="?p=squad-import" class="button">Wgraj inny protokół</a>
             </footer>
         </div>
     </div>

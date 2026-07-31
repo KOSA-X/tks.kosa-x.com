@@ -2,6 +2,10 @@
 database/config.secrets.php
 database/config.shop.php
 
+# Runtime cache CMS (odtwarza się samo)
+database/cache/license_check
+database/database-last-modification
+
 # phpLiteAdmin — tylko lokalnie, nigdy w repo / na produkcji (CLAUDE.md §15.6)
 plugins/admin.php
 
