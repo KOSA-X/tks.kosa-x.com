@@ -234,6 +234,26 @@ $config['payu_debug'] = false;
 $config['orderKey'] = 'rX8dP2bQeF9mL4zK7yW1aT6uH3sN0vC5';
 
 
+// ============================================================
+// TRANSMISJA LIVE — MODUŁ MECZOWY (TKS)
+// ============================================================
+// @claude-note: słownik składu meczowego zawodnika — klucz zapisywany
+// w pages.sSquad ('' = poza kadrą meczową). Używaj przez getElement().
+$config['squad_types'] = Array(
+  1 => 'Podstawowy',
+  2 => 'Rezerwowy',
+);
+
+// Klucze API modułu live — tu tylko PLACEHOLDERY. Prawdziwe klucze wstawiaj
+// w database/config.secrets.php (poza repo — patrz config.secrets.dist.php),
+// który ładuje się na końcu tego pliku i nadpisuje te wartości.
+$config['anthropic_api_key']  = '';   // Etap 1: import składu z protokołu (vision OCR)
+$config['elevenlabs_api_key'] = '';   // Etap 2: komunikaty głosowe (TTS)
+
+// Model vision do OCR protokołu (plugins/live/ocr.php)
+$config['anthropic_ocr_model'] = 'claude-opus-5';
+
+
 // @claude-lock
 // ============================================================
 // RDZEŃ QUICK.CMS — NIE MODYFIKOWAĆ BEZ BARDZO DOBREGO POWODU

@@ -1,0 +1,4 @@
+# Runtime cache modułu transmisji live (zdjęcia protokołów meczowych itp.).
+# Zero dostępu po HTTP — podgląd wyłącznie przez panel admina (?p=squad-import).
+Options -Indexes
+deny from all

@@ -1,0 +1,16 @@
+# Sekrety i pliki generowane per instalacja (patrz CLAUDE.md §15.1)
+database/config.secrets.php
+database/config.shop.php
+
+# Runtime cache CMS (odtwarza się samo)
+database/cache/license_check
+database/database-last-modification
+
+# phpLiteAdmin — tylko lokalnie, nigdy w repo / na produkcji (CLAUDE.md §15.6)
+plugins/admin.php
+
+# Runtime Instagram InstaFeed
+plugins/instagram/cache/
+
+# Runtime modułu transmisji live — zdjęcia protokołów meczowych (dane osobowe)
+plugins/live/cache/protocols/
