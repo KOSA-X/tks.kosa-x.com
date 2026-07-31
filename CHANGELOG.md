@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-07-31 — Telebim: przebudowa layoutu pod czytelność z trybun (wzór: _old)
+- **Scena wyniku** (plansza „wynik") = pełny ekran zamiast paska: zegar 4rem w białej pigule u góry, wynik **11rem**, herby 11rem + skróty drużyn 3.2rem — proporcje jak w starym telebimie (zegar 150px / wynik 300px / herby 500px @1080p)
+- **Zdarzenia przejmują CAŁY ekran** (jak w _old): gruba kolorowa ramka per typ (gol=brand, żółta=warning, czerwona/zejście/samobój=danger, wejście=success), etykieta akcji 3.6rem, nazwisko 4rem z numerem w brandowej pigule, zdjęcie zawodnika w medalionie 13rem
+- **Gol = mrugające tło**: warstwa radialnego brandowego glow pulsująca opacity (`tbGoalFlash` .9s infinite, GPU) + pulsowanie etykiety „GOL" (`tbGoalPulse`); wyłączane przy `prefers-reduced-motion`
+- **Plansze uproszczone i powiększone**: skład = SAMA lista (bez sztabu i logo — nieczytelne z daleka), zawodnik 1.9rem; belka tytułu 2.4rem; sędziowie 2.4rem; nagłówek meczowy 8rem wyniku / herby 8.5rem (na podsumowaniu skalowany w dół, bo wynik powtarza się w statystykach); wszystkie plansze pełnoekranowe z własnym tłem
+- Warstwy: scena wyniku (1) → plansze (2) → zdarzenia (5) → wideo (10)
+- Retest E2E: 8/8 zielone, zero błędów JS; dodatkowe kadry mrugnięcia tła gola
+
 ## 2026-07-31 — Transmisja live (TKS): TELEBIM (Etapy 4-6) — cieszynki wideo + powtórki z OBS
 - **Widok telebimu** — `page-telebim.php` (theme 13, zakładka „Telebim" iPage=34, `telebim_page`), standalone jak nakładka OBS, ale z CIEMNYM tłem (fizyczny ekran LED) i layoutem skalowanym do dowolnej rozdzielczości (`1rem = 1/48 szerokości`, projekt bazowy 768×512); pasek wyniku na całą szerokość, plansze niemal pełnoekranowe — sterowane TYMI SAMYMI `live_boards` co nakładka (operator przełącza raz, oba ekrany reagują); arkusz `_source/telebim.scss` → `css/telebim.css` (10 KB), vanilla `js/page-telebim.js`
 - **Cieszynki wideo po golu (Etap 4)** — klip mp4/webm wgrany STANDARDOWYM uploadem plików na podstronie zawodnika (rozszerzenia dopisane do `allowed_not_image_extensions` poza blokiem `@claude-lock`); preload wszystkich klipów obu drużyn na starcie (ukryte `<video preload>`); gol strzelca z klipem = pełnoekranowe wideo z podpisem (numer+nazwisko+minuta), brak klipu → zwykły popup, USZKODZONY klip → fallback na popup (zdarzenie nie przepada); kolejkowanie zdarzeń w trakcie odtwarzania

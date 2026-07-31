@@ -74,20 +74,15 @@ $fMatchHead = function () use ($aTeam1, $aTeam2, $sFiles) {
         .'</div>';
 };
 
-// plansza składu jednej drużyny
-$fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($aBoardLabels, $sFiles, $lang, $sMatchDate) {
+// plansza składu jednej drużyny — telebim pokazuje UPROSZCZONY widok:
+// sama lista z wielkim tekstem (bez sztabu i logo — nieczytelne z trybun)
+$fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($aBoardLabels, $lang, $sMatchDate) {
     $aGroups = liveSquad($iTeam);
-    $sStaff  = liveStaffBlock($iTeam);
 
     $content  = '<div class="tbBoard tbShow" data-board="'.html($sBoard).'">';
     $content .= '<header class="tbBoard__header"><span class="title">'.html($aTeam['name']).'</span>'
         .($sMatchDate !== '' ? '<span class="meta">'.html($sMatchDate).'</span>' : '').'</header>';
     $content .= '<div class="tbBoard__content"><div class="tbSquad">';
-
-    $content .= '<div class="tbSquad__head">'
-        .($aTeam['logo'] !== '' ? '<img src="'.$sFiles.html($aTeam['logo']).'" alt="" />' : '')
-        .($sStaff !== '' ? '<div class="tbSquad__staff">'.$sStaff.'</div>' : '')
-        .'</div>';
 
     $content .= '<div class="tbSquad__columns">';
     foreach (Array('1' => $lang['live_first_squad'], '2' => $lang['live_reserve']) as $sSquad => $sHeading) {
@@ -100,7 +95,7 @@ $fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($aBoardLabels, $sFiles, $
     }
     $content .= '</div>';
 
-    // domyka: .tbSquad__columns już zamknięte wyżej → .tbSquad, .tbBoard__content, .tbBoard
+    // domyka: .tbSquad, .tbBoard__content, .tbBoard
     return $content.'</div></div></div>';
 };
 ?><!doctype html>
