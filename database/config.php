@@ -78,6 +78,8 @@ $config['themes'] = Array(
   8  => 'page-examples.php',
   9  => 'page-form.php',
   10 => 'page-payment.php',
+  11 => 'page-live-panel.php',
+  12 => 'page-live-overlay.php',
 );
 
 
@@ -252,6 +254,17 @@ $config['elevenlabs_api_key'] = '';   // Etap 2: komunikaty głosowe (TTS)
 
 // Model vision do OCR protokołu (plugins/live/ocr.php)
 $config['anthropic_ocr_model'] = 'claude-opus-5';
+
+// @claude-note: słownik zdarzeń meczowych (live_events.sAction) — klucz w bazie,
+// etykieta w panelu operatora i na nakładce OBS. Obsługa: plugins/live/api.php.
+$config['live_actions'] = Array(
+  'goal'        => 'Gol',
+  'own_goal'    => 'Gol samobójczy',
+  'yellow_card' => 'Żółta kartka',
+  'red_card'    => 'Czerwona kartka',
+  'in'          => 'Wejście (zmiana)',
+  'out'         => 'Zejście (zmiana)',
+);
 
 
 // @claude-lock

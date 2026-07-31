@@ -1,0 +1,314 @@
+/*
+ * TRANSMISJA LIVE — panel operatora (page-live-panel.php).
+ * Komunikacja z plugins/live/api.php: odczyt stanu co 1 s (GET state),
+ * komendy POST z tokenem CSRF. Kafelek zawodnika → arkusz akcji → event_add.
+ */
+(function ($) {
+    'use strict';
+
+    var cfg = window.livePanelConfig;
+    if (!cfg || !$('#livePanel').length) {
+        return;
+    }
+
+    var sheetPlayer = null; // { id, team, name, number }
+    var lastTimerSeconds = 0;
+
+    // .mainBody ma transform (smooth scroll) i łamie position:fixed potomków —
+    // arkusz i toast muszą żyć bezpośrednio w <body>
+    $('#lp-sheet, #lp-toast').appendTo('body');
+
+    // ------------------------------------------------------------
+    // POMOCNICZE
+    // ------------------------------------------------------------
+    function toast(message, isError) {
+        var $toast = $('#lp-toast');
+        $toast.text(message)
+            .toggleClass('is-error', !!isError)
+            .prop('hidden', false)
+            .addClass('is-visible');
+        clearTimeout(toast.timer);
+        toast.timer = setTimeout(function () {
+            $toast.removeClass('is-visible');
+        }, 2500);
+    }
+
+    function api(action, data, onDone) {
+        var payload = $.extend({ action: action, sTokenCsrf: cfg.csrf }, data || {});
+        $.post(cfg.api, payload, null, 'json')
+            .done(function (response) {
+                if (!response.ok) {
+                    toast(response.error || 'Błąd', true);
+                    return;
+                }
+                if (onDone) {
+                    onDone(response);
+                }
+            })
+            .fail(function (xhr) {
+                var response = xhr.responseJSON || {};
+                toast(response.error || 'Błąd połączenia', true);
+            });
+    }
+
+    function formatTime(totalSeconds, half) {
+        // limity jak w meczu: 45:00 / 90:00 + oznaczenie czasu doliczonego
+        var capped = totalSeconds;
+        var extra = false;
+        if (half === 1 && capped > 2700) { capped = 2700; extra = true; }
+        if (half === 2 && capped > 5400) { capped = 5400; extra = true; }
+        var minutes = Math.floor(capped / 60);
+        var seconds = capped % 60;
+        return {
+            text: (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds,
+            extra: extra
+        };
+    }
+
+    function currentMinute() {
+        if (lastTimerSeconds <= 0) {
+            return '';
+        }
+        return String(Math.max(1, Math.ceil(lastTimerSeconds / 60)));
+    }
+
+    // ------------------------------------------------------------
+    // ODCZYT STANU (co 1 s)
+    // ------------------------------------------------------------
+    function refreshState() {
+        $.getJSON(cfg.api, { action: 'state' })
+            .done(function (state) {
+                if (!state.ok) {
+                    return;
+                }
+
+                lastTimerSeconds = state.timer.seconds;
+                var time = formatTime(state.timer.seconds, state.timer.half);
+                $('#lp-timer').text(time.text).toggleClass('is-extra', time.extra);
+                $('#lp-half').text(state.timer.half + ' ' + cfg.labels.halfShort);
+                $('#lp-pause').prop('hidden', !state.timer.running);
+                $('#lp-resume').prop('hidden', state.timer.running);
+
+                $('#lp-score1').text(state.score[0]);
+                $('#lp-score2').text(state.score[1]);
+
+                $.each(state.boards, function (name, visible) {
+                    $('.livePanel__board[data-board="' + name + '"]').toggleClass('is-active', visible === 1);
+                });
+            });
+    }
+
+    // ------------------------------------------------------------
+    // LISTA ZDARZEŃ + stan „na boisku" z historii zmian (in/out)
+    // ------------------------------------------------------------
+    function renderEvents(events) {
+        var $list = $('#lp-events').empty();
+        if (!events.length) {
+            $list.append($('<p class="livePanel__hint">').text(cfg.labels.noEvents));
+            return;
+        }
+
+        $.each(events, function (i, ev) {
+            var actionLabel = cfg.actions[ev.action] || ev.action;
+            var teamName = cfg.teamNames[String(ev.team)] || '';
+            var playerText = ev.player.id > 0
+                ? (ev.player.number !== '' ? ev.player.number + '. ' : '') + ev.player.name
+                : '—';
+
+            var $row = $('<div class="livePanel__event" data-event-action="' + ev.action + '">');
+            var $minute = $('<input type="text" class="form-control livePanel__eventMinute" inputmode="numeric" maxlength="3">').val(ev.minute);
+            $row.append($minute);
+            $row.append($('<span class="livePanel__eventAction">').text(actionLabel));
+            $row.append($('<span class="livePanel__eventPlayer">').text(playerText));
+            $row.append($('<span class="livePanel__eventTeam">').text(teamName));
+
+            var $save = $('<button type="button" class="button livePanel__eventBtn">').text(cfg.labels.save);
+            $save.on('click', function () {
+                api('event_update', { id: ev.id, iPlayer: ev.player.id, sMinute: $minute.val() }, function () {
+                    loadEvents(true);
+                });
+            });
+            var $remove = $('<button type="button" class="button livePanel__eventBtn livePanel__danger">').text(cfg.labels.delete);
+            $remove.on('click', function () {
+                if (!window.confirm(cfg.labels.confirmDelete)) {
+                    return;
+                }
+                api('event_delete', { id: ev.id }, function () {
+                    loadEvents(true);
+                });
+            });
+            $row.append($save).append($remove);
+            $list.append($row);
+        });
+    }
+
+    function applyOnPitch(events) {
+        // ostatnie zdarzenie in/out zawodnika decyduje o oznaczeniu kafelka
+        $('.livePanel__player').removeClass('is-on is-out');
+        var lastState = {};
+        $.each(events, function (i, ev) {
+            if (ev.action === 'in' || ev.action === 'out') {
+                lastState[ev.player.id] = ev.action;
+            }
+        });
+        $.each(lastState, function (playerId, action) {
+            $('.livePanel__player[data-player="' + playerId + '"]')
+                .addClass(action === 'in' ? 'is-on' : 'is-out');
+        });
+    }
+
+    function loadEvents(force) {
+        // nie podmieniaj listy, gdy operator właśnie ją edytuje (fokus w środku) —
+        // cykliczne odświeżanie kasowałoby wpisywaną wartość
+        if (!force && $('#lp-events').find(':focus').length) {
+            return;
+        }
+        $.getJSON(cfg.api, { action: 'events' })
+            .done(function (response) {
+                if (!response.ok) {
+                    return;
+                }
+                if (!force && $('#lp-events').find(':focus').length) {
+                    return;
+                }
+                renderEvents(response.events);
+                applyOnPitch(response.events);
+            });
+    }
+
+    // ------------------------------------------------------------
+    // WYNIK
+    // ------------------------------------------------------------
+    $('[data-score-team]').on('click', function () {
+        api('score_adjust', {
+            team: $(this).data('score-team'),
+            delta: $(this).data('delta')
+        }, function (response) {
+            $('#lp-score1').text(response.score[0]);
+            $('#lp-score2').text(response.score[1]);
+        });
+    });
+
+    // ------------------------------------------------------------
+    // ZEGAR
+    // ------------------------------------------------------------
+    var timerCommands = {
+        start1: { action: 'timer_start', data: { half: 1 } },
+        start2: { action: 'timer_start', data: { half: 2 } },
+        pause:  { action: 'timer_pause' },
+        resume: { action: 'timer_resume' },
+        plus:   { action: 'timer_adjust', data: { delta: 1 } },
+        minus:  { action: 'timer_adjust', data: { delta: -1 } },
+        reset:  { action: 'timer_reset' }
+    };
+    $('[data-timer]').on('click', function () {
+        var command = timerCommands[$(this).data('timer')];
+        if (command) {
+            api(command.action, command.data || {}, refreshState);
+        }
+    });
+
+    // ------------------------------------------------------------
+    // PLANSZE — przycisk pokazuje stan, klik przełącza
+    // ------------------------------------------------------------
+    $('.livePanel__board').on('click', function () {
+        var $board = $(this);
+        api('board_toggle', {
+            sName: $board.data('board'),
+            iVisible: $board.hasClass('is-active') ? 0 : 1
+        }, function (response) {
+            $.each(response.boards, function (name, visible) {
+                $('.livePanel__board[data-board="' + name + '"]').toggleClass('is-active', visible === 1);
+            });
+        });
+    });
+
+    // ------------------------------------------------------------
+    // KONFIGURACJA MECZU
+    // ------------------------------------------------------------
+    $('#lp-save-teams').on('click', function () {
+        api('teams_set', {
+            iTeam1: $('#lp-team1').val(),
+            iTeam2: $('#lp-team2').val()
+        }, function () {
+            window.location.reload();
+        });
+    });
+
+    $('#lp-new-match').on('click', function () {
+        if (!window.confirm(cfg.labels.confirmNewMatch)) {
+            return;
+        }
+        api('match_reset', {}, function () {
+            window.location.reload();
+        });
+    });
+
+    // ------------------------------------------------------------
+    // KAFELEK ZAWODNIKA → ARKUSZ AKCJI
+    // ------------------------------------------------------------
+    $('.livePanel__player').on('click', function () {
+        var $player = $(this);
+        sheetPlayer = {
+            id: $player.data('player'),
+            team: $player.data('team'),
+            name: $player.data('name'),
+            number: $player.data('number')
+        };
+        $('#lp-sheet-title').text(
+            (sheetPlayer.number !== '' ? sheetPlayer.number + '. ' : '') + sheetPlayer.name
+        );
+        $('#lp-sheet-minute').val(currentMinute());
+        $('#lp-sheet').prop('hidden', false);
+    });
+
+    function closeSheet() {
+        $('#lp-sheet').prop('hidden', true);
+        sheetPlayer = null;
+    }
+
+    $('#lp-sheet-cancel').on('click', closeSheet);
+    $('#lp-sheet').on('click', function (event) {
+        if (event.target === this) {
+            closeSheet();
+        }
+    });
+
+    $('.livePanel__sheetAction').on('click', function () {
+        if (!sheetPlayer) {
+            return;
+        }
+        var action = $(this).data('action');
+        api('event_add', {
+            iPlayer: sheetPlayer.id,
+            iTeam: sheetPlayer.team,
+            sAction: action,
+            sMinute: $('#lp-sheet-minute').val()
+        }, function () {
+            toast(cfg.actions[action] + ' — OK');
+            closeSheet();
+            loadEvents(true);
+        });
+    });
+
+    // ------------------------------------------------------------
+    // ZDARZENIA — czyszczenie
+    // ------------------------------------------------------------
+    $('#lp-clear-events').on('click', function () {
+        if (!window.confirm(cfg.labels.confirmClear)) {
+            return;
+        }
+        api('events_clear', {}, function () {
+            loadEvents(true);
+        });
+    });
+
+    // ------------------------------------------------------------
+    // START
+    // ------------------------------------------------------------
+    refreshState();
+    loadEvents();
+    setInterval(refreshState, 1000);
+    setInterval(loadEvents, 10000);
+
+})(jQuery);
