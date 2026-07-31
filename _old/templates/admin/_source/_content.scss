@@ -1,0 +1,647 @@
+ .mainBody{
+    @include fade;
+    background: var(--bg-color);
+    padding-top: $header_mobile + $gutter;
+     position: relative;
+     z-index: 1;
+     overflow: hidden;
+}
+
+
+.login-wrapper{
+    @include flexbox;
+    justify-content: center;
+    height: 100vh;
+    flex-direction: column;
+}
+
+.login-panel{
+    width: 90%;
+    max-width: 600px;
+    margin: 0 auto;
+    
+//    align-items: center;
+    
+    header.header a{
+        line-height: 1.2;
+        @include flexbox;
+        align-items: center;
+        img{
+            margin-right: 20px;
+        }
+        
+    }
+}
+.login-form{
+    margin: $gutter 0;
+    @include border;
+    @include border-radius;
+    background: var(--white);
+    padding: $gutter;
+}
+
+
+
+ 
+
+.section{
+    padding: 100px 0;
+    position: relative;
+    max-width: 100%;
+    overflow: hidden;
+    
+    &__scroll{
+        position: absolute;
+        top: -($header_mobile)
+    }
+//    &__row{
+//        @include flexbox;
+//        flex-wrap: wrap;
+//    }
+//    &__column{
+//        flex-basis: 100%;
+//        width: 100%;
+//    }
+    & > .container{
+        position: relative;
+    }
+    
+    &__header{
+        margin-bottom: $gutter2;
+    }
+    &__title{
+        margin: 0;
+        line-height: 1;
+    }
+    
+    &__subtitle{
+        @include font-l;
+        @include font-light;
+        line-height: 1.2;
+        margin: $gutter 0 0 0;
+        small{
+            flex-basis: 100%;
+            width: 100%;
+            display: block;
+        }
+        a{
+            text-decoration: underline;
+        }
+    }
+ 
+    &__desc{
+        margin: 15px 0 0 0;
+        @include font-md;
+        .link_underline{
+            @include font-medium;
+            border-bottom: 1px solid var(--gray);
+        }
+        p{
+            margin-bottom: 15px
+        }
+    }
+    &__buttons{
+        @include flexbox;
+        align-items: center;
+        flex-wrap: wrap;
+        & > * {
+            margin: 0 15px 15px 0;
+        }
+    }    
+    &__more{
+        width: 75px;
+        display: block;
+        @include fade;
+        &:hover{
+            transform: translateX($gutter);
+        }
+    }
+    
+    &__bg{
+        position: absolute;
+        z-index: -1;
+        background: var(--brand-light);
+        left: -$gutter2;
+        top: -$gutter2;
+        right: -999px;
+        bottom: -$gutter2;
+    }
+}
+
+ 
+
+
+
+// ----------------------------------------------------------
+// ----- STRONA GLOWNA
+// ----------------------------------------------------------
+ 
+     
+
+// ----------------------------------------------------------
+// ----- TABS
+// ----------------------------------------------------------
+  
+.tabs{
+    @include list-style-no;
+    @include flexbox;
+    li{
+        margin-right: 5px;
+        a{
+            display: block;
+            @include font-regular;
+            padding: 15px 20px;
+            border-top-left-radius: $border-radius;
+            border-top-right-radius: $border-radius;
+            background: var(--brand-light);
+        }
+    }
+    li.selected{
+        a{
+            background: var(--white);
+            @include font-medium;
+            
+        }
+    }
+    
+  
+    
+}
+.tabsContent{
+    @include list-style-no;
+    background: var(--white);
+    padding: $gutter2;
+    border-bottom-left-radius: $border-radius;
+    border-bottom-right-radius: $border-radius;
+    
+    & > li{
+        margin-bottom: $gutter;
+    }
+    
+    .short-description .form-item, .full-description .form-item{
+            .display, .hide{
+                @include font-medium;
+                text-decoration: underline;
+                    
+            }
+            flex-wrap: wrap;
+            & > label{
+                flex-basis: 100%;
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            & > select, .toggle, textarea, .tox, .description{
+                flex-basis: 100%;
+                width: 100%;
+            }
+        }
+    
+}
+
+.form-separator{
+    @include border-top;
+    padding: $gutter 0 0 0;
+}
+
+
+.qq-uploader{
+    width: 100% !important;
+}
+.qq-upload-button{
+    width: 100% !important;
+    background-color: var(--brand) !important;
+    font-weight: 700;
+//    color: var(--brand-dark) !important;
+    padding: 20px !important;
+    border: 2px solid var(--brand) !important;
+    border-radius: 5px !important;
+}
+// ----------------------------------------------------------
+// ----- SLIDER
+// ----------------------------------------------------------
+ 
+ 
+ 
+ 
+ 
+
+
+.pagesTree{
+    margin-bottom: 10px;
+    line-height: 1;
+    text-transform: uppercase;
+    @include font-sm;
+    
+    .link_underline{
+        @include font-medium;
+        color: var(--brand);
+    }
+    
+    ol{
+        @include list-style-no;
+        @include flexbox;    
+    }
+ 
+    li:not(:first-child){
+        position: relative;
+        padding-left: 25px;
+        margin-left: 20px;
+        &::before{
+            width: 10px;
+            height: 2px;
+            background: var(--brand);
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 50%;
+        }
+    }
+    li a{
+        @include font-medium;
+        text-decoration: none;
+//        color: var(--brand-light);
+        &:hover{
+//            color: var(--brand);
+        }
+    }
+}
+
+
+.mainPage{
+    position: relative;
+    z-index: 1;
+    &__header{
+        position: relative;
+        padding: $gutter 0;
+//        padding: ($header_mobile * 1.5) 0;
+        margin: 0 auto;
+        line-height: 1.1;
+
+    }
+    
+    &__title{
+        @include font-xl;
+        @include font-bold;
+        margin: 0;
+        position: relative;
+        z-index: 1;
+        white-space: normal !important;
+        margin-bottom: $gutter;
+//        
+    }
+    &__subtitle{
+        font-family: $font-p;
+        
+        @include font-r;
+        @include font-light;
+        margin: 5px 0 0 0;
+        line-height: 1;
+    }
+    
+    &__wrapper{
+        @include flexbox;
+        flex-direction: column;
+        padding-top: $gutter;
+    }
+    
+    &__content{
+        order: 1;
+    }
+
+    &__column{
+        order: 2;
+        margin-top: 50px;
+    }
+    
+ 
+    
+    
+    &__article{
+        @include font-md;
+        @include font-light;
+        p{
+            margin-bottom: 20px;
+        }
+        a:not(.button){
+//            color: var(--brand);
+        }
+        h2{
+            @include font-xl;
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+        h3{
+            margin-bottom: 15px;
+        }
+        
+        .negativeMargin{
+            margin-left: -25px;
+            margin-right: -25px;
+            iframe{
+                margin: 30px 0;
+            }
+        }
+        
+        blockquote{
+            background-color: var(--gray);
+            padding: 70px 30px 30px 30px;
+            display: block;
+            margin: 30px -25px;
+            position: relative;
+            @include font-r;
+            h5{
+                margin-bottom: 20px;
+            }
+            &::before{
+                width: 30px;
+                height: 30px;
+                background-image: url(../img/quote.png);
+                background-size: 30px;
+                background-repeat: no-repeat;
+                position: absolute;
+//                background-color: #000;
+                left: 30px;
+                top: 30px;
+                content: "";
+                filter: invert(1);
+                z-index: 1;
+            }
+        }
+        
+        .galleryList{
+            margin-bottom: $gutter2;
+        }
+    }
+    &__desc{
+        margin-bottom: $gutter;
+    }
+    
+    &__date{
+        @include font-sm;
+        margin-top: 30px;
+        @include border-top;
+        padding-top: 15px;
+    }
+
+}
+
+
+
+
+
+
+
+
+.separator{
+    background-image: url(../img/separator.webp);
+    background-position: center center;
+    background-repeat: no-repeat;
+    height: 140px;
+    margin: 50px 0;
+    border: 0;
+}
+
+
+
+
+// ----------------------------------------------------------
+// ----- PRODUKT
+// ----------------------------------------------------------
+        
+// ----------------------------------------------------------
+// ----- GALERIA
+// ----------------------------------------------------------
+
+.gallery{
+    @include list-style-no;
+    .owl-dots{
+//        margin-top: $gutter;
+    }
+}
+
+.galleryItem{
+    overflow: hidden;
+    @include fade;
+    position: relative;
+    a{
+        position: relative;
+        height: 100%;
+        display: block;
+    }
+    
+    &__desc{
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        color: var(--black);
+        @include font-sm;
+        @include font-regular;
+        overflow: hidden;
+        padding: 30px 25px 25px 25px;
+        z-index: 2;
+        &::before{
+            @include fade;
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            top: 0;
+            background: linear-gradient(0deg, rgba(0,0,0,.5) 0%, rgba(0,0,0,0) 100%);
+            @include opacity(.5);
+            content: "";
+            z-index: -1;
+        }
+    }
+ 
+    
+    &:hover .galleryItem__desc::before{
+        @include opacity(1);
+        
+    }
+}
+
+
+// ----- SLIDER
+
+.gallerySlider{
+//    @include flexbox;
+//    justify-content: center;
+//    flex-wrap: wrap;
+//    flex-direction: column;
+//    align-items: center;
+    .galleryItem{
+        margin: 0 auto;
+        &__image{
+            margin: 0 auto;
+            @include flexbox;
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-light);
+            aspect-ratio: 1;
+            @include border-radius;
+            overflow: hidden;
+            img{
+                @include border-radius;
+                overflow: hidden;
+                @include fade;
+                aspect-ratio: 1;
+                object-fit: cover;
+                min-height: 100%;
+                min-width: 100%;
+            }
+        }
+    }
+}
+
+// ----- LISTA
+
+.galleryList{
+    @include flexbox;
+    justify-content: center;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+    .galleryItem{
+        margin: 0 auto;
+    }
+}
+
+
+// ----- GRID 
+
+.galleryGrid{
+    @include flexbox;
+    flex-wrap: wrap;
+    margin-right: -5px;
+    .galleryItem{
+        flex-basis: calc(50% - 5px);
+        width: calc(50% - 5px);
+        margin: 0 5px 5px 0;
+        @include border-radius;
+        &__image{
+            background: var(--gray-light);
+            aspect-ratio: 1;
+                
+            img{
+                @include fade;
+                aspect-ratio: 1;
+                object-fit: cover;
+                min-height: 100%;
+                min-width: 100%;
+            }
+        }
+        
+ 
+        &:hover{
+            .galleryItem__image img{
+                @include opacity(.9);
+            }
+        }
+    }
+}
+
+.galleryGrid + .galleryList{
+    margin-top: 50px;
+}
+
+
+
+
+
+
+  
+
+
+.dark-mode{
+    
+    .widget__title img,
+    .invert{
+        filter: invert(1);
+    }
+    .mainHeader.scroll{
+        background-color: rgba(0,0,0,.3);
+    }
+
+    
+}
+ 
+ 
+// ----------------------------------------------------------
+// ----------------------------------------------------------
+// --------------------- RESPONSIVE
+// ----------------------------------------------------------
+// ----------------------------------------------------------
+@media (min-width: 578px){
+    
+ 
+}
+
+@media (min-width: 768px){
+    
+   
+    
+    
+ 
+    
+    
+
+    
+    
+    
+}
+
+@media (min-width: 992px){
+    
+    
+    .tabsContent{
+        .form-item{
+            @include flexbox;
+            align-items: center;
+            flex-wrap: wrap;
+            & > label{
+                flex-basis: 25%;
+                width: 25%;
+                margin: 0;
+            }
+            & > select, & > input[type="text"], input[type="date"], input[type="email"]{
+                flex-basis: 75%;
+                width: 75%;
+            }
+        }
+        
+        
+    }
+    
+      
+ 
+    
+}
+
+@media (min-width: 1200px){
+    
+    .mainBody{
+        padding-top: $header_desktop + $header_top + $gutter;
+    }
+    
+     
+    
+ 
+    
+     
+    
+    
+
+ 
+    
+}
+
+@media (min-width: 1400px){
+    
+    
+    
+}
+
+@media (min-width: 2000px){
+ 
+}

@@ -1,0 +1,153 @@
+// ==========================================================
+// _brand.scss — KONTRAKT SKINA (jeden plik na nowy projekt)
+// ==========================================================
+// Przy nowym kliencie edytuj WYŁĄCZNIE ten plik: marka, typografia,
+// radius, odstępy i paleta tokenów (:root + motywy).
+//
+// ★ ZASADA: WSZYSTKIE kolory żyją TUTAJ. W żadnym innym pliku SCSS nie
+//   używamy surowych hexów/rgb — tylko zmiennych ($brand, $gray…) i tokenów
+//   (var(--brand), var(--white)…). Nie tworzymy kolorów jednorazowego użycia.
+//
+// Importowany jako PIERWSZY w style.scss — zmienne są dostępne wszędzie.
+// Po zmianie: przebuduj css/style.css (compressed) i _source/style.css (expanded).
+
+
+// ----------------------------------------------------------
+// ----- TYPOGRAFIA
+// ----------------------------------------------------------
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Zalando+Sans+Expanded:ital,wght@0,200..900;1,200..900&display=swap');
+
+$font-h: "Zalando Sans Expanded", sans-serif;   // nagłówki
+$font-p: "Montserrat", sans-serif;              // treść
+
+
+// ----------------------------------------------------------
+// ----- KOLORY MARKI  (maks. 3 — brand2/brand3 opcjonalne)
+// ----------------------------------------------------------
+// Kolor wiodący + jego odcień jasny i ciemny.
+$brand:       #d00e1c;   // wiodący
+$brand-light: #fff4f5;   // subtelne tło akcentu
+$brand-dark:  #000f1b;   // mocny kontrast
+
+// Drugi kolor marki (opcjonalny). Ustaw per projekt; domyślnie granat.
+$brand2:       #14233f;
+$brand2-light: #e9eef7;
+$brand2-dark:  #0a1424;
+
+// Trzeci kolor — TYLKO w wyjątkowych projektach. Odkomentuj gdy trzeba.
+// $brand3:       #000000;
+// $brand3-light: #000000;
+// $brand3-dark:  #000000;
+
+
+// ----------------------------------------------------------
+// ----- SKALA SZAROŚCI + BIEL / CZERŃ
+// ----------------------------------------------------------
+$white:      #fff;
+$black:      #010101;
+$gray-light: #f9f9f9;
+$gray:       #333;
+$gray-dark:  #111;
+
+
+// ----------------------------------------------------------
+// ----- KOLORY SEMANTYCZNE (status)
+// ----------------------------------------------------------
+$success: #6a994e;
+$danger:  #c1121f;
+$warning: #fb8500;
+$info:    #105585;
+
+
+// ----------------------------------------------------------
+// ----- KOLORY MAREK SOCIAL (zewnętrzne — muszą zgadzać się z platformą)
+// ----------------------------------------------------------
+$social-facebook:  #5472d2;
+$social-twitter:   #1d9bf0;
+$social-youtube:   #fe0002;
+$social-instagram: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+$social-messenger: linear-gradient(to top, #0078ff 0%, #00c6ff 100%);
+$social-tiktok:    linear-gradient(45deg, #25f4ee 0%, #000 50%, #fe2c55 100%);
+
+
+// ----------------------------------------------------------
+// ----- KSZTAŁT / ODSTĘPY
+// ----------------------------------------------------------
+$border-radius: 8px;
+
+$gutter:  20px;
+$gutter2: 40px;
+$gutter3: 60px;
+
+
+// ----------------------------------------------------------
+// ----- PALETA TOKENÓW — MOTYW JASNY (domyślny)
+// ----------------------------------------------------------
+:root {
+    --brand:       #{$brand};
+    --brand-light: #{$brand-light};
+    --brand-dark:  #{$brand-dark};
+
+    --brand2:       #{$brand2};
+    --brand2-light: #{$brand2-light};
+    --brand2-dark:  #{$brand2-dark};
+
+    --font-color:   #111;
+    --bg-color:     #fbfbfb;
+    --border-color: #e8e8e8;
+    --border-hover: #bbb;
+    --border-light: #ddd;
+
+    --gray-dark:  #{$gray-dark};
+    --gray:       #{$gray};
+    --gray-light: #f1f1f1;
+    --white:      #{$white};
+    --black:      #{$black};
+
+    // poświata akcentu (text-glow, hover) — subtelna na jasnym tle
+    --glow-brand: rgba(#{red($brand)}, #{green($brand)}, #{blue($brand)}, .18);
+}
+
+
+// ----------------------------------------------------------
+// ----- MOTYW CIEMNY (przełącznik .theme-dark)
+// ----------------------------------------------------------
+.theme-dark {
+    --brand-light: #{$brand-dark};
+    --brand-dark:  #{$brand-light};
+
+    --font-color:   #fcfcfc;
+    --bg-color:     #010509;
+    --border-color: #111;
+    --border-hover: #444;
+
+    --gray-dark:  #111;
+    --gray-light: #151515;
+
+    --white: #010101;
+    --black: #fff;
+
+    // mocniejsza poświata na ciemnym tle
+    --glow-brand: rgba(#{red($brand)}, #{green($brand)}, #{blue($brand)}, .5);
+}
+
+
+// ----------------------------------------------------------
+// ----- MOTYW WYSOKIEGO KONTRASTU (przełącznik .theme-contrast)
+// ----------------------------------------------------------
+.theme-contrast {
+    --brand:       #ff0;
+    --brand-light: #111;
+    --brand-dark:  #fff;
+
+    --font-color:   #fff;
+    --bg-color:     #010509;
+    --border-color: #fff;
+    --border-hover: #ff0;
+
+    --gray-dark:  #111;
+    --gray-light: #151515;
+
+    --white: #010101;
+    --black: #fff;
+}

@@ -1,0 +1,27 @@
+// ----------------------------------------------------------
+// BASE / GLOBAL (RESETRY, BODY, TYPOGRAFIA BAZOWA)
+// ----------------------------------------------------------
+@import 'global/brand';   // ★ SKIN: marka, fonty, radius, odstępy, paleta tokenów (:root + motywy) — edytuj przy nowym kliencie
+@import 'global/cms';     // fundament strukturalny: breakpointy, skala typografii, wagi, mixiny (media-up, flexbox, fade…), grid
+@import 'global/reset';     // body, html, typografia globalna, defaultowe elementy
+@import 'global/form';     // .form-*, .form-control, checkboxy, range, floating labels
+@import 'global/slider';     // .form-*, .form-control, checkboxy, range, floating labels
+@import 'global/components';     // komponenty 
+
+
+// ----------------------------------------------------------
+// LAYOUT / STRUCTURA STRONY
+// ----------------------------------------------------------
+@import 'layout/header';     // .mainHeader, nawigacja, hamburger, topbar
+@import 'layout/footer';     // .mainFooter, stopka, scroll-to-top
+@import 'layout/content';    // .mainBody, sekcje, ogólny layout treści
+@import 'layout/page';    // .mainBody, sekcje, ogólny layout treści
+@import 'layout/shop';    // .mainBody, sekcje, ogólny layout treści
+
+
+
+// ----------------------------------------------------------
+// DODATKOWE / SPECYFICZNE MODUŁY PROJEKTU
+// ----------------------------------------------------------
+// (tu można dopinać kolejne moduły dla konkretnych wdrożeń)
+// Styl widgetu Instagram (.instaFeed / .fb-instafeed) siedzi w _components.scss

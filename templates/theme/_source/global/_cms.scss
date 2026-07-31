@@ -1,0 +1,828 @@
+  
+
+// ----------------------------------------------------------
+// ----- ZMIENNE STRUKTURALNE
+// ----------------------------------------------------------
+// Marka, fonty, radius, odstępy i paleta motywu → _brand.scss
+// (edytuj TAMTEN plik przy nowym skinie klienta).
+$breakpoints: (
+  xs: 0,        // domyślnie mobile
+  sm: 578px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1600px,
+  xxxl: 2000px
+);
+
+$font-size: 15px;
+
+$font-size-xs: 0.7em;
+$font-size-sm: 0.9em;
+
+$font-size-md: 1.2em;
+$font-size-l: 1.4em;
+$font-size-xl: 1.8em;
+$font-size-xxl: 2.3em;
+$font-size-xxxl: 2.8em;
+
+$font-xbold: 700;
+$font-bold: 600;
+$font-medium2: 600;
+$font-medium: 500;
+$font-regular: 400;
+$font-light: 300;
+
+// DOMYŚLNE WARTOŚĆI
+
+
+$header_top: 40px;
+$header_mobile: 70px;
+$header_desktop: 80px;
+$header_scroll: 60px;
+$footer: 45px;
+
+
+// Wszystkie kolory (marka, semantyczne, szarości, biel/czerń, social) → _brand.scss
+// (importowany PIERWSZY). Tutaj nie deklarujemy ani nie używamy surowych kolorów.
+
+
+
+
+// fonts
+@mixin font-light{
+	font-weight: $font-light;
+}
+@mixin font-regular{
+	font-weight: $font-regular;
+}
+@mixin font-medium{
+	font-weight: $font-medium;
+}
+@mixin font-medium2{
+	font-weight: $font-medium2;
+}
+@mixin font-bold{
+	font-weight: $font-bold;
+}
+@mixin font-xbold{
+	font-weight: $font-xbold;
+}
+
+@mixin shadow-brand{
+    -webkit-box-shadow: 0px 0px 40px 0px rgba($brand, 0.5);
+    -moz-box-shadow: 0px 0px 40px 0px rgba($brand, 0.5);
+    box-shadow: 0px 0px 40px 0px rgba($brand, 0.5);
+}
+
+// rozmiary
+@mixin font-xs{
+	font-size: $font-size-xs;
+}
+
+@mixin font-sm{
+	font-size: $font-size-sm;
+}
+@mixin font-md{
+	font-size: $font-size-md;
+}
+@mixin font-r{
+	font-size: $font-size;
+}
+
+@mixin font-l{
+	font-size: $font-size-l;
+}
+@mixin font-xl{
+	font-size: $font-size-xl;
+}
+@mixin font-xxl{
+	font-size: $font-size-xxl;
+}
+
+@mixin font-xxxl{
+	font-size: $font-size-xxxl;
+}
+
+@mixin muted{
+    @include opacity(.7);
+}
+
+@mixin noise{
+
+    background-image: url(../images/noise.webp);
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    content: "";
+    @include opacity(.05);
+
+}
+
+@mixin brand-light{
+    background: var(--white);
+}
+
+
+
+// Obramowania
+
+
+@mixin border{
+	border: 1px solid var(--border-color);
+}
+
+@mixin border-hover{
+	border-color: var(--border-hover);
+}
+
+@mixin border-bottom{
+	border-bottom: 1px solid var(--border-color);
+}
+
+@mixin border-bottom2{
+	border-bottom: 2px solid var(--border-color);
+}
+@mixin border-top{
+	border-top: 1px solid var(--border-color);
+}
+
+@mixin border-left{
+	border-left: 1px solid var(--border-color);
+}
+@mixin border-right{
+	border-right: 1px solid var(--border-color);
+}
+@mixin border-radius{
+	border-radius: $border-radius;
+}
+
+@mixin marign-bottom{
+	margin-bottom: 30px;
+}
+
+@mixin reset{
+    margin:0;
+    padding:0;
+    -webkit-box-sizing:border-box;
+    -moz-box-sizing:border-box;
+    box-sizing:border-box;
+}
+@mixin list-style-no{
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+@mixin shadow{
+	-webkit-box-shadow: 0px 0px 40px 0px rgba($black, 0.19);
+    -moz-box-shadow: 0px 0px 40px 0px rgba($black, 0.19);
+    box-shadow: 0px 0px 40px 0px rgba($black, 0.19);
+    @include fade;
+}
+
+@mixin shadow-light{
+	-webkit-box-shadow: 0px 0px 30px 0px rgba($black, 0.1);
+    -moz-box-shadow: 0px 0px 30px 0px rgba($black, 0.1);
+    box-shadow: 0px 0px 30px 0px rgba($black, 0.1);
+}
+
+@mixin shadow-none{
+	-webkit-box-shadow: 0px 0px 0px 0px rgba($black, 0);
+    -moz-box-shadow: 0px 0px 0px 0px rgba($black, 0);
+    box-shadow: 0px 0px 0px 0px rgba($black, 0);
+}
+
+@mixin flexbox {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+}
+
+@mixin flexbox-justify {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+@mixin fade{
+	 -webkit-transition: all .2s  ease-in-out;
+	 -moz-transition: all .2s ease-in-out;
+	 -o-transition: all .2s ease-in-out;
+	 transition: all .2s ease-in-out;
+}
+@mixin fade-slow{
+    -webkit-transition: all .7s cubic-bezier(.77,0,.175,1);
+	 -moz-transition: all .7s cubic-bezier(.77,0,.175,1);
+	 -o-transition: all .7s cubic-bezier(.77,0,.175,1);
+	 transition: all .7s cubic-bezier(.77,0,.175,1);
+}
+
+
+@mixin fade2{
+	 -webkit-transition: all .7s  ease-in-out;
+	 -moz-transition: all .7s ease-in-out;
+	 -o-transition: all .7s ease-in-out;
+	 transition: all .7s ease-in-out;
+}
+
+// Owija ruch tak, by respektował preferencję ograniczonego ruchu.
+// Użycie:  .x { @include motion-safe { animation: heroReveal 1s both; } }
+@mixin motion-safe{
+    @media (prefers-reduced-motion: no-preference){
+        @content;
+    }
+}
+
+@mixin invert($value){
+    filter: invert($value) brightness($value * 1000);
+}
+@mixin opacity($opacity){
+	-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=$opacity)";
+	filter: alpha(opacity=$opacity);
+	-moz-opacity:$opacity;
+	-khtml-opacity: $opacity;
+	opacity: $opacity;
+//	
+//	transition: all 0.3s;
+//    -moz-transition: all 0.3s;
+//    -webkit-transition: all 0.3s;
+//    -o-transition: all 0.3s;
+	
+}
+
+
+// tools/_mixins.scss
+
+// media query: min-width
+@mixin media-up($breakpoint) {
+  $value: map-get($breakpoints, $breakpoint);
+
+  @if $value == null {
+    @warn 'Nie znaleziono breakpointa: #{$breakpoint}';
+  } @else {
+    @media (min-width: $value) {
+      @content;
+    }
+  }
+}
+
+// (opcjonalnie, jak będziesz chciał szerzej)
+// max-width
+@mixin media-down($breakpoint) {
+  $value: map-get($breakpoints, $breakpoint);
+
+  @if $value == null {
+    @warn 'Nie znaleziono breakpointa: #{$breakpoint}';
+  } @else {
+    @media (max-width: $value) {
+      @content;
+    }
+  }
+}
+
+// between
+@mixin media-between($from, $to) {
+  $from-value: map-get($breakpoints, $from);
+  $to-value: map-get($breakpoints, $to);
+
+  @if $from-value == null or $to-value == null {
+    @warn 'Zły breakpoint w mq-between: #{$from} → #{$to}';
+  } @else {
+    @media (min-width: $from-value) and (max-width: $to-value) {
+      @content;
+    }
+  }
+}
+
+
+// ----------------------------------------------------------
+// ----- CONTAINER
+// ----------------------------------------------------------
+
+.container {
+	width: 100%;
+	margin-left: auto;
+	margin-right: auto;
+	padding-left: $gutter;
+	padding-right: $gutter;
+
+	@include media-up(sm) {
+		max-width: 540px;
+	}
+
+	@include media-up(md) {
+		max-width: 720px;
+	}
+
+	@include media-up(lg) {
+		max-width: 960px;
+	}
+
+	@include media-up(xl) {
+		max-width: 1140px;
+	}
+}
+
+// dodatkowy breakpoint 1400px
+@media (min-width: 1400px) {
+	.container {
+		max-width: 1320px;
+	}
+}
+
+
+// ----------------------------------------------------------
+// ----- GRID: ROW
+// ----------------------------------------------------------
+
+.row {
+    min-width: 100%;
+//    flex-basis: 100%;
+	// mobile: domyślnie block, elementy pod sobą
+
+	@include media-up(lg) {
+		@include flexbox;
+		flex-wrap: wrap;
+		margin-right: -$gutter;
+	}
+
+
+	
+}
+
+// modyfikatory wierszy (alignment)
+.row--center {
+	@include flexbox;
+	justify-content: center;
+}
+
+.row--between {
+	@include flexbox;
+	justify-content: space-between;
+}
+
+.row--around {
+	@include flexbox;
+	justify-content: space-around;
+}
+
+.row--middle {
+	@include flexbox;
+	align-items: center;
+}
+
+.row--top {
+	@include flexbox;
+	align-items: flex-start;
+}
+
+.row--bottom {
+	@include flexbox;
+	align-items: flex-end;
+}
+
+
+// ----------------------------------------------------------
+// ----- GRID: COLUMNS (BAZA)
+// ----------------------------------------------------------
+
+// bazowo wszystkie kolumny na 100% szerokości (mobile)
+.col-2,
+.col-3,
+.col-4,
+.col-5,
+.col-6,
+.col-7,
+.col-8,
+.col-9,
+.col-10,
+.col-11,
+.col-12 {
+	width: 100%;
+	flex-basis: 100%;
+}
+
+// helpers dla zachowania layoutu
+.col-auto {
+	flex: 0 0 auto;
+	width: auto;
+}
+
+.col-grow {
+	flex: 1 1 0;
+	min-width: 0;
+}
+
+.col-shrink {
+	flex: 0 1 auto;
+	min-width: 0;
+}
+
+// >= 992px (lg) – pierwszy podział (istniejące kolumny + nowe)
+@include media-up(lg) {
+
+	.col-6,
+	.col-4,
+	.col-5 {
+		width: calc(50% - $gutter);
+		flex-basis: calc(50% - $gutter);
+		margin: 0 $gutter 0 0;
+	}
+
+	.col-3 {
+		width: calc(33.33% - $gutter);
+		flex-basis: calc(33.33% - $gutter);
+		margin: 0 $gutter 0 0;
+	}
+
+	// NOWE: .col-2, .col-9, .col-10, .col-11, .col-12
+	.col-2 {
+		width: calc(16.66% - $gutter);
+		flex-basis: calc(16.66% - $gutter);
+		margin: 0 $gutter 0 0;
+	}
+
+	.col-9 {
+		width: calc(75% - $gutter);
+		flex-basis: calc(75% - $gutter);
+		margin: 0 $gutter 0 0;
+	}
+
+	.col-10 {
+		width: calc(83.33% - $gutter);
+		flex-basis: calc(83.33% - $gutter);
+		margin: 0 $gutter 0 0;
+	}
+
+	.col-11 {
+		width: calc(91.66% - $gutter);
+		flex-basis: calc(91.66% - $gutter);
+		margin: 0 $gutter 0 0;
+	}
+
+	.col-12 {
+		width: calc(100% - $gutter);
+		flex-basis: calc(100% - $gutter);
+		margin: 0 $gutter 0 0;
+	}
+}
+
+// >= 1200px (xl) – dokładniejsze szerokości + większy gutter
+@include media-up(xl) {
+
+	.col-6 {
+		width: calc(50% - $gutter);
+		flex-basis: calc(50% - $gutter);
+		margin: 0 $gutter 0 0;
+	}
+
+	.col-4 {
+		width: calc(33.33% - $gutter);
+		flex-basis: calc(33.33% - $gutter);
+		margin: 0 $gutter 0 0;
+	}
+
+	.col-5 {
+		width: calc(41.66% - $gutter);
+		flex-basis: calc(41.66% - $gutter);
+		margin: 0 $gutter 0 0;
+	}
+
+	.col-7 {
+		width: calc(58.33% - $gutter);
+		flex-basis: calc(58.33% - $gutter);
+		margin: 0 $gutter 0 0;
+	}
+
+	.col-8 {
+		width: calc(66.66% - $gutter);
+		flex-basis: calc(66.66% - $gutter);
+		margin: 0 $gutter 0 0;
+	}
+
+	// NOWE XL – spójne z lg
+	.col-2 {
+		width: calc(16.66% - $gutter);
+		flex-basis: calc(16.66% - $gutter);
+		margin: 0 $gutter 0 0;
+	}
+
+	.col-3 {
+		width: calc(25% - $gutter);
+		flex-basis: calc(25% - $gutter);
+		margin: 0 $gutter 0 0;
+	}
+
+	.col-9 {
+		width: calc(75% - $gutter);
+		flex-basis: calc(75% - $gutter);
+		margin: 0 $gutter 0 0;
+	}
+
+	.col-10 {
+		width: calc(83.33% - $gutter);
+		flex-basis: calc(83.33% - $gutter);
+		margin: 0 $gutter 0 0;
+	}
+
+	.col-11 {
+		width: calc(91.66% - $gutter);
+		flex-basis: calc(91.66% - $gutter);
+		margin: 0 $gutter 0 0;
+	}
+
+	.col-12 {
+		width: calc(100% - $gutter);
+		flex-basis: calc(100% - $gutter);
+		margin: 0 $gutter 0 0;
+	}
+}
+
+
+// ----------------------------------------------------------
+// ----- GRID: RESPONSIVE COLS ala BOOTSTRAP
+// ----------------------------------------------------------
+
+// ile kolumn ma siatka
+$grid-columns: 12;
+
+// mapowanie aliasów breakpointów na Twoje mixiny media-up()
+$grid-breakpoints: (
+	sm: sm,
+	md: md,
+	lg: lg,
+	xl: xl
+);
+
+// generator col-[breakpoint]-[1..12] + col-[breakpoint] (auto)
+@each $bp, $mq in $grid-breakpoints {
+
+	@include media-up($mq) {
+
+		// dobór guttera: dla xl używamy większego
+		$gutter-current: if($bp == xl, $gutter, $gutter);
+
+		// .col-sm-1 ... .col-sm-12 itd.
+		@for $i from 1 through $grid-columns {
+			$width: (100% / $grid-columns) * $i;
+
+			.col-#{$bp}-#{$i} {
+				width: calc(#{$width} - #{$gutter-current});
+				flex-basis: calc(#{$width} - #{$gutter-current});
+				margin-right: $gutter-current;
+			}
+		}
+
+		// .col-sm, .col-md, .col-lg, .col-xl – elastyczna kolumna
+		.col-#{$bp} {
+			flex: 1 0 0;
+			min-width: 0;
+			margin-right: $gutter-current;
+		}
+	}
+}
+
+
+
+// ----------------------------------------------------------
+// ----- TEXT & FONT HELPERS
+// ----------------------------------------------------------
+
+.text-center {
+	text-align: center;
+}
+
+.font-sm { @include font-sm; }
+.font-md { @include font-md; }
+.font-l  { @include font-l; }
+
+.muted   { @include muted; }
+
+// ----------------------------------------------------------
+// ----- FLEX HELPERS
+// ----------------------------------------------------------
+
+
+
+
+.flex {
+	@include flexbox;
+}
+
+.flex-justify {
+	@include flexbox-justify;
+}
+
+.align-center {
+	align-items: center;
+}
+
+.w-100 {
+	width: 100%;
+	flex-basis: 100%;
+}
+
+.fancybox__caption {
+	text-align: center;
+}
+
+// ----------------------------------------------------------
+// ----- BACKGROUND HELPERS
+// ----------------------------------------------------------
+
+ 
+.showUp {
+    visibility: hidden;
+}
+
+.bg-gray {
+	background-color: var(--gray);
+}
+
+.bg-black {
+	background-color: var(--black);
+}
+
+.bg-white {
+	background-color: var(--white);
+//	color: var(--gray-dark);
+}
+
+.bg-brand      { background-color: var(--brand); }
+.bg-brand-dark { background-color: var(--brand-dark); }
+
+.bg-insta {
+	background: $social-instagram;
+}
+
+
+// ----------------------------------------------------------
+// ----- DECORATIVE SEPARATOR X
+// ----------------------------------------------------------
+
+.separator {
+    
+    
+	margin: $gutter2 auto;
+ 
+    
+    
+	position: relative;
+	width: 100%;
+	height: 30px;
+	margin: 30px auto;
+	border: none;
+	background-image: url(../images/logo.svg);
+	background-position: center center;
+	background-repeat: no-repeat;
+    
+
+	&::before,
+	&::after {
+		position: absolute;
+		top: 50%;
+		height: 1px;
+		background: var(--gray);
+		content: "";
+		transform: translateY(-1px);
+        @include opacity(.3);
+	}
+
+	&::before {
+		left: 10%;
+		right: calc(50% + 50px);
+	}
+
+	&::after {
+		right: 10%;
+		left: calc(50% + 50px);
+	}
+}
+
+// ----------------------------------------------------------
+// ----- RATIO HELPERS
+// ----------------------------------------------------------
+
+.ratio {
+	aspect-ratio: 16 / 9;
+
+	iframe {
+		aspect-ratio: 16 / 9;
+		width: 100%;
+	}
+}
+
+// ----------------------------------------------------------
+// ----- GOOGLE TRANSLATE HIDE
+// ----------------------------------------------------------
+
+.skiptranslate {
+	display: none;
+}
+
+#google_translate_element {
+	visibility: hidden;
+	display: none;
+}
+
+
+
+
+
+// ----------------------------------------------------------
+// ----- MISC HELPERS
+// ----------------------------------------------------------
+
+.no-border {
+	border: 0 !important;
+}
+
+.d-none {
+	display: none !important;
+}
+
+
+// ----------------------------------------------------------
+// ----- GLASS EFFECT
+// ----------------------------------------------------------
+
+.glass {
+	background: rgba($white, 0.1);
+	backdrop-filter: blur(4px);
+	border: 2px solid rgba($white, 0.2);
+}
+
+// ----------------------------------------------------------
+// ----- MARGIN HELPERS (AUTO)
+// ----------------------------------------------------------
+.m-0{ margin: 0 !important; }
+.ml-auto { margin-left: auto !important; }
+.mr-auto { margin-right: auto !important; }
+.mt-auto { margin-top: auto !important; }
+.mb-auto { margin-bottom: auto !important; }
+
+.p-0{ padding: 0 !important; }
+.pl-auto { padding-left: auto !important; }
+.pr-auto { padding-right: auto !important; }
+.pt-auto { padding-top: auto !important; }
+.pb-auto { padding-bottom: auto !important; }
+
+// ----------------------------------------------------------
+// ----- MARGIN HELPERS (STEPS) – SCSS LOOPS
+// ----------------------------------------------------------
+//  .m?-0  => 0px
+//  .m?-1  => 10px
+//  ...
+//  .m?-10 => 100px
+
+$space-step: 10px;
+$space-max: 10;
+
+// LEFT
+@for $i from 0 through $space-max {
+	.ml-#{$i} {
+		margin-left: $space-step * $i !important;
+	}
+    .pl-#{$i} {
+		padding-left: $space-step * $i !important;
+	}
+}
+
+// RIGHT
+@for $i from 0 through $space-max {
+	.mr-#{$i} {
+		margin-right: $space-step * $i !important;
+	}
+    .pr-#{$i} {
+		padding-right: $space-step * $i !important;
+	}
+}
+
+// BOTTOM
+@for $i from 0 through $space-max {
+	.mb-#{$i} {
+		margin-bottom: $space-step * $i !important;
+	}
+    .pb-#{$i} {
+		padding-bottom: $space-step * $i !important;
+	}
+}
+
+// TOP
+@for $i from 0 through $space-max {
+	.mt-#{$i} {
+		margin-top: $space-step * $i !important;
+	}
+    .pt-#{$i} {
+		padding-top: $space-step * $i !important;
+	}
+}
+
+

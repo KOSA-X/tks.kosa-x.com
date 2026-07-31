@@ -1,0 +1,4 @@
+# Runtime cache InstaFeed — generowane przez cron (feed.json, token.json, media/*).
+# Trzymamy sam katalog w repo, zawartość ignorujemy.
+*
+!.gitignore

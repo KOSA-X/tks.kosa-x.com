@@ -1,0 +1,203 @@
+// ----------------------------------------------------------
+// ----- FOOTER
+// ----------------------------------------------------------
+
+.mainFooter{
+    @include font-sm;
+    @include fade;
+    margin-top: $gutter3;
+    @include border-top;
+    position: relative;
+    background: var(--white);
+    a{
+        color: var(--font-color);
+        &:hover{
+            text-decoration: underline;
+        }
+    }
+ 
+    &__row{
+        padding-top: $gutter3;
+    }
+    &__column{
+        margin-bottom: $gutter3;
+    }
+    
+    &__title{
+        @include font-r;
+        @include font-bold;
+        text-transform: uppercase;
+        margin: 0 0 15px 0;
+    }
+    
+    &__slogan{
+        @include font-medium;
+        margin-bottom: $gutter / 2;
+    }
+    &__desc{
+        @include muted;
+    }
+    
+    &__logo{
+        margin-bottom: $gutter;
+        @include flexbox;
+        align-items: center;
+        line-height: 1;
+        @include font-medium;
+        @include font-md;
+        color: var(--brand);
+        
+        .logo_dark{
+            display: none;
+        }
+        img{
+            height: 20px;
+            margin-right: $gutter;
+        }
+    }
+    
+    .hoursOpen{
+        margin: $gutter 0 0 0;
+    }
+    
+    .themeSettings{
+    }
+    
+    &__bottom{
+        @include font-sm;
+        @include font-medium;
+        @include border-top;
+        text-align: center;
+        padding: $gutter2 0;
+        background: var(--white);
+        & > .container{
+            @include flexbox;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        a{
+        }
+    }
+    
+    &__info{
+        margin: 0 0 $gutter 0;
+    }
+    &__author{
+        @include flexbox;
+        align-items: center;
+        .designer{
+            margin-right: 15px;
+        }
+        .darkMode{
+            margin-left: $gutter;
+        }
+    }
+    
+    .contactsList{
+        li{
+            flex-wrap: wrap;
+            padding: 0;
+        }
+        li:not(:last-child){
+            margin: 0 0 20px 0;
+        }
+        .phone2{
+            display: none;
+        }
+    }
+    .socialMediaIcons{
+        margin-top: $gutter;
+    }
+
+    @include media-up(md){
+        &__row{
+            @include flexbox;
+            flex-wrap: wrap;
+            margin-right: -$gutter2;
+        }
+        &__column{
+            flex-basis: calc(33.33% - $gutter2);
+            width: calc(33.33% - $gutter2);
+            margin: 0 $gutter2 $gutter2 0;
+        }
+        &__bottom > .container{
+            flex-direction: row;
+            justify-content: space-between;
+        }
+        &__info{
+            margin: 0;
+        }
+    }
+
+    @include media-up(xl){
+        &__row{
+            padding-top: 80px;
+        }
+        &__column{
+            margin-bottom: 80px;
+        }
+    }
+}
+
+.footerMenu{
+    .menu_item_logo{
+        display: none;
+    }
+    &__list{
+        @include list-style-no;
+        .menu_item{
+            margin-bottom: 3px;
+        }
+        .menu_icon{
+        }
+        .menu_link{
+            &:hover{
+            }
+        }
+        .menu_item.selected{
+            .menu_link{
+                @include font-medium;
+                color: var(--brand);
+            }
+        }
+    }
+}
+ 
+
+
+ 
+ 
+
+#cookies-message {
+	position: fixed;
+	left: $gutter;
+	bottom: $gutter;
+	padding: $gutter;
+	background: var(--white);
+	@include shadow;
+	@include border;
+	@include border-radius;
+	@include font-sm;
+	@include font-regular;
+	z-index: 3;
+	max-width: 250px;
+
+	img {
+		margin-bottom: 10px;
+		width: 32px;
+	}
+
+	a {
+	}
+
+	.button {
+		margin-top: $gutter;
+		text-decoration: none;
+		text-align: center;
+
+		&::before {
+			display: none;
+		}
+	}
+}

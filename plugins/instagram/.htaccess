@@ -1,0 +1,30 @@
+# ============================================================
+# KOSA X InstaFeed — ochrona plików modułu
+# ============================================================
+# Reguła: obrazy w cache/{account}/media/ MUSZĄ być serwowalne (<img src>),
+# ale config, token, feed.json, logi i klasa PHP — nigdy po HTTP.
+# cron.php zostaje dostępny (sam broni się sekretem w query string).
+
+Options -Indexes
+
+# --- Wrażliwe / wewnętrzne rozszerzenia (token.json, feed.json, cron.log, README.md) ---
+<FilesMatch "\.(json|log|md)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# --- Konfiguracja, klasa i widget (dołączane po stronie PHP, nie po URL) ---
+<FilesMatch "^(config\.php|InstaFeed\.class\.php|widget\.php)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>

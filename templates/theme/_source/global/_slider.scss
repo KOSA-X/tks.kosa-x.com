@@ -1,0 +1,484 @@
+// ----------------------------------------------------------
+// ----- SLIDER
+// ----------------------------------------------------------
+
+.mainSlider {
+	margin: $header_top auto 0 auto;
+	position: relative;
+
+	.owl-carousel {
+		// overflow: visible;
+	}
+
+	.owl-stage {
+		
+	}
+
+	.owl-item {
+        @include fade2;
+        @include opacity(.8);
+    }
+
+    .owl-item.active {
+        @include opacity(1);
+
+        .mainSlider__image {
+            animation: slideZoom 10s linear forwards;
+        }
+    }
+
+	&__item {
+		position: relative;
+		height: calc(100vh - $header_top);
+		min-height: 500px;
+		overflow: hidden;
+        background: var(--gray-dark);
+	}
+
+	&__content {
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: auto;
+		bottom: 0;
+		text-align: center;
+		color: $white;
+		background: $black;
+		background: linear-gradient(0deg, rgba($black, .7) 0%, rgba($black, 0) 100%);
+		padding: 200px 0 150px 0;
+	}
+
+	.container {
+//		max-width: 900px;
+	}
+
+	&__title {
+		margin: 0;
+		font-size: calc(1em + 3vw);
+		@include font-bold;
+		line-height: 1.2;
+		letter-spacing: .01em;
+		text-shadow: 0 2px 30px rgba($black, .5);
+
+		span {
+			display: inline-block;
+			@include font-xbold;
+			position: relative;
+			line-height: 1;
+
+			&::before {
+				height: 4px;
+				width: 100%;
+				left: 0;
+				bottom: -6px;
+				background: var(--brand);
+				content: "";
+				position: absolute;
+				box-shadow: 0 0 18px var(--glow-brand);
+			}
+		}
+
+		a {
+			text-decoration: none;
+			color: $white;
+
+			&:hover {
+				text-decoration: underline;
+			}
+		}
+	}
+
+	&__desc {
+		margin-top: 5px;
+		@include muted;
+		@include font-md;
+        font-family: $font-h;
+        padding: 0 $gutter;
+	}
+
+	&__button {
+		margin-top: $gutter2;
+
+		// solidny czerwony CTA (nadpisuje wariant .button-white z widoku)
+		&.button {
+			padding: 15px 36px;
+			color: $white;
+			background: var(--brand);
+			border-color: var(--brand);
+
+			&:hover {
+				color: $white;
+				background: var(--brand-hover);
+				border-color: var(--brand-hover);
+				@include shadow-brand;
+			}
+		}
+	}
+
+	&__image {
+        @include fade;
+        background-color: black;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        inset: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 0;
+
+        // GPU compositing + stan końcowy jako baza (eliminuje skok przy zmianie slajdu)
+        transform: scale(1.12);
+        transform-origin: center center;
+        will-change: transform;
+        backface-visibility: hidden;
+        transition: transform 1.5s ease-out;
+    }
+
+	&__progress {
+		display: none;
+		width: 0;
+		max-width: 100%;
+		height: 3px;
+		background: var(--brand);
+		position: absolute;
+		left: 0;
+		top: 0;
+		z-index: 2;
+		right: 0;
+	}
+
+	.owl-nav {
+		display: none;
+        z-index: 7;
+        
+	}
+
+ 
+    
+    // Progres bar na aktywnej kropce — animacja zamiast JS transition
+    .owl-dots {
+        height: 0;
+		transform: translateY(-100px);
+        .owl-dot span{
+            background: $white;
+        }
+        .owl-dot.active span {
+            background: var(--brand);
+            animation: owlDotProgress 5000ms linear forwards;
+            transform-origin: left center;
+        }
+    }
+
+    // Pauza obu animacji (zoom obrazu + progres bar) jedną klasą na .mainSlider
+    &.is-paused {
+        .owl-item.active .mainSlider__image,
+        .owl-dots .owl-dot.active span {
+            animation-play-state: paused;
+        }
+    }
+
+	// --------------------------------------------------------
+	// RESPONSIVE: >= 1200px (xl)
+	// --------------------------------------------------------
+	@include media-up(xl) {
+//		margin: ($header_top + $header_desktop) auto 0 auto;
+
+		&__item {
+//			height: calc(100vh - $header_top - $header_desktop);
+		}
+
+		&__content {
+			padding: 200px 0 100px 0;
+		}
+
+		&__title {
+			font-size: calc(2em + 1vw);
+		}
+
+		.owl-nav {
+			@include flexbox;
+
+			.owl-prev,
+			.owl-next {
+				background-size: 40px auto;
+				width: 80px;
+				height: 40px;
+			}
+		}
+	}
+
+	// --------------------------------------------------------
+	// RESPONSIVE: >= 1600px (xxl)
+	// --------------------------------------------------------
+	@include media-up(xxl) {
+//		margin: ($header_top + $header_desktop + $gutter2) auto 0 auto;
+
+		&__list {
+			
+		}
+        .owl-stage {
+            
+        }
+        
+        &__desc {
+//            @include font-xl;
+        }
+
+		&__item {
+//			height: calc(100vh - $header_top - $header_desktop - 120px);
+//            @include border-radius;
+            
+		}
+
+		.owl-dots {
+//			transform: translateY(0);
+
+			.owl-dot span {
+//				background: var(--black);
+			}
+		}
+	}
+}
+@keyframes owlDotProgress {
+    from { width: 0; }
+    to   { width: 100%; }
+}
+
+@keyframes slideZoom {
+    from {
+        transform: scale(1);
+    }
+    to {
+        transform: scale(1.12);
+    }
+}
+// ----------------------------------------------------------
+// ----- OWL CAROUSEL GLOBAL
+// ----------------------------------------------------------
+
+.owl-carousel {
+	overflow: hidden;
+	position: relative;
+	@include list-style-no;
+}
+
+.owl-stage,
+.owl-item {
+	@include flexbox;
+	align-items: stretch;
+}
+
+.owl-item > li,
+.owl-item > div {
+	width: 100%;
+	flex-basis: 100%;
+}
+
+.owl-dots {
+	@include flexbox;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	padding: $gutter2 0 $gutter 0;
+
+	&.disabled {
+		display: none;
+	}
+
+	.owl-dot {
+		background: transparent;
+		border: 0;
+		width: 12px;
+		height: 4px;
+		margin: 0 7px;
+		padding: 0;
+		@include fade;
+		@include flexbox;
+		align-items: center;
+        background: rgba($black, 0.2);
+
+		span {
+			display: inline-block;
+			width: 100%;
+			height: 4px;
+			background: var(--black);
+			position: relative;
+			@include fade;
+			border-radius: 4px;
+			position: relative;
+            @include opacity(.5);
+		}
+	}
+
+	.owl-dot.active {
+		width: 30px;
+
+		span {
+			@include opacity(1);
+		}
+	}
+}
+
+.owl-nav {
+	@include flexbox;
+	justify-content: space-between;
+	align-items: center;
+	height: 0;
+	position: absolute;
+	bottom: $gutter + 2px;
+	left: 0;
+	right: 0;
+
+	&.disabled {
+		display: none;
+	}
+
+	.owl-prev,
+	.owl-next {
+		background-color: transparent;
+		background-image: url(../images/arrow-long.svg);
+		background-position: center center;
+		background-repeat: no-repeat;
+		background-size: 30px auto;
+		font-size: 0;
+		width: 80px;
+		height: 40px;
+		border: 0;
+		@include fade;
+
+		&:hover,
+		&:focus,
+		&:active {
+			border: 0;
+			outline: 0;
+		}
+	}
+
+	.owl-prev {
+		transform: rotate(180deg);
+	}
+}
+
+
+
+// ----------------------------------------------------------
+// ----- VIDEO HEADER
+// ----------------------------------------------------------
+
+.videoHeader {
+	overflow: hidden;
+	width: 100%;
+	height: calc(100vh - $header_top);
+	margin-top: $header_top;
+	position: relative;
+	color: $white;
+	background: $black;
+	@include flexbox;
+	@include fade;
+	align-items: center;
+	justify-content: center;
+
+	&__background {
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		top: $header_top;
+
+		width: 100%;
+		height: calc(100vh - $header_top);
+
+		object-fit: cover;
+		background-color: $black;
+		background-image: url(../images/intro-video.jpg);
+		background-repeat: no-repeat;
+		background-size: cover;
+		background-position: center;
+
+		z-index: 0;
+		@include fade;
+		@include opacity(0.5);
+	}
+
+	&__content {
+		position: relative;
+		z-index: 2;
+
+		width: 90%;
+		max-width: 900px;
+		margin: 0 auto;
+		text-align: center;
+
+		@include flexbox;
+		@include fade;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+
+		.logo {
+			display: none;
+
+			img {
+				width: 120px;
+				@include invert(1);
+			}
+		}
+	}
+
+	&__button {
+		// margin-top: $gutter;
+	}
+
+	// animacja strzałki
+	@keyframes arrowBounce {
+		0% {
+			transform: translateX(0);
+			opacity: 0;
+		}
+		10% {
+			// transform: translateY(0);
+			opacity: 1;
+		}
+		70% {
+			// transform: translateY(0);
+			opacity: 1;
+		}
+		100% {
+			transform: translateX(20px);
+			opacity: 0;
+		}
+	}
+
+	&__arrow {
+		position: absolute;
+		left: calc(50% - 30px);
+		bottom: 100px;
+
+		width: 60px;
+		height: 60px;
+		transform: rotate(90deg);
+
+		img {
+			height: 40px;
+			filter: invert(1);
+			animation: arrowBounce 2s infinite ease-in-out;
+		}
+	}
+
+	// ≥ 1200px
+	@include media-up(xl) {
+//		height: calc(100vh - $header_top - $header_desktop);
+//		margin-top: $header_top + $header_desktop;
+
+		&__background {
+//			top: $header_top + $header_desktop;
+//			height: calc(100vh - $header_top - $header_desktop);
+		}
+	}
+}
+
+

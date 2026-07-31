@@ -1,0 +1,1733 @@
+// ----------------------------------------------------------
+// ----- MAIN BODY
+// ----------------------------------------------------------
+
+.mainBody{
+    @include fade;
+    padding-top: $header_top + $header_mobile;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    will-change: transform;
+    background: var(--bg-color);
+}
+
+a{
+    &:hover{
+        text-decoration: underline;
+    }
+}
+
+
+// ----------------------------------------------------------
+// ----- 100% szerkości 
+// ----------------------------------------------------------
+.pageType-3{
+    .mainPage > .container{
+        max-width: none;
+        padding: 0;
+    }
+}
+
+
+// ----------------------------------------------------------
+// ----- KONTAKT – THEME SPECIFIC
+// ----------------------------------------------------------
+
+.theme-3 {
+	.mainFooter {
+//		margin-top: 0;
+
+		&__row {
+			display: none;
+		}
+	}
+}
+
+
+.pageContact {
+    
+    &__cards{
+        .card{
+            height: 100%;
+        }
+        .col-6{
+            margin-bottom: $gutter2;
+        }
+    }
+
+	.contactsList {
+        .value{
+            font-size: $font-size + 1px;
+        }
+		> li {
+            img{
+                display: none;
+            }
+		}
+	}
+
+    .socialMediaIcons {
+        margin-top: $gutter;
+    }
+	
+
+	&__form {}
+
+	&__map {
+		text-align: center;
+
+		.card {
+			margin: 0;
+			border-radius: 0;
+			border-bottom: 0;
+			border-left: 0;
+			border-right: 0;
+            
+            
+
+			&__header {
+				justify-content: center;
+				margin: 0;
+			}
+
+			.contactsList > li {
+				img,
+				.label {
+					display: none;
+				}
+
+				align-items: center;
+			}
+		}
+	}
+}
+
+
+
+
+
+
+
+
+
+// ----------------------------------------------------------
+// ----- MAIN PAGE (SZABLON PODSTRONY)
+// ----------------------------------------------------------
+
+.mainPage {
+	position: relative;
+	z-index: 1;
+
+	// ------------------------------------------------------
+	// HEADER
+	// ------------------------------------------------------
+	&__header {
+		position: relative;
+		padding: $gutter2 0;
+		margin: 0;
+		line-height: 1.1;
+
+		&_row {
+			@include flexbox;
+			align-items: center;
+		}
+
+		&_icon {
+			width: 100px;
+			flex-basis: 100px;
+			margin-right: $gutter2;
+		}
+
+		&_content {}
+
+		> .container {
+			position: relative;
+			z-index: 2;
+			@include flexbox;
+			flex-direction: column;
+			align-items: flex-start;
+		}
+
+		&-bg {
+			padding: $gutter3 * 2.5 0;
+			background-color: $black;
+			background-image: url(../images/header-bg.jpg);
+			background-position: center;
+			background-size: cover;
+			position: relative;
+            margin-bottom: $gutter;
+
+			&::before {
+				position: absolute;
+				inset: 0;
+				content: "";
+				background: rgba($black, 0.4);
+			}
+
+			.container {
+				align-items: center;
+			}
+
+			.mainPage__title,
+			.mainPage__subtitle {
+				color: $white;
+				text-align: center;
+			}
+            .mainPage__tree ol{
+                li:not(:first-child)::before{
+                    filter: invert(1);
+                }
+                a{
+                    color: $white;    
+                }
+                
+            }
+		}
+	}
+
+	// ------------------------------------------------------
+	// NAWIGACJA RODZIC → AKTUALNA PODSTRONA
+	// ------------------------------------------------------
+    &__tree{
+        
+        @include font-sm;
+        max-width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
+
+        // fajniejsze UX na telefonach
+        -webkit-overflow-scrolling: touch;
+        ol{
+            @include flexbox;
+             flex-wrap: nowrap;
+            li{
+                flex: 0 0 auto;
+                display: inline-flex;
+                align-items: center;
+                position: relative;
+                margin-bottom: 10px;
+            }
+//            li:first-child{
+//                display: none;
+//            }
+            li:last-child{
+                display: none;
+            }
+            
+            li:not(:first-child){
+                padding-left: $gutter;
+                margin-left: 10px;
+                
+                &::before{
+                    content: "";
+                    position: absolute;
+                    left: 0;
+                    width: 14px;
+                    height: 14px;
+                    background-image: url(../images/arrow.svg);
+                    background-position: left center;
+                    background-repeat: no-repeat;
+                    background-size: 14px;
+                }
+                
+//                margin-right: 10px;
+                
+            }
+            a{
+                color: var(--font-color);
+                &:hover{
+                    color: var(--brand);
+                }
+            }
+        }
+        
+    }
+	&__parent {
+		@include font-medium;
+		line-height: 1;
+		margin: 0 0 10px 0;
+		text-transform: uppercase;
+		letter-spacing: 1px;
+
+		a {
+			display: inline-block;
+			@include fade;
+			@include border-radius;
+			@include flexbox;
+
+			align-items: center;
+			padding: 7px 12px;
+
+			color: var(--brand-dark);
+			background: var(--border-color);
+
+			img {
+				width: 18px;
+				transform: rotate(180deg);
+				margin-right: 10px;
+				@include fade;
+			}
+
+			&:hover {
+				color: var(--brand-light);
+				background: var(--brand-dark);
+
+				img {
+					filter: invert(1);
+				}
+			}
+		}
+	}
+
+	// ------------------------------------------------------
+	// TYTUŁ I PODTYTUŁ
+	// ------------------------------------------------------
+	&__title {
+		@include font-xl;
+		@include font-xbold;
+		margin: 0;
+		position: relative;
+		z-index: 1;
+		white-space: normal !important;
+	}
+
+	&__subtitle {
+		@include font-md;
+		@include font-regular;
+		margin: 10px 0 0 0;
+		line-height: 1.2;
+	}
+
+	// ------------------------------------------------------
+	// LAYOUT 1-KOLUMNOWY MOBILE
+	// ------------------------------------------------------
+	&__wrapper {
+		@include flexbox;
+		flex-direction: column;
+	}
+
+	&__content {
+		order: 1;
+	}
+
+	&__column {
+		order: 2;
+		margin: $gutter2 0 0 0;
+        
+        .card{
+            margin-bottom: $gutter2;
+        }
+	}
+
+	// ------------------------------------------------------
+	// ARTYKUŁ / TREŚĆ
+	// ------------------------------------------------------
+	&__article {
+		p{
+            margin: 0;
+        }
+        p + p{
+            margin-top: $gutter;
+        }
+
+		h2 {
+			@include font-xl;
+			margin-bottom: 20px;
+			line-height: 1.2;
+		}
+
+		h3 {
+			margin-bottom: 15px;
+			@include font-bold;
+		}
+
+		.gallerySlider {
+			margin-bottom: $gutter;
+		}
+
+		blockquote {
+			border-left: 3px solid var(--brand);
+			padding: 70px 30px 30px 30px;
+			margin: 30px -25px;
+			position: relative;
+			@include font-r;
+
+			h5 {
+				margin-bottom: 20px;
+			}
+
+			&::before {
+				position: absolute;
+				left: 30px;
+				top: 30px;
+				width: 30px;
+				height: 30px;
+				background-image: url(../images/quote.png);
+				background-size: 30px;
+				background-repeat: no-repeat;
+				content: "";
+				filter: invert(1);
+				z-index: 1;
+			}
+		}
+
+		.galleryList {
+			margin-bottom: $gutter2;
+		}
+	}
+
+	// ------------------------------------------------------
+	// OPISY SHORT / FULL
+	// ------------------------------------------------------
+	&__descShort {
+//		@include font-md;
+//		margin-bottom: $gutter;
+        
+	}
+
+	&__descFull {
+//		@include font-regular;
+	}
+
+	&__desc {
+		h2 {
+			position: relative;
+			padding-left: 30px;
+			@include flexbox;
+			align-items: center;
+
+			&::before {
+				position: absolute;
+				left: -50px;
+				width: 60px;
+				height: 35px;
+				background: $brand;
+				content: "";
+				@include border-radius;
+			}
+		}
+
+		&-short {
+			margin-bottom: $gutter3;
+		}
+	}
+
+	// ------------------------------------------------------
+	// DATA PUBLIKACJI
+	// ------------------------------------------------------
+	&__date {
+		@include font-sm;
+		@include border-top;
+		padding-top: 15px;
+		margin-top: 30px;
+	}
+}
+
+.mainPage__descShort + .mainPage__descFull,
+.mainPage__descShort + .gallery,
+.mainPage__article + .pagesList,
+.mainPage__article + .gallery
+{
+    margin-top: $gutter2;
+}
+ 
+
+// ----------------------------------------------------------
+// ----- NEGATIVE MARGIN
+// ----------------------------------------------------------
+
+.negativeMargin {
+	margin-left: -$gutter !important;
+	margin-right: -$gutter !important;
+
+	// >= 578px
+	@include media-up(sm) {
+		margin-left: 0 !important;
+		margin-right: 0 !important;
+	}
+}
+
+// ----------------------------------------------------------
+// ----- BREADCRUMBS / DRZEWKO STRON
+// ----------------------------------------------------------
+.is-parent-page-32{
+    //popupy
+
+}
+ 
+// ----------------------------------------------------------
+// ----- PAGINACJA
+// ----------------------------------------------------------
+
+.pagination {
+	@include list-style-no;
+	@include flexbox;
+
+	align-items: center;
+	justify-content: center;
+
+	.page-link {
+		@include flexbox;
+		align-items: center;
+		justify-content: center;
+
+		padding: 10px 15px;
+		line-height: 1;
+
+		background: var(--white);
+		color: var(--font-color);
+
+		@include font-medium;
+		@include font-sm;
+		@include border-left;
+		@include border-top;
+		@include border-bottom;
+	}
+
+	.page-item {
+		&.active .page-link {
+			background: var(--border-color);
+			// border-color: transparent;
+		}
+
+		&:first-child .page-link {
+			border-top-left-radius: $border-radius;
+			border-bottom-left-radius: $border-radius;
+		}
+
+		&:last-child .page-link {
+			@include border-right;
+			border-top-right-radius: $border-radius;
+			border-bottom-right-radius: $border-radius;
+		}
+	}
+}
+
+
+// ----------------------------------------------------------
+// ----- MAPA STRONY
+// ----------------------------------------------------------
+
+.siteMap {
+	.menu_icon {
+		display: none;
+	}
+
+	&__list {
+		.menu_item {}
+
+		.menu_link {
+			@include font-medium;
+		}
+        .submenu{
+            margin-left: $gutter;
+        }
+	}
+
+	.container {
+		max-width: none;
+		padding: 0;
+		margin: 0;
+	}
+}
+
+
+// ----------------------------------------------------------
+// ----- KALENDARZ REZERWACJI
+// ----------------------------------------------------------
+
+// lista wybranych wartości (np. daty, ilości, itp.)
+.pageForm {
+	&__selectedList {
+		@include list-style-no;
+		margin-bottom: $gutter;
+
+		> li {
+			@include flexbox;
+			align-items: center;
+
+			.label {
+				display: block;
+				width: 200px;
+				flex-basis: 200px;
+				@include font-regular;
+			}
+
+			.value {
+				@include font-medium;
+			}
+		}
+	}
+
+	.card__header {
+		justify-content: center;
+
+		.card__title {
+			width: 100%;
+			flex-basis: 100%;
+			@include font-r;
+		}
+	}
+}
+
+
+// ----------------------------------------------------------
+// ----- NAWIGACJA KALENDARZA
+// ----------------------------------------------------------
+
+.pageFormCalendar__nav {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	width: 100%;
+	flex-basis: 100%;
+
+	.button {
+		padding: 10px;
+		@include font-medium;
+
+		img {
+			margin: 0;
+		}
+	}
+
+	.calendar-prev {
+		img {
+			transform: rotate(180deg);
+		}
+	}
+
+	.calendar-title {
+		@include flexbox;
+		align-items: center;
+		justify-content: center;
+
+		width: 180px;
+		flex-basis: 180px;
+		text-transform: capitalize; // dla strftime z PL
+
+		img {
+			width: 16px;
+			margin-right: 10px;
+		}
+	}
+}
+
+
+// ----------------------------------------------------------
+// ----- TABELA KALENDARZA
+// ----------------------------------------------------------
+
+.pageFormCalendar {
+	width: 100%;
+	border-collapse: collapse;
+
+	th,
+	td {
+		min-width: 36px;
+		text-align: center;
+		position: relative;
+	}
+
+	td {
+		padding: 2px;
+	}
+
+	td.empty {
+		background: transparent;
+	}
+
+	// LEGEND
+	&__legend {
+		margin-top: 30px;
+		@include flexbox;
+		align-items: center;
+
+		.legend-item {
+			display: inline-flex;
+			align-items: center;
+			margin-right: 10px;
+			@include font-sm;
+		}
+
+		.legend-yours::before,
+		.legend-busy::before {
+			content: "";
+			width: 15px;
+			height: 15px;
+			margin-right: 5px;
+			display: inline-block;
+			@include border-radius;
+		}
+
+		.legend-yours::before {
+			background: rgba($success, 0.4);
+		}
+
+		.legend-busy::before {
+			background: rgba($danger, 0.4);
+		}
+	}
+
+	// KOMÓRKI DNI
+	.day-circle {
+		@include flexbox;
+		@include font-regular;
+		@include font-sm;
+		@include fade;
+
+		align-items: center;
+		justify-content: center;
+
+		aspect-ratio: 1;
+		border-radius: 50%;
+	}
+
+	.day-free {
+		color: inherit;
+	}
+
+	.day-past .day-circle,
+	.day-sunday .day-circle {
+		@include opacity(.5);
+		@include font-light;
+		background: transparent !important;
+	}
+
+	// zakres rezerwacji (start / środek / koniec) – ten sam wygląd
+	.day-start .day-circle,
+	.day-range .day-circle,
+	.day-end .day-circle {
+		background: rgba($success, 0.2);
+		color: $success;
+	}
+
+	.day-busy .day-circle {
+		background: rgba($danger, 0.2);
+		color: $danger;
+	}
+
+	.day-free:not(.day-start, .day-end, .day-range):hover .day-circle {
+		background: var(--gray-light);
+	}
+
+	// >= 1200px – większy padding w komórkach
+	@include media-up(xl) {
+		td {
+			padding: 5px;
+		}
+	}
+}
+
+
+
+
+// ----------------------------------------------------------
+// ----- LISTA PODSTRON (OGÓLNA)
+// ----------------------------------------------------------
+
+.pagesList {
+	@include list-style-no;
+
+	.pageItem:not(:last-child) {
+		margin-bottom: $gutter2;
+	}
+
+	// >= 768px – siatka 2 kolumny (poza blogiem, wyszukiwaniem, produktami itp.)
+	@include media-up(md) {
+		&:not(.owl-carousel, .blogList, .searchList) {
+			@include flexbox;
+			align-items: stretch;
+			flex-wrap: wrap;
+			margin-right: -$gutter;
+
+			.pageItem {
+				width: calc(50% - $gutter);
+				flex-basis: calc(50% - $gutter);
+				margin: 0 $gutter $gutter 0;
+			}
+		}
+	}
+
+	// >= 1200px – siatka 3 kolumny
+	@include media-up(xl) {
+		&:not(.owl-carousel, .blogList, .searchList) {
+			margin-right: -30px;
+
+			.pageItem {
+				width: calc(33.33% - 30px);
+				flex-basis: calc(33.33% - 30px);
+				margin: 0 30px 30px 0;
+			}
+		}
+
+		// większe paddingi dla „zwykłych” list (nie produktów, nie bloga)
+		&:not(.productsList, .blogList, .quotesList) {
+			.pageItem {
+				.content {
+					padding: 30px;
+				}
+
+				.footer {
+					padding: 0 30px 30px 30px;
+				}
+			}
+		}
+	}
+}
+
+
+// ----------------------------------------------------------
+// ----- SLIDER PO OSI X (LISTA STRON)
+// ----------------------------------------------------------
+
+.pagesListSlider {
+	@include flexbox;
+	overflow-x: scroll;
+	scroll-snap-type: x mandatory;
+
+	margin-left: -$gutter;
+	margin-right: -$gutter;
+	padding-bottom: 10px;
+	padding-right: $gutter;
+
+	.pageItem {
+		scroll-snap-align: center;
+		flex-basis: 75%;
+		min-width: 75%;
+		width: 75%;
+		margin: 0 0 0 $gutter;
+	}
+}
+
+
+// ----------------------------------------------------------
+// ----- ELEMENT LISTY STRON (pageItem)
+// ----------------------------------------------------------
+
+.pageItem {
+	@include flexbox;
+	@include fade;
+	@include border;
+	@include border-radius;
+
+	position: relative;
+	overflow: hidden;
+	flex-direction: column;
+	align-items: stretch;
+	background: var(--white);
+
+	.image {
+		margin: 0;
+		position: relative;
+		overflow: hidden;
+		background: var(--gray-dark);
+		aspect-ratio: 4 / 3;
+
+		img {
+			aspect-ratio: 4 / 3;
+			@include fade;
+			object-fit: cover;
+			min-height: 100%;
+			min-width: 100%;
+			will-change: opacity;
+		}
+
+		a {
+			@include flexbox;
+            align-items: center;
+            justify-content: center;
+			height: 100%;
+		}
+	}
+
+	.content {
+		padding: $gutter;
+		@include flexbox;
+		flex-direction: column;
+	}
+
+	.category {
+		margin-bottom: 10px;
+
+		a {
+			@include font-medium;
+			@include muted;
+			@include font-sm;
+
+			text-transform: uppercase;
+			border-bottom: 1px solid var(--border-color);
+
+			&:hover {
+				border-color: var(--brand);
+                text-decoration: none;
+			}
+		}
+	}
+
+	.title {
+		margin: 0;
+		@include font-l;
+		@include font-bold;
+
+		a {
+			@include fade;
+			color: var(--font-color);
+
+			&:hover {
+				color: var(--brand);
+				text-decoration: underline;
+			}
+		}
+	}
+
+	.desc {
+		margin: 10px 0 0 0;
+		@include font-sm;
+		@include muted;
+
+		text-overflow: ellipsis;
+		overflow: hidden;
+		display: -webkit-box;
+		-webkit-line-clamp: 3;
+		-webkit-box-orient: vertical;
+
+		p {
+			margin: 0;
+		}
+	}
+
+    .filters{
+        margin: 10px 0 0 0;
+    }	
+
+	.parametrs {
+		@include list-style-no;
+		margin: 5px 0 0 0;
+		@include font-sm;
+
+		.label {
+			margin-right: 10px;
+		}
+
+		.value {
+			@include font-medium;
+		}
+
+		li {
+			// miejsce na dodatkowe stylowanie
+		}
+	}
+
+	.productPrice {
+		@include font-sm;
+
+		&-currency {
+			display: none;
+		}
+
+		&-promo {
+			.productPrice-normal {
+				display: none;
+			}
+		}
+	}
+
+	.more {
+		// link „więcej” jeśli będzie potrzebny
+	}
+
+	.date {
+		@include font-sm;
+		@include muted;
+	}
+
+	.footer {
+		margin-top: auto;
+		padding: 0 $gutter $gutter $gutter;
+		@include flexbox;
+		align-items: center;
+		justify-content: space-between;
+
+		.link_underline {
+			@include font-medium;
+		}
+	}
+
+	&:hover {
+		border-color: var(--border-hover);
+        @include shadow-light;
+//		box-shadow: 0 18px 40px -18px rgba($black, .8), 0 0 30px -12px var(--brand);
+
+		.image img {
+//			transform: scale(1.05);
+		}
+
+		.title a {
+			color: var(--brand);
+		}
+	}
+}
+
+
+// ----------------------------------------------------------
+// ----- LISTA OFERT
+// ----------------------------------------------------------
+
+.offerList {
+	.pageItem {
+		.image {
+			background: transparent;
+			@include flexbox;
+			align-items: center;
+			justify-content: center;
+			aspect-ratio: auto;
+			text-align: center;
+			padding: $gutter2 $gutter 0 $gutter;
+
+			img {
+				aspect-ratio: auto;
+				height: 100px;
+			}
+		}
+	}
+}
+
+
+// ----------------------------------------------------------
+// ----- LISTA AKTUALNOŚCI (BLOG)
+// ----------------------------------------------------------
+
+.blogList {
+	.pageItem {
+		.footer {
+			padding: $gutter 0 0 0;
+		}
+	}
+
+	// >= 768px – układ poziomy (obrazek + treść)
+	@include media-up(md) {
+		.pageItem {
+			flex-direction: row;
+
+			.image {
+				width: 30%;
+				flex-basis: 30%;
+			}
+
+			.content + .image{
+				width: 70%;
+				flex-basis: 70%;
+				@include flexbox;
+				flex-direction: column;
+			}
+		}
+	}
+
+	// >= 992px – dłuższy opis
+	@include media-up(lg) {
+		&:not(.owl-carousel) {
+			.pageItem {
+				.desc {
+					@include font-r;
+					-webkit-line-clamp: 5;
+				}
+			}
+		}
+	}
+
+	// >= 1200px – większy padding treści
+	@include media-up(xl) {
+		.pageItem {
+			.content {
+				padding: 30px;
+			}
+		}
+	}
+}
+
+
+// ----------------------------------------------------------
+// ----- OPINIE
+// ----------------------------------------------------------
+
+.quotesList{
+    .pageItem{
+        width: 100% !important;
+        flex-basis: 100% !important;
+        margin: 0 !important;
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+        .info, .footer{
+            display: none;
+        }
+        .title{
+            @include font-r;
+        }
+        .content{
+            padding: 30px;
+        }
+        
+        .image{
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            aspect-ratio: 1;
+            margin-top: 30px;
+        }
+    }
+}
+
+
+// ----------------------------------------------------------
+// ----- LISTA WYSZUKIWANIA
+// ----------------------------------------------------------
+
+.searchList {
+	.pageItem {
+		width: 100%;
+		flex-basis: 100%;
+
+		.title {
+			@include font-md;
+		}
+
+		.footer {
+			// w razie potrzeby można doprecyzować
+			// padding: $gutter 0 0 0;
+		}
+	}
+
+	.pageItem:not(:last-child) {
+		margin: 0 0 $gutter 0;
+	}
+}
+
+
+// ----------------------------------------------------------
+// ----- LISTA PORTFOLIO / PROJEKTÓW
+// ----------------------------------------------------------
+
+.projectsList {
+	.pageItem {
+		border: 0;
+
+		.image,
+		.image img {
+			aspect-ratio: 1;
+		}
+
+		.content {
+			position: absolute;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			padding-bottom: $gutter + 6px;
+
+			color: $white;
+			background: linear-gradient(
+				0deg,
+				rgba($black, 0.85) 0%,
+				rgba($black, 0) 100%
+			);
+		}
+
+		// tytuł nad kategorią — jak na kartach realizacji KJERU
+		.title {
+			order: 1;
+			text-transform: uppercase;
+			letter-spacing: .04em;
+			@include font-md;
+
+			a {
+				color: $white;
+			}
+		}
+
+		.filters {
+			order: 2;
+			margin: 8px 0 0 0;
+
+			&_item {
+				padding: 0;
+				border: 0;
+				margin: 0 12px 0 0;
+				letter-spacing: .12em;
+				color: rgba($white, .65);
+			}
+		}
+
+		.desc {
+			order: 3;
+		}
+
+		.footer {
+			display: none;
+		}
+
+		// czerwona linia odsłaniana przy hoverze
+		&::after {
+			content: "";
+			position: absolute;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			height: 3px;
+			background: var(--brand);
+			transform: scaleX(0);
+			transform-origin: left center;
+			transition: transform .45s cubic-bezier(.77, 0, .175, 1);
+			z-index: 2;
+		}
+
+		&:hover::after {
+			transform: scaleX(1);
+		}
+	}
+}
+
+
+// ----------------------------------------------------------
+// ----- FILTRY PROJEKTÓW
+// ----------------------------------------------------------
+
+.project {
+	&__categoryButtons {
+		li {
+			margin: 0 15px 15px 0;
+
+			a {
+				display: block;
+				padding: 5px 10px;
+
+				@include border;
+				@include border-radius;
+				@include fade;
+				@include font-medium;
+				@include font-sm;
+
+				background: var(--white);
+				color: var(--font-color);
+
+				&:hover {
+					border-color: var(--brand);
+				}
+			}
+
+			&.selected a {
+				border-color: var(--brand);
+				background: var(--brand-light);
+				color: var(--brand);
+			}
+		}
+	}
+}
+
+
+
+
+
+
+// ----------------------------------------------------------
+// ----- GALERIA
+// ----------------------------------------------------------
+
+.gallery {
+	@include list-style-no;
+}
+
+
+// ----------------------------------------------------------
+// ----- IMAGE PARALLAX
+// ----------------------------------------------------------
+
+.imageParallax {
+	position: relative;
+	display: block;
+	overflow: hidden;
+	width: 100%;
+	height: 100%;
+
+	img {
+		display: block;
+		width: 100%;
+		height: auto;
+//		transform: scale(1.1);
+		will-change: transform;
+        
+//		transition: none !important;
+	}
+    
+}
+
+
+// ----------------------------------------------------------
+// ----- GALLERY ITEM (BLOK)
+// ----------------------------------------------------------
+
+.galleryItem {
+	position: relative;
+	overflow: hidden;
+	@include fade;
+    
+
+ 
+
+	a {
+		position: relative;
+//		display: block;
+        @include flexbox;
+        align-items: center;
+        justify-content: center;
+		height: 100%;
+	}
+
+	&__desc {
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 0;
+
+		padding: 30px 25px 25px 25px;
+		overflow: hidden;
+		z-index: 2;
+
+		color: $white;
+		@include font-sm;
+		@include font-regular;
+
+		&::before {
+			content: "";
+			position: absolute;
+			inset: 0;
+			background: linear-gradient(
+				0deg,
+				rgba($black, 0.5) 0%,
+				rgba($black, 0) 100%
+			);
+			@include fade;
+			@include opacity(.5);
+			z-index: -1;
+		}
+        &-item{
+            @include flexbox;
+            align-items: center;
+            img{
+                filter: invert(1);
+                width: 14px;
+                margin-right: 7px;
+            }
+        }
+	}
+
+	&__image {
+		position: relative;
+		overflow: hidden;
+
+		img {
+//			@include fade;
+			will-change: opacity;
+			object-fit: cover;
+			min-height: 100%;
+			min-width: 100%;
+            -webkit-transition: all .2s linear;
+         -moz-transition: all .2s linear;
+         -o-transition: all .2s linear;
+         transition: all .2s linear;
+		}
+
+//		&::before {
+//            content: '';
+//            position: absolute;
+//            inset: 0;
+//            background: var(--gray-light) url('/img/loading.gif') center / 32px no-repeat;
+//            z-index: 1;
+//            opacity: 1;
+//            transition: opacity 0.3s ease;
+//        }
+	}
+
+	&:hover {
+		.galleryItem__desc::before {
+			@include opacity(1);
+		}
+
+		.galleryItem__image img {
+			// np. @include opacity(0.9);
+		}
+        
+        .galleryItem__image.imageParallax{
+            img{
+//                transform: scale(1.05) !important;
+            }
+        }
+	}
+}
+
+.galleryItem.loaded .galleryItem__image::before {
+    opacity: 0;
+    pointer-events: none;
+}
+
+
+
+
+
+/* Kontener UL – nie zmieniamy nazwy klasy */
+.horizontalGallery{
+    position: relative;
+    @include list-style-no;
+
+    &__viewport{
+        overflow: hidden;
+        width: 100%;
+    }
+
+    &__rows{
+        display: grid;
+        grid-template-rows: repeat(3, 1fr);
+        row-gap: $gutter; /* odstęp między wierszami, dostosuj */
+    }
+}
+
+ 
+/* Pojedynczy rząd: poziomy pasek bez zawijania */
+.galleryRow {
+    @include list-style-no;
+    display: flex;
+    flex-wrap: nowrap;
+    will-change: transform;
+
+    .galleryItem {
+        flex: 0 0 calc(45% - 10px);
+        max-width: calc(45% - 10px);
+        padding: 0; /* wyczyść, jeżeli coś dodaje odstępy */
+        margin: 0 $gutter 0 0;
+
+        a, picture, img{
+            //            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        picture{
+            aspect-ratio: 1; 
+        }
+        img{
+            object-fit: cover;
+            height: 100%;
+        }
+    }
+    
+    
+    @include media-up(sm){
+        .galleryItem {
+            flex: 0 0 calc(35% - 10px);
+            max-width: calc(35% - 10px);
+            margin: 0 $gutter 0 0;
+        }
+    }    
+    @include media-up(md){
+        .galleryItem {
+            flex: 0 0 calc(30% - 10px);
+            max-width: calc(30% - 10px);
+            margin: 0 $gutter 0 0;
+        }
+    }
+    @include media-up(lg){
+        .galleryItem {
+            flex: 0 0 calc(25% - 10px);
+            max-width: calc(25% - 10px);
+            margin: 0 $gutter 0 0;
+        }
+    }
+    @include media-up(xl){
+        .galleryItem {
+            flex: 0 0 calc(20% - 10px);
+            max-width: calc(20% - 10px);
+            margin: 0 $gutter 0 0;
+        }
+    }
+    @include media-up(xxl){
+        .galleryItem {
+            flex: 0 0 calc(15% - 10px);
+            max-width: calc(15% - 10px);
+            margin: 0 $gutter 0 0;
+        }
+    }
+}
+
+  
+
+ 
+
+// ----------------------------------------------------------
+// ----- LISTA (JEDEN POD DRUGIM / CENTER)
+// ----------------------------------------------------------
+
+.galleryList {
+	@include flexbox;
+	flex-direction: column;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+
+	.galleryItem {
+		margin: 0 auto 5px auto;
+	}
+}
+
+
+// ----------------------------------------------------------
+// ----- GRID
+// ----------------------------------------------------------
+
+.galleryGrid {
+	@include flexbox;
+	flex-wrap: wrap;
+	margin-right: -5px;
+
+	.galleryItem {
+		width: 100%;
+		flex-basis: 100%;
+		margin: 0 0 5px 0;
+		@include border-radius;
+
+		&__image {
+			background: var(--gray-light);
+			aspect-ratio: 1;
+
+			img {
+				aspect-ratio: 1;
+			}
+		}
+
+		&:hover {
+			.galleryItem__image img {
+				@include opacity(.9);
+			}
+		}
+	}
+
+	// >= 768px – 2 kolumny
+	@include media-up(sm) {
+		.galleryItem {
+			width: calc(50% - 5px);
+			flex-basis: calc(50% - 5px);
+            margin: 0 5px 5px 0;
+		}
+	}
+
+	// >= 920px – 3 kolumny
+	@include media-up(lg) {
+		.galleryItem {
+			width: calc(33.33% - 5px);
+			flex-basis: calc(33.33% - 5px);
+		}
+	}
+    
+		
+}
+
+
+
+
+// odstęp między gridem a listą
+.galleryGrid + .galleryList {
+	margin-top: 50px;
+}
+
+
+// ----------------------------------------------------------
+// ----- SLIDER GALERII
+// ----------------------------------------------------------
+
+.gallerySlider {
+	.galleryItem {
+		&__image {
+			aspect-ratio: 4 / 3;
+
+			img {
+				aspect-ratio: 4 / 3;
+			}
+		}
+	}
+
+	// >= 578px – zaokrąglenie itemów w sliderze
+	@include media-up(sm) {
+		.galleryItem {
+			@include border-radius;
+		}
+	}
+}
+
+
+// ----------------------------------------------------------
+// ----- LOGA PARTNERÓW
+// ----------------------------------------------------------
+
+// białe kafle logotypów na ciemnym tle (sekcja "Producenci")
+.galleryLogo {
+	@include flexbox;
+
+	flex-wrap: wrap;
+	margin-right: -$gutter;
+
+	.owl-dots {
+		margin-top: 40px;
+	}
+
+	.galleryItem {
+		width: calc(50% - #{$gutter});
+		flex-basis: calc(50% - #{$gutter});
+		margin: 0 $gutter $gutter 0;
+		padding: 25px;
+		min-height: 90px;
+		text-align: center;
+		background: var(--card-light);
+		border: 1px solid var(--card-light);
+
+		@include flexbox;
+		@include fade;
+		@include border-radius;
+		align-items: center;
+		justify-content: center;
+
+		&__image {
+			aspect-ratio: auto;
+		}
+
+		a {
+			text-decoration: none;
+		}
+
+		&__desc {
+			position: relative;
+			padding: 10px 0 0 0;
+			text-align: center;
+			@include muted;
+			@include font-xs;
+			color: var(--card-light-text);
+
+			&::before {
+				background: none;
+			}
+		}
+
+		img {
+			@include fade;
+			filter: grayscale(100);
+			max-width: 130px;
+			max-height: 45px;
+			margin: 0 auto;
+			min-width: 0;
+			min-height: 0;
+			object-fit: contain;
+			aspect-ratio: auto;
+		}
+
+		&:hover {
+			border-color: var(--brand);
+			transform: translateY(-4px);
+			box-shadow: 0 14px 30px -14px var(--brand);
+
+			img {
+				filter: grayscale(0);
+			}
+		}
+
+		// narożniki hover z bazowego .galleryItem nie pasują do białych kafli
+		&::before,
+		&::after {
+			display: none;
+		}
+	}
+
+	// >= 1200px – 4 loga w rzędzie
+	@include media-up(xl) {
+		.galleryItem {
+			width: calc(25% - #{$gutter});
+			flex-basis: calc(25% - #{$gutter});
+		}
+	}
+}
+
+
+
+// ----------------------------------------------------------
+// ----- RESPONSYWNOŚĆ
+// ----------------------------------------------------------
+
+// >= 992px
+@include media-up(sm) {
+	.mainPage {
+ 
+		&__header-bg {
+			margin-bottom: $gutter2;
+		}
+	}
+}
+// >= 992px
+@include media-up(lg) {
+	.mainPage {
+		
+	}
+}
+
+ 
+
+// >= 1200px
+@include media-up(xl) {
+    
+    .mainBody{
+        padding-top: $header_desktop + $header_top;
+    }
+    
+	.mainPage {
+		&__header {
+			padding: $gutter3 0;
+
+			&-bg {
+				padding: $gutter3 * 4 0;
+			}
+		}
+
+		&__title {
+			font-size: 2.5em;
+		}
+	}
+    
+    body:not(.page-column){
+        .galleryGrid {
+            .galleryItem {
+            width: calc(25% - 5px);
+            flex-basis: calc(25% - 5px);
+            }
+        }
+    }
+    
+    // layout 2-kolumnowy
+    body.page-column{
+        .mainPage__wrapper {
+			flex-direction: row;
+		}
+        .mainPage__column {
+			order: 1;
+			flex-basis: 25%;
+			width: 25%;
+			padding-right: $gutter2;
+			margin: 0;
+		}
+
+		.mainPage__content {
+			order: 2;
+			flex-basis: 75%;
+			width: 75%;
+		}
+    }
+
+
+	 
+}

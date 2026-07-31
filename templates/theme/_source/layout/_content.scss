@@ -1,0 +1,449 @@
+
+
+// ----------------------------------------------------------
+// ----- BIGGER FONT
+// ----------------------------------------------------------
+.theme-font{
+    font-size: 18px;
+}
+
+// ----------------------------------------------------------
+// ----- CONTRAST MODE
+// ----------------------------------------------------------
+.theme-contrast{
+    
+    .button{
+        color: var(--white);
+        background: var(--black) !important;
+        border: 0;
+        img{
+            filter: invert(0) !important;
+        }
+        &.selected, &:hover{
+            color: var(--white);
+            background: var(--brand) !important;
+        }
+    }
+}
+
+
+// ----------------------------------------------------------
+// ----- POPUP (np. szczegóły oferty/projektu)
+// ----------------------------------------------------------
+
+.popup {
+
+
+	&__image {
+
+	}
+
+	&__lead {
+	}
+
+	&__desc {
+	}
+
+	&__title {
+	}
+}
+
+
+// ----------------------------------------------------------
+// ----- DARK MODE
+// ----------------------------------------------------------
+
+.theme-dark, .theme-contrast{
+//    background-image: url(../images/bg-dark.png);
+
+    .separator,
+    .card__title img,
+    .features__icon img,
+    .owl-nav .owl-next, 
+    .owl-nav .owl-prev,
+    .chooseLanguage__button_arrow,
+    .mainPage__tree ol li::before,
+    .invert{
+        filter: invert(1);
+    }
+
+    .mainPage__parent a:hover img{
+        filter: invert(0);
+    }
+
+    .menuHamburger span{
+        background: $white;
+    }
+
+    .mainHeader,
+    .mainHeader__menu,
+    .headerMenu .submenu{
+        background-color: rgba($black, .95);
+    }
+
+    .headerMenu .menu_item_submenu .menu_link{
+        background-image: url(../images/arrow-down-white.svg);
+    }
+
+    .section__subtitle, 
+    .section__subtitle a{
+        // kolor w dark mode, jeśli potrzebny
+    }
+
+    .logo_light{
+        display: none;
+    }
+    .logo_dark{
+        display: block;
+    }
+}
+
+
+
+
+// ----------------------------------------------------------
+// ----- SECTION (blok sekcji na stronie)
+// ----------------------------------------------------------
+
+.section {
+	position: relative;
+	max-width: 100%;
+	margin-bottom: 150px;
+
+	&__scroll {
+		position: absolute;
+		top: -$header_mobile;
+	}
+
+	> .container {
+		position: relative;
+	}
+
+	&__header {
+		margin-bottom: $gutter2;
+		@include flexbox;
+		flex-direction: column;
+		align-items: flex-start;
+
+		&_button {
+			margin-top: $gutter;
+		}
+	}
+
+	&__title {
+		margin: 0;
+		line-height: 1.1;
+		color: var(--brand-dark);
+		text-transform: uppercase;
+		letter-spacing: .02em;
+		position: relative;
+		padding-bottom: 22px;
+
+ 
+
+		&-icon {
+			width: $gutter3;
+			margin-right: $gutter;
+		}
+
+		a {
+			&:hover {
+				text-decoration: underline;
+			}
+		}
+	}
+
+	&__subtitle {
+		margin: 0 0 $gutter 0;
+		line-height: 1;
+		text-transform: uppercase;
+		letter-spacing: .18em;
+		@include font-medium;
+		@include font-sm;
+
+		small {
+			display: block;
+			width: 100%;
+			flex-basis: 100%;
+		}
+
+		// etykieta w czerwieni marki, z kreską po lewej
+		a {
+			display: inline-flex;
+			align-items: center;
+            text-decoration: none;
+			@include fade;
+
+			color: var(--brand);
+			background: transparent;
+
+			&::before {
+				content: "";
+				display: inline-block;
+				width: 26px;
+				height: 2px;
+				margin-right: 12px;
+				background: var(--brand);
+				@include fade;
+			}
+
+			&:hover {
+                text-decoration: none;
+				color: var(--brand-dark);
+
+				&::before {
+					width: 40px;
+					background: var(--brand-dark);
+				}
+			}
+		}
+	}
+
+	&__desc {
+		margin: $gutter 0 0 0;
+		color: var(--font-muted);
+		@include font-md;
+
+		p {
+			margin: 0;
+		}
+	}
+}
+
+
+// ----------------------------------------------------------
+// ----- > 1600px – większe odstępy między sekcjami
+// ----------------------------------------------------------
+
+@media (min-width: 1600px) {
+	.section {
+		margin-bottom: 200px;
+	}
+}
+
+
+// ----------------------------------------------------------
+// ----- SEKCJA O NAS
+// ----------------------------------------------------------
+
+.aboutUs {
+
+}
+
+
+// ----------------------------------------------------------
+// ----- SEKCJA PROJEKTY
+// ----------------------------------------------------------
+
+.ourProjects {
+	.buttonList {
+		margin-top: $gutter;
+	}
+	// >= 992px
+	@include media-up(lg) {
+		.buttonList {
+			margin-top: 0;
+			justify-content: flex-end;
+		}
+	}
+}
+
+
+// ----------------------------------------------------------
+// ----- CTA
+// ----------------------------------------------------------
+
+.cta {
+	text-align: center;
+	overflow: hidden;
+
+	max-width: 1600px;
+	margin-left: auto;
+	margin-right: auto;
+
+	background-color: $black;
+	background-image: url(../images/cta-bg.jpg);
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	// background-attachment: fixed;
+
+	&__wrapper {
+		position: relative;
+		padding: $gutter3;
+		color: $white;
+
+		> * {
+			position: relative;
+			z-index: 1;
+		}
+
+		&::before {
+			content: "";
+			position: absolute;
+			inset: 0;
+			background: rgba($black, 0.6);
+			z-index: 0;
+		}
+	}
+
+	&__desc {
+		// @include font-md;
+	}
+
+	&__more {
+		margin-top: $gutter2;
+	}
+
+	.section__title {
+		color: $white;
+	}
+
+	.section__header {
+		align-items: center;
+	}
+
+	// >= 992px
+	@include media-up(lg) {
+		@include border-radius;
+
+		&__wrapper {
+			padding: $gutter3 * 2 20%;
+		}
+	}
+}
+
+
+ 
+
+// ----------------------------------------------------------
+// ----- TEXT GLOW (poświata nagłówka w kolorze marki)
+// ----------------------------------------------------------
+// Używane na .section__title. Subtelna na jasnym tle, mocniejsza
+// na ciemnym — sterowana tokenem --glow-brand (_cms.scss).
+.text-glow{
+    text-shadow: 0 0 18px var(--glow-brand);
+}
+
+.theme-dark .text-glow,
+.theme-contrast .text-glow{
+    text-shadow:
+        0 0 22px var(--glow-brand),
+        0 0 52px rgba($brand, .22);
+}
+
+
+// ----------------------------------------------------------
+// ----- EFFECTS
+// ----------------------------------------------------------
+
+html.scroll-lock,
+body.scroll-lock {
+  overflow: hidden;
+  // jeśli chcesz, można dodać:
+  // touch-action: none; // mobilne przewijanie też się uspokaja
+}
+
+.mainBody.scroll-lock {
+  // żeby mobilne "overscroll" nie robiło dziwnych efektów
+  overscroll-behavior: contain;
+}
+
+.blurEffect .mainBody, .blurEffect .videoHeader{
+  position: relative;
+  pointer-events: none;
+  transition:
+    filter .25s ease,
+    opacity .25s ease,
+    transform .25s ease;
+
+  @include media-up(xl) {
+    @include opacity(1);
+  }
+
+  &::after {
+      @include fade;
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: rgba($black, .5);
+    -webkit-backdrop-filter: saturate(180%) blur(5px);
+    backdrop-filter: saturate(180%) blur(5px);
+    pointer-events: none;
+    z-index: 2;
+    border-radius: inherit;
+  }
+}
+
+
+ 
+
+
+
+
+
+
+
+// ----------------------------------------------------------
+// ----- REDUCED MOTION (dostępność)
+// ----------------------------------------------------------
+// Uszanuj preferencję ograniczonego ruchu: skróć animacje/przejścia
+// i zdejmij parallax oraz Ken-Burns slidera. Nowe animacje owijaj
+// dodatkowo w @include motion-safe { ... } (_cms.scss).
+@media (prefers-reduced-motion: reduce){
+    *,
+    *::before,
+    *::after{
+        animation-duration: .001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .001ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .imageParallax img,
+    .mainSlider__image,
+    .videoHeader__background{
+        transform: none !important;
+    }
+}
+
+
+// ----------------------------------------------------------
+// ----- KARTY ATUTÓW (lista oferty — ikona + tytuł + opis)
+// ----------------------------------------------------------
+// Restyling bazowego .offerList: wyśrodkowane ciemne karty z ikoną,
+// jak pasek atutów pod sliderem na kjeruwheels.pl
+
+.offerList {
+	.pageItem {
+
+	}
+}
+
+
+
+// ----------------------------------------------------------
+// ----- RESPONSYWNOŚĆ
+// ----------------------------------------------------------
+
+// >= 992px
+@include media-up(sm) {
+
+}
+// >= 992px
+@include media-up(lg) {
+
+}
+
+
+
+// >= 1200px
+@include media-up(xl) {
+   
+}
+ 
+
+// >= 1400px
+@include media-up(xxl) {
+   
+}

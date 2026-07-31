@@ -1,0 +1,565 @@
+
+.mainHeader{
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    z-index: 8;
+    @include fade;
+    @include border-bottom;
+    
+    
+    background: var(--white);
+    
+    &.scroll{
+//        background-co/lor: rgba(0,0,0,.3);
+//        -webkit-backdrop-filter: saturate(180%) blur(10px);
+//        backdrop-filter: saturate(180%) blur(10px);
+//        @include border-bottom;
+    }
+    // STRUKTURA
+    &__top{
+        background: $brand-dark;
+        color: $white;
+        display: none;
+        & > .container{
+            @include flexbox-justify;
+            @include fade;
+            height: $header_top;
+        }
+        a{    
+            color: $white;
+        }
+        &-title{
+            
+        }
+//        display: none;
+    }
+    
+    &__center{
+        & > .container{
+            @include flexbox-justify;
+            @include fade;
+            height: $header_mobile;
+        }
+    }
+    
+    .logo_mobile, .logo_desktop, .cartIcon img, .socialMediaIcons .icon img, .contactsList img, .chooseLanguage__button_arrow{
+//        filter: invert(1);
+    }
+    
+    .contactButtons{
+        margin: $gutter;
+        .button-border{
+            border-color: var(--gray);
+            color: var(--brand-light);
+            img{
+                filter: invert(1);
+            }
+        }
+    }
+    
+    .chooseLanguage__button{
+        border-color: var(--gray);
+    }
+    
+
+     // ELEMENTY
+  
+    
+    // logo
+    &__logo{
+        @include fade;
+        margin-right: auto;
+        a{
+            @include flexbox;
+            align-items: center;
+            text-decoration: none;
+        }
+        
+        .logo_mobile{
+            display: none
+        }
+        .logo_text{
+            margin-left: $gutter;
+            display: none;
+        }
+        .logo_img{
+            @include fade;
+            height: $header_mobile - 30px;
+        }
+    }
+    
+    .cartIcon{
+        order: 8;
+        margin: 0 $gutter 0 auto;
+    }
+    &__icons{
+        margin: 0 $gutter;
+    }
+
+    &__menu{
+        position: fixed;
+        top: 0;
+        left: 50px;
+        bottom: 0;
+        right: 0;
+        height: 100vh;
+        background: var(--white);
+        padding-bottom: 100px;
+        @include fade;
+        @include opacity(0);
+        transform: translateX(101%);
+//        @include flexbox;
+        @include border-left;
+//        flex-direction: column;
+        overflow-y: scroll;
+        
+        
+        // ikony social media
+        .socialMediaIcons{
+//            margin:  $gutter;
+            .icon{
+//                border: 0;
+                border-color: var(--gray);
+            }
+            .phone, .email{
+                display: none;
+            }
+        }
+
+
+   
+        
+        &_button{
+            order: 9;
+            
+        }
+        
+        &_head{
+            height: $header_mobile + 50px;
+            @include flexbox;
+            align-items: center;
+            padding: 0 $gutter;
+            img{
+                height: 60px;
+//                filter: invert(1);
+            }
+        }
+ 
+        &.open{
+            transform: translateX(0);
+            @include shadow;
+            @include opacity(1);
+        }
+        
+    }
+    
+ 
+    
+}
+
+.topLinks{
+    @include list-style-no;
+    @include flexbox;
+    align-items: center;
+    & > li{
+        margin-left: 20px;
+        a{
+            @include flexbox;
+            align-items: center;
+            
+        }
+    }
+    img{
+        width: 16px;
+        margin-right: 10px;
+    }
+}
+
+
+
+
+.headerMenu{
+    white-space: nowrap;
+    &__list, .submenu{
+        @include list-style-no;
+    }
+    
+    .menu_item{
+        position: relative;
+        @include border-top;
+        padding: 12px $gutter;
+        width: 100%;
+    }
+    .menu_link{
+//        padding: 0;
+        @include font-medium;
+//        color: $brand-light;
+        
+//        position: relative;
+    }
+    
+    .submenu_item{
+        border: 0;
+        padding: 5px $gutter 5px $gutter2;
+    }
+    .submenu_link{
+        @include font-light;
+        
+    }
+    
+    
+    .menu_item.selected{
+        background: var(--brand-light);
+        & > .menu_link{
+            color: var(--brand);
+            @include font-medium;
+            
+        }
+    }
+    
+    .menu_item_submenu{
+    }
+    
+    
+    .menu_arrow{
+        background: url(../img/arrow.svg) no-repeat center center;
+        background-size: 20px;    
+        position: absolute;
+        right: $gutter;
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+        top: 4px;
+        @include opacity(1);
+//        filter: invert(1);
+        @include fade;
+        transform: rotate(90deg);
+        &:hover{
+            @include opacity(1);
+        }
+    }
+    
+    .submenu{
+        margin: 0 0-($gutter);
+        padding: 10px 0;
+        display: none;
+ 
+ 
+        .menu_item.selected{
+            .menu_link::before{
+                width: 0;
+            }    
+        }
+        &.open{
+            display: block;
+        }
+    }
+}
+
+
+
+
+// MENU HAMBURGER
+.menuHamburger{
+    position: relative;
+    z-index: 9;
+    margin:0;
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+    @include fade;
+    cursor: pointer;
+//    background: var(--bg-color);
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    
+    span {
+        display: block;
+        position: absolute;
+        height: 2px;
+        width: 26px;
+        background: var(--black); /// KOLOR MENU HAMBURGER
+        border-radius: 1px;
+        opacity: 1;
+        left: 9px;
+        -webkit-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+        @include fade;
+        
+        &:nth-child(1) {
+            top: 15px;
+            -webkit-transform-origin: left center;
+            -moz-transform-origin: left center;
+            -o-transform-origin: left center;
+            transform-origin: left center;
+        }
+        &:nth-child(2) {
+            top: 21px;
+            -webkit-transform-origin: left center;
+            -moz-transform-origin: left center;
+            -o-transform-origin: left center;
+            transform-origin: left center;
+        }
+        &:nth-child(3) {
+            top: 27px;
+            width: 20px;
+            -webkit-transform-origin: left center;
+            -moz-transform-origin: left center;
+            -o-transform-origin: left center;
+            transform-origin: left center;
+        }
+    }
+    // MENU OWTARTE
+    &.open{
+        transform: rotate(-90deg);
+        span:nth-child(1) {
+            -webkit-transform: rotate(45deg);
+            -moz-transform: rotate(45deg);
+            -o-transform: rotate(45deg);
+            transform: rotate(45deg);
+            top: 12px;
+            left: 13px;
+        }
+        span:nth-child(2) {
+            -webkit-transform: rotate(-45deg);
+            -moz-transform: rotate(-45deg);
+            -o-transform: rotate(-45deg);
+            transform: rotate(-45deg);
+            top: 30px;
+            left: 13px;
+        }
+        span:nth-child(3) {
+            width: 0;
+            
+//            width: 100%;
+        }
+    }
+}
+
+
+
+
+
+ 
+
+// ----------------------------------------------------------
+// --------------------- RESPONSIVE
+// ----------------------------------------------------------
+
+
+@media (min-width: 578px){
+    
+}
+
+@media (min-width: 768px){
+    
+    .mainHeader{
+        &__menu{
+            left: 50%;
+        }
+    }
+}
+
+@media (min-width: 992px){
+    
+}
+
+@media (min-width: 1200px){
+  
+
+    .mainHeader{
+//        height: $header_desktop;
+        
+        &__center{
+            & > .container{
+                height: $header_desktop;
+            }
+            
+        }
+        &__top{
+            display: block;
+        }
+        
+        &__logo{
+            width: 150px;
+            flex-basis: 150px;
+            .logo_img{
+                height: $header_desktop - 30px;
+            }
+        }
+        
+ 
+        
+        &__icons{
+            display: none;
+        }
+        
+        
+        
+        
+        
+        
+        // PRZEJŚCIE NA MENU DESKTOP
+        &__menu{
+            top: 0;
+            width: auto;
+            position: relative;
+            background: transparent;
+            transform: translateX(0);
+            flex-direction: row;
+            align-items: center;
+            overflow: visible;
+            border: 0;
+            padding: 0;
+            height: 100%;
+            left: 0;
+            @include flexbox;
+            align-items: center;
+            @include opacity(1);
+            .contactButtons{
+                display: none;
+            }
+
+            .socialMediaIcons{
+                order: 2;
+                margin: 0 0 0 $gutter2;
+            }
+            
+            &_button{ // przycisk otwierający menu moblilne
+                display: none;
+            }
+            &_head{
+                display: none;
+            }
+            &.open{
+                box-shadow: none;
+            }
+        }
+    }
+    
+  
+    
+    .headerMenu{
+        order: 1;
+        &__list{
+            @include flexbox;
+        }
+        .menu_item{
+            border: 0;
+            padding: 12px 25px;
+            position: relative;
+            @include border-radius;
+        }
+        .menu_item.selected{
+ 
+            & > .menu_link{
+//                color: $brand-light;
+                @include font-medium;
+            }
+        }
+        
+   
+        
+        
+        .menu_link{
+            @include fade;
+//            @include font-regular;
+            &:hover{
+                text-decoration: underline;
+            }
+            
+        }
+
+        .submenu_item{
+            padding: 5px $gutter;
+            &.selected::before{
+                display: none
+            }
+        }
+        
+        .menu_item_submenu{
+            padding-right: 20px;
+            
+        }
+        
+        
+        .menu_arrow{
+            top: calc(50% - 6px);
+            width: 12px;
+            height: 12px;
+            right: 0;
+             @include opacity(.5);
+        }
+        
+        
+        .submenu{
+            display: block;
+            position: absolute;
+            left: -5px;
+            top: calc(100% + 20px);
+            min-width: 350px;
+            background: var(--white);
+            z-index: 10;
+            visibility: hidden;
+            @include opacity(0);
+            @include fade;
+            @include border;
+            @include border-radius;
+            overflow: hidden;
+            padding: $gutter 10px;
+            margin: 0;
+        }
+        
+        .menu_item:hover{
+            & > .menu_link{
+
+            }
+            & > .menu_arrow{
+                top: calc(50% - 4px);
+            }
+            & > .submenu{
+                visibility: visible;
+                @include opacity(1);
+                top: calc(100%);
+            }
+        }
+        
+    }
+     
+    
+    .mainHeader.scroll{
+//        background-color: rgba(255,255,255,.7);
+//        -webkit-backdrop-filter: saturate(180%) blur(20px);
+//        backdrop-filter: saturate(180%) blur(20px);
+//        @include border-bottom;
+//        transform: translateY(-$header_top);
+ 
+        .mainHeader__logo{
+            .logo_img{
+                height: $header_scroll - 20px;
+            }
+        }
+        .headerMenu{
+            .menu_link{
+                @include font-sm;
+            }
+            .menu_item.selected{
+                &::before{
+                    bottom: 0;
+                }
+            }
+        }
+            
+        
+        .mainHeader__center .container{
+            height: $header_scroll;
+        }
+    }
+
+}

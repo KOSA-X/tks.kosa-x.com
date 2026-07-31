@@ -1,0 +1,277 @@
+
+// fonts
+@mixin font-light{
+	font-weight: $font-light;
+}
+@mixin font-regular{
+	font-weight: $font-regular;
+}
+@mixin font-medium{
+	font-weight: $font-medium;
+}
+@mixin font-medium2{
+	font-weight: $font-medium2;
+}
+@mixin font-bold{
+	font-weight: $font-bold;
+}
+@mixin font-xbold{
+	font-weight: $font-xbold;
+}
+
+
+// rozmiary
+@mixin font-xs{
+	font-size: $font-size-xs;
+}
+
+@mixin font-sm{
+	font-size: $font-size-sm;
+}
+@mixin font-md{
+	font-size: $font-size-md;
+}
+@mixin font-r{
+	font-size: $font-size;
+}
+
+@mixin font-l{
+	font-size: $font-size-l;
+}
+@mixin font-xl{
+	font-size: $font-size-xl;
+}
+@mixin font-xxl{
+	font-size: $font-size-xxl;
+}
+
+@mixin font-xxxl{
+	font-size: $font-size-xxxl;
+}
+
+@mixin muted{
+    @include opacity(.7);
+}
+
+@mixin noise{
+
+    background-image: url(../images/noise.webp);
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    content: "";
+    @include opacity(.05);
+
+}
+
+
+
+// Obramowania
+
+
+@mixin border-effect($border){
+    
+    position: relative;
+    
+    &::before, &::after{
+        left: 0;
+        right: 0;
+        height: $border;
+        content: "";
+        background: rgb(27,100,176);
+        background: -moz-linear-gradient(90deg, rgba(27,100,176,1) 0%, rgba(232,94,95,1) 50%, rgba(27,100,176,1) 100%);
+        background: -webkit-linear-gradient(90deg, rgba(27,100,176,1) 0%, rgba(232,94,95,1) 50%, rgba(27,100,176,1) 100%);
+        background: linear-gradient(90deg, rgba(27,100,176,1) 0%, rgba(232,94,95,1) 50%, rgba(27,100,176,1) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#1b64b0",endColorstr="#1b64b0",GradientType=1);
+        
+        // pogoń
+//        background: #1b5723;
+//background: linear-gradient(90deg, rgba(27, 87, 35, 1) 0%, rgba(219, 69, 70, 1) 50%, rgba(27, 87, 35, 1) 100%);
+        position: absolute;
+    }
+    
+    &::before{
+        top: 0;
+        bottom: auto;
+    }
+    
+    &::after{
+        bottom: 0;
+        top: auto;
+    }
+    
+    
+}
+@mixin gradient-black{
+    color: #fff;
+    background: rgb(0,0,0);
+    background: -moz-linear-gradient(0deg, rgba(0,0,0,0.9) 0%, rgba(47,47,47,0.9) 50%, rgba(0,0,0,0.9) 100%);
+    background: -webkit-linear-gradient(0deg, rgba(0,0,0,0.9) 0%, rgba(47,47,47,0.9) 50%, rgba(0,0,0,0.9) 100%);
+    background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, rgba(47,47,47,0.9) 50%, rgba(0,0,0,0.9) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#000000",endColorstr="#000000",GradientType=1);
+}
+@mixin gradient-blue{
+    color: #fff;
+    background: rgb(42,46,133);
+    background: -moz-linear-gradient(0deg, rgba(42,46,133,1) 0%, rgba(24,103,178,1) 50%, rgba(42,46,133,1) 100%);
+    background: -webkit-linear-gradient(0deg, rgba(42,46,133,1) 0%, rgba(24,103,178,1) 50%, rgba(42,46,133,1) 100%);
+    background: linear-gradient(0deg, rgba(42,46,133,1) 0%, rgba(24,103,178,1) 50%, rgba(42,46,133,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#2a2e85",endColorstr="#2a2e85",GradientType=1);
+}
+
+//@mixin gradient-blue{
+//    color: #fff;
+//    background: #1A1A1A;
+//background: linear-gradient(0deg, rgba(26, 26, 26, 1) 0%, rgba(110, 110, 110, 1) 50%, rgba(26, 26, 26, 1) 100%);
+//}
+
+
+
+@mixin gradient-red{
+    color: #fff;
+    background: rgb(191,18,41);
+    background: -moz-linear-gradient(0deg, rgba(191,18,41,1) 0%, rgba(242,59,62,1) 100%);
+    background: -webkit-linear-gradient(0deg, rgba(191,18,41,1) 0%, rgba(242,59,62,1) 100%);
+    background: linear-gradient(0deg, rgba(191,18,41,1) 0%, rgba(242,59,62,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#bf1229",endColorstr="#f23b3e",GradientType=1);
+}
+
+
+
+@mixin gradient-green{
+    color: #fff;
+    background: rgb(23,122,43);
+    background: -moz-linear-gradient(0deg, rgba(23,122,43,1) 0%, rgba(60,164,44,1) 100%);
+    background: -webkit-linear-gradient(0deg, rgba(23,122,43,1) 0%, rgba(60,164,44,1) 100%);
+    background: linear-gradient(0deg, rgba(23,122,43,1) 0%, rgba(60,164,44,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#177a2b",endColorstr="#3ca42c",GradientType=1);
+}
+
+
+@mixin gradient-white{
+    color: #000;
+    background: rgb(204,204,204);
+    background: -moz-linear-gradient(0deg, rgba(204,204,204,1) 0%, rgba(255,255,255,1) 100%);
+    background: -webkit-linear-gradient(0deg, rgba(204,204,204,1) 0%, rgba(255,255,255,1) 100%);
+    background: linear-gradient(0deg, rgba(204,204,204,1) 0%, rgba(255,255,255,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#cccccc",endColorstr="#ffffff",GradientType=1);
+}
+
+
+@mixin border{
+	border: 1px solid var(--border-color);
+}
+
+@mixin border-hover{
+	border: 1px solid var(--border-color-hover);
+}
+
+@mixin border-bottom{
+	border-bottom: 1px solid var(--border-color);
+}
+
+@mixin border-bottom2{
+	border-bottom: 2px solid var(--border-color);
+}
+@mixin border-top{
+	border-top: 1px solid var(--border-color);
+}
+
+@mixin border-left{
+	border-left: 1px solid var(--border-color);
+}
+@mixin border-right{
+	border-right: 1px solid var(--border-color);
+}
+@mixin border-radius{
+	border-radius: $border-radius;
+}
+
+@mixin marign-bottom{
+	margin-bottom: 30px;
+}
+
+@mixin reset{
+    margin:0;
+    padding:0;
+    -webkit-box-sizing:border-box;
+    -moz-box-sizing:border-box;
+    box-sizing:border-box;
+}
+@mixin list-style-no{
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+@mixin shadow{
+	-webkit-box-shadow: 0px 0px 40px 0px rgba(0,0,0,0.19);
+    -moz-box-shadow: 0px 0px 40px 0px rgba(0,0,0,0.19);
+    box-shadow: 0px 0px 40px 0px rgba(0,0,0,0.19);
+    @include fade;
+}
+
+@mixin shadow-light{
+	-webkit-box-shadow: 0px 0px 30px 0px rgba(0,0,0,0.1);
+-moz-box-shadow: 0px 0px 30px 0px rgba(0,0,0,0.1);
+box-shadow: 0px 0px 30px 0px rgba(0,0,0,0.1);
+}
+
+@mixin shadow-none{
+	-webkit-box-shadow:  0px 0px 0px 0px rgba(0,0,0,0);
+-moz-box-shadow: 0px 0px 0px 0px rgba(0,0,0,0);
+box-shadow:0px 0px 0px 0px rgba(0,0,0,0);
+}
+
+@mixin flexbox {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+}
+
+@mixin flexbox-justify {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+@mixin fade{
+	 -webkit-transition: all .25s  ease-in-out;
+	 -moz-transition: all .25s ease-in-out;
+	 -o-transition: all .25s ease-in-out;
+	 transition: all .25s ease-in-out;
+}
+@mixin fade2{
+    -webkit-transition: all .6s cubic-bezier(.77,0,.175,1);
+	 -moz-transition: all .6s cubic-bezier(.77,0,.175,1);
+	 -o-transition: aall .6s cubic-bezier(.77,0,.175,1);
+	 transition: all .6s cubic-bezier(.77,0,.175,1);
+}
+
+
+@mixin fade-slow{
+	 -webkit-transition: all 2s  ease-in-out;
+	 -moz-transition: all 2s ease-in-out;
+	 -o-transition: all 2s ease-in-out;
+	 transition: all 2s ease-in-out;
+}
+
+@mixin opacity($opacity){
+	-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=$opacity)";
+	filter: alpha(opacity=$opacity);
+	-moz-opacity:$opacity;
+	-khtml-opacity: $opacity;
+	opacity: $opacity;
+//	
+//	transition: all 0.3s;
+//    -moz-transition: all 0.3s;
+//    -webkit-transition: all 0.3s;
+//    -o-transition: all 0.3s;
+	
+}

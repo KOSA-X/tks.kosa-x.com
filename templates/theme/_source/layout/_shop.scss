@@ -1,0 +1,1032 @@
+// ----------------------------------------------------------
+// ----- SKLEP: UKŁAD STRONY
+// ----------------------------------------------------------
+
+.pageShop {
+	.mainPage__column {
+		order: 1;
+		margin: 0;
+	}
+
+	.mainPage__content {
+		order: 2;
+	}
+}
+
+.pageCart {}
+
+
+// ----------------------------------------------------------
+// ----- CENY PRODUKTU
+// ----------------------------------------------------------
+
+.productPrice {
+	@include font-bold;
+
+	&-promo {
+		.productPrice-x {
+			color: $danger;
+			@include font-bold;
+		}
+
+		.productPrice-normal {
+			margin-left: 10px;
+			text-decoration: line-through;
+		}
+	}
+
+	&-old { }
+
+	&-normal { }
+
+	&-currency {
+		margin-left: 5px;
+	}
+}
+
+
+// ----------------------------------------------------------
+// ----- LISTA PRODUKTÓW W SKLEPIE
+// ----------------------------------------------------------
+
+// białe karty produktów na ciemnym tle — styl kart felg KJERU
+.productsList {
+	.pageItem {
+
+		.image {
+			aspect-ratio: 1;
+			background: transparent;
+            
+            img{
+                aspect-ratio: 1;
+                @include fade;
+                object-fit: contain;
+                padding: $gutter $gutter 0 $gutter;
+            }
+		}
+
+		.title {
+			@include font-sm;
+			text-overflow: ellipsis;
+			overflow: hidden;
+			display: -webkit-box;
+			-webkit-line-clamp: 1;
+			-webkit-box-orient: vertical;
+
+			a {
+//				color: var(--card-light-text);
+			}
+		}
+
+		.category {
+			margin-bottom: 5px;
+			@include font-sm;
+
+			a {
+//				color: var(--card-light-muted);
+//				border-color: var(--card-light-border);
+			}
+		}
+
+		.desc {
+			display: none;
+			@include font-xs;
+			@include muted;
+		}
+
+ 
+
+		.productPrice {
+
+			// na kafelku produktu waluta jest częścią formatu "od X PLN /szt."
+			&-currency {
+				display: inline;
+			}
+		}
+
+
+		// "od [cena] PLN /szt."
+		.priceFrom {
+			@include flexbox;
+			align-items: baseline;
+			gap: 5px;
+			@include font-sm;
+
+			&__label,
+			&__unit {
+			}
+
+			.productPrice {
+				@include font-bold;
+			}
+		}
+
+		// przycisk "do koszyka" — ciemny na białej karcie, czerwony na hover
+		.add-to-cart {
+
+			&:hover {
+			}
+		}
+
+		&:hover {
+
+			.title a {
+				color: var(--brand);
+			}
+		}
+	}
+
+	// >= 992px – siatka 3 kolumny (bez karuzeli)
+//	@include media-up(lg) {
+//		&:not(.owl-carousel) {
+//			.pageItem {
+//				width: calc(33.33% - $gutter);
+//				flex-basis: calc(33.33% - $gutter);
+//			}
+//		}
+//	}
+}
+
+
+// ----------------------------------------------------------
+// ----- WIDGET z listą PRODUKTÓW W KOSZYKU
+// ----------------------------------------------------------
+
+.sidePanel{
+    position: fixed;
+    z-index: 9;
+    width: 100%;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    transform: translateY(100px);
+    @include fade;
+    @include font-sm;
+    @include opacity(0);
+    visibility: hidden;
+    &.show{
+        transform: translateY(0) ;
+        @include shadow;
+        @include opacity(1);
+        visibility: visible;
+    }
+    .button-close{
+        padding: 9px;
+    }
+}
+
+.cartWidget{
+    
+    &__button{
+        display: none;
+    }
+    
+    .cartWidget__button{
+        display: block;
+    }
+    
+    
+ 
+    
+    .cartListWrapper .cartList{
+        overflow-y: scroll;
+        max-height: 50vh;
+    }
+    
+    .cartItem{
+//		@include flexbox;
+//		align-items: center;
+//        display: block;
+
+		&__product {
+//			margin-bottom: 10px;
+//			width: 100%;
+//			flex-basis: 100%;
+		}
+
+		&__info, &__content{
+//			width: 100%;
+//			flex-basis: 100%;
+		}
+        
+        &__thumb{
+//            display: none;
+        }
+    }
+    
+    @include media-up(lg){
+        
+        .cartListWrapper{
+//            overflow-y: auto;
+//            max-height: none;
+        }
+
+//        bottom: 0;
+//        left: auto;
+//        width: 400px;
+//        transform: translateX(100px);
+//        @include font-r;
+//        top: 0;
+//        
+//        &.show{
+//            transform: translateX(0);
+//        }
+//        
+//        .card{
+//            border-radius: 0;
+//            height: 100vh;
+//            background: var(--white);
+//        }
+//        .cartListWrapper{
+//            max-height: 100vh;
+//            height: calc(100vh - 93px - 106px);
+//        }
+        
+        
+    }
+    
+    
+}
+
+// ----------------------------------------------------------
+// ----- LISTA PRODUKTÓW W KOSZYKU (MINI KOSZYK)
+// ----------------------------------------------------------
+
+.cartList {
+	@include list-style-no;
+	background: var(--white);
+	overflow: hidden;
+
+	&__summary {
+		margin-top: $gutter;
+		@include flexbox;
+		align-items: center;
+		justify-content: flex-end;
+	}
+
+	&__price {
+		text-align: right;
+		line-height: 1;
+		@include font-md;
+		@include font-bold;
+
+		small {
+			display: block;
+			@include font-regular;
+			@include muted;
+		}
+	}
+
+	&__button {
+		margin-left: $gutter;
+	}
+}
+
+
+// ----------------------------------------------------------
+// ----- ELEMENT KOSZYKA
+// ----------------------------------------------------------
+
+.cartItem {
+	@include border-bottom;
+	padding: $gutter;
+
+	&__product {
+		@include flexbox;
+		align-items: center;
+		width: 100%;
+		margin-bottom: $gutter;
+	}
+
+	&__thumb {
+		flex-basis: 75px;
+		width: 75px;
+		margin-right: $gutter;
+		aspect-ratio: 1;
+		position: relative;
+		@include border-radius;
+		overflow: hidden;
+
+		img {
+			aspect-ratio: 1;
+			object-fit: cover;
+			min-height: 100%;
+			min-width: 100%;
+		}
+	}
+
+	&__content {
+		flex-basis: calc(100% - 100px - $gutter);
+		width: calc(100% - 100px - $gutter);
+
+		h5 {
+			@include font-r;
+		}
+
+		p {
+			margin: 0;
+			@include muted;
+			@include font-sm;
+		}
+
+		.cartItem__price {
+			@include font-regular;
+			@include font-sm;
+
+			.productPrice {
+				margin-left: 5px;
+				@include font-regular;
+
+				&-currency {
+					display: none;
+				}
+			}
+		}
+	}
+
+	&__info {
+		@include flexbox;
+		align-items: center;
+	}
+
+	&__price {
+		@include font-medium;
+		@include flexbox;
+		margin-right: $gutter;
+	}
+
+	button {
+		background: transparent;
+		border: 0;
+		outline: 0;
+
+		img {
+			width: 16px;
+		}
+	}
+
+	.delete-from-cart {
+		@include opacity(.5);
+
+		&:hover {
+			@include opacity(1);
+		}
+	}
+
+	// ilość
+	&__quantity {
+		@include flexbox;
+		@include border;
+		@include border-radius;
+
+		background: var(--white);
+		align-items: stretch;
+
+		width: 90px;
+		height: 30px;
+		margin-right: auto;
+
+		.form-control {
+			width: 30px;
+			padding: 0;
+			text-align: center;
+			border-radius: 0;
+			border: 0;
+		}
+
+		button {
+			display: block;
+			width: 30px;
+			height: 30px;
+
+			@include flexbox;
+			align-items: center;
+			justify-content: center;
+			text-align: center;
+
+			@include font-md;
+			@include font-medium;
+            &:hover{
+                color: $brand;
+            }
+		}
+	}
+
+	&:last-child {
+		border-bottom: 0;
+	}
+
+	// >= 1200px – układ poziomy
+	@include media-up(xl) {
+		@include flexbox;
+		align-items: center;
+
+		&__product {
+			margin-bottom: 0;
+			width: calc(100% - 300px);
+			flex-basis: calc(100% - 300px);
+		}
+
+		&__info {
+			width: 300px;
+			flex-basis: 300px;
+		}
+	}
+}
+
+
+// ----------------------------------------------------------
+// ----- KARTA PRODUKTU
+// ----------------------------------------------------------
+
+.pageType-2{
+    
+}
+
+.products {
+	@include list-style-no;
+}
+
+.shopPage {
+	.mainPage__descFull {
+		margin-top: $gutter2;
+	}
+
+	// >= 992px – opis wraca do góry
+	@include media-up(lg) {
+		.mainPage__descFull {
+			margin-top: 0;
+		}
+	}
+}
+
+.productMore {
+    background: var(--white);
+    padding: $gutter;
+    
+    
+	.gallerySlider {
+		margin-top: -$gutter;
+
+		.galleryItem__image,
+		.galleryItem__image img {
+			aspect-ratio: 1;
+		}
+	}
+    .galleryItem{
+        &__desc{
+            color: var(--font-color);
+            @include font-medium2;
+            &::before{
+                display: none;
+            }
+        }
+    }
+    
+    &__content{
+        padding: $gutter 0 0 0;
+    }
+    
+    .tabs{
+        margin-top: $gutter2;
+    }
+
+	.filters {
+		margin: 0 0 $gutter 0;
+
+		&_item {
+			flex-basis: 50%;
+			width: 50%;
+			margin: 0 0 $gutter 0;
+		}
+
+		&_label {
+			margin-bottom: 5px;
+		}
+	}
+
+	&__price {
+		margin-bottom: $gutter;
+
+		> .label {
+			@include font-medium;
+			line-height: 1;
+		}
+
+		> .value {
+			@include font-l;
+		}
+	}
+
+	&__galleryGrid {
+		margin-top: $gutter3 !important;
+	}
+
+	.add-to-cart {
+		justify-content: center;
+	}
+
+	// >= 578px – slider bez ujemnego marginesu
+	@include media-up(sm) {
+        padding: $gutter2;
+        @include border-radius;
+        
+        &__content{
+            padding: 0 0 0 $gutter;
+        }
+
+		.gallerySlider {
+			margin-top: 0;
+		}
+	}
+    
+    
+    &__seeAlso{
+        margin-top: $gutter3;
+        .section__header{
+            margin-bottom: $gutter;
+        }
+    }
+}
+
+// ----------------------------------------------------------
+// ----- DOSTĘPNOŚĆ PRODUKTU (stock / na zamówienie)
+// ----------------------------------------------------------
+
+.productAvailability {
+	margin: $gutter 0;
+	padding: 14px $gutter;
+	background: var(--gray-light);
+	@include border-radius;
+	@include font-sm;
+
+	&__status {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		@include font-medium;
+
+		// kropka statusu
+		&::before {
+			content: "";
+			width: 9px;
+			height: 9px;
+			border-radius: 50%;
+			flex: 0 0 auto;
+		}
+
+		&-in::before {
+			background: $success;
+			box-shadow: 0 0 10px rgba($success, .7);
+		}
+
+		&-order::before {
+			background: $warning;
+			box-shadow: 0 0 10px rgba($warning, .6);
+		}
+	}
+
+	&__note {
+		display: block;
+		margin-top: 6px;
+		color: var(--font-muted);
+	}
+
+	&__sku {
+		display: block;
+		margin-top: 10px;
+		padding-top: 10px;
+		border-top: 1px solid var(--border-color);
+		color: var(--font-muted);
+		letter-spacing: .05em;
+	}
+}
+
+// konfigurator opcji produktu — czytelna specyfikacja + przyciski wyboru
+.productConfig{
+    margin: $gutter 0 $gutter2 0;
+
+    &__item{
+        margin-bottom: 5px;
+        @include flexbox;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 10px;
+        margin: 0;
+        padding: 10px 0;
+        border-bottom: 1px dashed var(--border-color);
+        @include font-sm;
+
+
+        .label{ 
+            color: var(--font-muted);
+            @include font-regular;
+            text-transform: uppercase;
+//            letter-spacing: .06em;
+            white-space: nowrap;
+        }
+        .value{}
+
+        // cecha z JEDNĄ wartością — wiersz specyfikacji (etykieta ... wartość)
+        &--single{
+
+            .value{
+                @include font-medium2;
+                text-align: right;
+            }
+        }
+
+        // cecha z WYBOREM — nagłówek grupy + przyciski
+        &--radio{
+            flex-direction: column;
+ 
+
+            .productConfig__label{
+//                display: block;
+//                margin-bottom: 8px;
+//                color: var(--font-muted);
+//                text-transform: uppercase;
+//                letter-spacing: .08em;
+//                @include font-xs;
+//                @include font-medium;
+            }
+        }
+    }
+
+    .formCheckBox{
+        margin-right: 0;
+        @include fade;
+
+        .form-check{
+            margin: 0 6px 6px 0;
+
+            .form-check-label {
+                padding: 8px 14px;
+                @include font-sm;
+                @include font-regular;
+            }
+        }
+
+        // podświetlenie grupy, w której brakuje wyboru
+        &.is-invalid{
+            .form-check-label{
+                border-color: $danger;
+            }
+            animation: configInvalidPulse .45s ease-in-out;
+        }
+    }
+}
+
+@keyframes configInvalidPulse {
+    0%, 100% { transform: translateX(0); }
+    25%      { transform: translateX(-4px); }
+    75%      { transform: translateX(4px); }
+}
+
+// select konfiguratora z brakującym wyborem
+.product-config-select.is-invalid{
+    border-color: $danger !important;
+}
+
+// komunikat pod przyciskiem "dodaj do koszyka"
+.productConfig__message{
+    @include flexbox;
+    align-items: center;
+    gap: 10px;
+    margin-top: 12px;
+    padding: 12px 15px;
+    border: 1px solid rgba($danger, .5);
+    border-left: 3px solid $danger;
+    background: rgba($danger, .08);
+    color: var(--font-color);
+    @include border-radius;
+    @include font-sm;
+
+    img{
+        width: 16px;
+        flex: 0 0 auto;
+    }
+}
+
+// "zablokowany" przycisk koszyka — wizualnie wygaszony, ale klikalny,
+// żeby dało się pokazać komunikat o brakujących opcjach
+.add-to-cart.button-disabled{
+    @include opacity(.55);
+    filter: grayscale(35%);
+}
+
+
+// ----------------------------------------------------------
+// ----- WIĘCEJ MODELI OD MARKI (karta produktu)
+// ----------------------------------------------------------
+
+.moreFromBrand {
+	margin-top: $gutter3;
+
+	&__header {
+		margin-bottom: $gutter2;
+	}
+
+	&__title {
+		margin: 0;
+		text-transform: uppercase;
+		letter-spacing: .03em;
+		position: relative;
+		padding-bottom: 16px;
+
+		&::after {
+			content: "";
+			position: absolute;
+			left: 0;
+			bottom: 0;
+			width: 48px;
+			height: 3px;
+			background: var(--brand);
+		}
+	}
+}
+
+
+// ----------------------------------------------------------
+// ----- LOGOWANIE PRZEZ GOOGLE (panel użytkownika)
+// ----------------------------------------------------------
+
+.googleSignIn {
+	margin-top: $gutter;
+
+	&__separator {
+		position: relative;
+		text-align: center;
+		margin: $gutter 0;
+		color: var(--font-muted);
+		text-transform: uppercase;
+		letter-spacing: .1em;
+		@include font-xs;
+
+		&::before {
+			content: "";
+			position: absolute;
+			left: 0;
+			right: 0;
+			top: 50%;
+			height: 1px;
+			background: var(--border-color);
+		}
+
+		span {
+			position: relative;
+			padding: 0 14px;
+			background: var(--surface);
+		}
+	}
+
+	.g_id_signin {
+		display: flex;
+		justify-content: center;
+	}
+}
+
+
+// ----------------------------------------------------------
+// ----- WIDŻET FILTRÓW W KOLUMNIE (sklep)
+// ----------------------------------------------------------
+// wartości filtrów jako małe przyciski (ten sam .formCheckBox
+// co w konfiguratorze produktu), długie listy przewijane
+
+.filtersForm{
+
+    .form-label{
+        margin-bottom: 12px;
+        color: var(--font-muted);
+        text-transform: uppercase;
+        letter-spacing: .08em;
+        @include font-sm;
+        @include font-bold;
+    }
+
+    .filter-group{
+        margin-bottom: $gutter;
+    }
+
+    &__values{
+        margin-right: 0;
+        max-height: 176px;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        scrollbar-width: thin;
+        padding-right: 4px;
+
+        .form-check{
+            margin: 0 8px 8px 0;
+
+            .form-check-label{
+                padding: 6px 10px;
+                @include font-sm;
+                @include font-regular;
+                line-height: 1;
+                white-space: nowrap;
+            }
+        }
+    }
+
+    .form-button{
+        @include flexbox;
+        align-items: center;
+        margin-top: $gutter;
+    }
+}
+
+ 
+
+
+
+
+// ----------------------------------------------------------
+// ----- ZAMÓWIENIE
+// ----------------------------------------------------------
+
+.theme-10 {
+	.mainPage {
+		&__parent {
+			display: none;
+		}
+	}
+}
+
+// ----------------------------------------------------------
+// ----- KOD RABATOWY W ZAMÓWIENIU
+// ----------------------------------------------------------
+// pole + przycisk "Przelicz rabat" (page-order.php, AJAX: shop-discount.php)
+
+.orderDiscount{
+    @include flexbox;
+    align-items: stretch;
+    gap: 10px;
+
+    &__field{
+        flex: 1 1 auto;
+        min-width: 0;
+        margin-bottom: 0;
+    }
+
+    &__button{
+        flex: 0 0 auto;
+        white-space: nowrap;
+    }
+
+    &__feedback{
+        display: none;
+        margin-top: 10px;
+        @include font-sm;
+
+        &.is-success,
+        &.is-error{
+            display: block;
+        }
+
+        &.is-success{ color: $success; }
+        &.is-error{ color: $danger; }
+    }
+
+    &__row{
+        .value{
+            color: $success;
+            @include font-medium;
+        }
+    }
+}
+
+.pageOrder {
+	.form-button {
+		button {
+			width: 100%;
+			justify-content: center;
+		}
+	}
+
+	&__summary {
+		@include flexbox;
+		@include font-bold;
+		@include font-md;
+		justify-content: space-between;
+        #order-total{
+            text-align: right;
+        }
+	}
+
+	.card-delivery {
+		.card__list > li {
+			flex-direction: column;
+			align-items: flex-start;
+		}
+	}
+    
+    
+    .formCheckBox{
+        justify-content: space-between;
+        .form-check{
+            flex-basis: 50%;
+            width: 50%;
+            margin: 0;
+
+            .form-check-label {
+                padding: $gutter;
+                width: calc(100% - $gutter);
+            }
+            @include media-up(md){
+                flex: 1 1 0;
+                width: auto;
+            }
+        }
+    }
+
+	// >= 768px – rozbicie podsumowania na 2 kolumny
+	@include media-up(md) {
+		&__summary {
+			strong,
+			span {
+				width: 50%;
+				flex-basis: 50%;
+			}
+		}
+	}
+}
+
+
+.details_payment{
+    padding-top: $gutter;
+    display: none;
+    &.show{
+        display: block;
+    }
+}
+
+.paymentList{
+    @include flexbox;
+    flex-wrap: wrap;
+//    justify-content: space-between;
+    margin-right: -5px;
+    & > li{
+        margin: 0 5px 5px 0;
+    }
+}
+
+
+// ----------------------------------------------------------
+// ----- THEME-6 DLA SKLEPU
+// ----------------------------------------------------------
+
+.theme-6 {
+	// >= 1200px – układ kolumnowy dla sklepu
+	@include media-up(xl) {
+		.mainPage:not(.no-column) {
+			.mainPage__column {
+				order: 1;
+				padding-left: 0;
+				padding-right: $gutter2;
+			}
+
+			.mainPage__content {
+				order: 2;
+			}
+		}
+
+		.mainPage__article {
+			padding: $gutter2;
+		}
+	}
+}
+
+ 
+
+
+.filters {
+	@include list-style-no;
+	@include flexbox;
+	flex-wrap: wrap;
+	line-height: 1;
+
+	&_item {
+        display: inline-flex;
+        align-items: center;
+        margin: 5px 5px 0 0;
+        padding: 4px 8px;
+        border-radius: 4px;
+//			text-transform: uppercase;
+//			letter-spacing: .05em;
+        line-height: 1;
+        @include border;
+        @include font-sm;
+//			@include muted;
+    }
+
+	&_label {
+		display: block;
+        margin-right: 5px;
+	}
+
+	&_value {
+		@include font-medium;
+	}
+}
+ 

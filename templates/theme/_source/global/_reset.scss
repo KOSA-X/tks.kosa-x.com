@@ -1,0 +1,345 @@
+// ----------------------------------------------------------
+// ----- RESET GLOBALNY (rozszerzony)
+// ----------------------------------------------------------
+
+*, *::before, *::after {
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+html, body {
+	overflow: auto;
+	height: auto;
+	scroll-behavior: auto;
+}
+
+body {
+	background: var(--bg-color);
+	color: var(--font-color);
+	font-family: $font-p;
+	font-weight: $font-regular;
+	font-size: $font-size;
+	font-optical-sizing: auto;
+	line-height: 1.5;
+	top: 0 !important;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	-webkit-text-size-adjust: 100%;
+}
+
+// ----------------------------------------------------------
+// MEDIA ELEMENTS
+// ----------------------------------------------------------
+
+img, picture, video, canvas, svg {
+	display: block;
+	max-width: 100%;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+	border-style: none;
+}
+
+// ----------------------------------------------------------
+// TYPO
+// ----------------------------------------------------------
+
+p, h1, h2, h3, h4, h5, h6 {
+	overflow-wrap: break-word;
+}
+
+b, strong, .text-strong {
+	@include font-bold;
+}
+
+h1, h2, h3 {
+	font-family: $font-h;
+	@include font-xbold;
+
+	small {
+		font-weight: $font-regular;
+	}
+}
+
+h1 {
+	@include font-xxxl;
+	@include font-bold;
+	line-height: 1.2;
+}
+
+h2 {
+	@include font-xxl;
+	line-height: 1.2;
+}
+
+h3 {
+	@include font-xl;
+	line-height: 1.2;
+}
+
+h4 {
+	@include font-l;
+	@include font-bold;
+	line-height: 1.1;
+}
+
+h5 {
+	@include font-md;
+	@include font-bold;
+	line-height: 1.2;
+}
+
+// ----------------------------------------------------------
+// LISTS + ELEMENTY BLOKOWE
+// ----------------------------------------------------------
+
+ul, ol {
+	list-style: none;
+	padding-left: 0;
+	margin: 0;
+}
+
+blockquote, figure {
+	margin: 0;
+}
+
+hr {
+	border: none;
+	border-bottom: 1px solid var(--border-color);
+	margin: 20px 0;
+}
+
+address {
+	font-style: normal;
+}
+
+// ----------------------------------------------------------
+// FORMY – BAZA
+// ----------------------------------------------------------
+
+input, button, textarea, select {
+	font: inherit;
+	color: inherit;
+	background: transparent;
+	border: none;
+	outline: none;
+}
+
+//input, textarea {
+//	-webkit-appearance: none;
+//	-moz-appearance: none;
+//	appearance: none;
+//}
+
+select {
+	appearance: none;
+	-webkit-appearance: none;
+}
+
+button {
+	cursor: pointer;
+	color: var(--font-color);
+	background: transparent;
+	border: none;
+	padding: 0;
+	-webkit-tap-highlight-color: transparent;
+}
+
+fieldset {
+	border: none;
+	margin: 0;
+	padding: 0;
+}
+
+legend {
+	padding: 0;
+}
+
+// ----------------------------------------------------------
+// FORMY – SPECYFICZNE INPUTY
+// ----------------------------------------------------------
+
+// usunięcie strzałek z input[type=number]
+input[type="number"] {
+	-moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+// reset input[type=search]
+input[type="search"] {
+	-webkit-appearance: none;
+	outline-offset: 0;
+}
+
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button {
+	-webkit-appearance: none;
+}
+
+// przyciski w Firefoxie
+button::-moz-focus-inner,
+[type="button"]::-moz-focus-inner,
+[type="reset"]::-moz-focus-inner,
+[type="submit"]::-moz-focus-inner {
+	border: 0;
+	padding: 0;
+}
+
+// checkbox / radio – zostawiamy natywny wygląd, stylujesz lokalnie
+input[type="checkbox"],
+input[type="radio"] {
+	// custom stylowanie w komponentach
+}
+
+// zapobieganie auto-zoomowi na mobile (inputy zawsze >=16px)
+@media (max-width: 768px) {
+	input,
+	textarea,
+	select {
+		font-size: max(16px, $font-size);
+	}
+}
+
+// ----------------------------------------------------------
+// LINKS
+// ----------------------------------------------------------
+
+a {
+	color: var(--brand);
+	text-decoration: none;
+	-webkit-tap-highlight-color: transparent;
+
+	&:hover {
+		color: var(--brand);
+		cursor: pointer;
+	}
+}
+
+// ----------------------------------------------------------
+// FOCUS STATES (accessibility friendly)
+// ----------------------------------------------------------
+
+// Domyślne focus tylko na elementy interaktywne
+a,
+button,
+input,
+textarea,
+select {
+	&:focus {
+		outline: none;
+	}
+	&:focus-visible {
+		outline: 2px solid var(--brand);
+		outline-offset: 2px;
+	}
+}
+
+// fallback dla przeglądarek bez :focus-visible
+.no-focus-visible a:focus,
+.no-focus-visible button:focus,
+.no-focus-visible input:focus,
+.no-focus-visible textarea:focus,
+.no-focus-visible select:focus {
+	outline: 2px solid var(--brand);
+	outline-offset: 2px;
+}
+
+// ----------------------------------------------------------
+// TABLES
+// ----------------------------------------------------------
+
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+	width: 100%;
+}
+
+th, td {
+	padding: 0;
+	text-align: left;
+}
+
+// ----------------------------------------------------------
+// SCROLLBARS
+// ----------------------------------------------------------
+
+// WebKit (Chrome, Edge, Safari)
+html,
+body,
+.scrollable {
+	&::-webkit-scrollbar {
+		width: 8px;
+		height: 8px;
+	}
+
+	&::-webkit-scrollbar-track {
+		background: var(--scrollbar-track, var(--bg-color));
+	}
+
+	&::-webkit-scrollbar-thumb {
+		background: var(--scrollbar-thumb, var(--gray));
+		border-radius: 999px;
+	}
+
+	&::-webkit-scrollbar-thumb:hover {
+		background: var(--scrollbar-thumb-hover, var(--gray-dark));
+	}
+}
+
+// Firefox
+html,
+body,
+.scrollable {
+	scrollbar-width: thin;
+	scrollbar-color: var(--scrollbar-thumb, var(--gray)) var(--scrollbar-track, var(--bg-color));
+}
+
+// ----------------------------------------------------------
+// SELECTION
+// ----------------------------------------------------------
+
+::selection {
+	background: var(--brand);
+	color: $white;
+}
+
+::-moz-selection {
+	background: var(--brand);
+	color: $white;
+}
+
+// ----------------------------------------------------------
+// TOUCH / MOBILE
+// ----------------------------------------------------------
+
+// wyłączenie blue highlight na mobile
+* {
+	-webkit-tap-highlight-color: transparent;
+}
+
+// smooth scroll możesz włączyć globalnie, jeśli chcesz
+// html {
+// 	scroll-behavior: smooth;
+// }
+
+// ----------------------------------------------------------
+// ROOT
+// ----------------------------------------------------------
+
+#root,
+#__next {
+	isolation: isolate;
+}

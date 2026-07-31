@@ -1,0 +1,960 @@
+// ==========================================================================
+// RESET.SCSS — KOSA X CMS (foundation)
+// - settings (vars) + tokens
+// - mixins
+// - css variables + themes
+// - base reset / elements
+// - layout helpers (container/grid)
+// - utilities (spacing, flex, backgrounds)
+// ==========================================================================
+
+
+// --------------------------------------------------------------------------
+// FONTS
+// --------------------------------------------------------------------------
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Zalando+Sans+Expanded:ital,wght@0,200..900;1,200..900&display=swap");
+
+$font-h: "Zalando Sans Expanded", sans-serif;
+$font-p: "Montserrat", sans-serif;
+
+
+// --------------------------------------------------------------------------
+// SETTINGS / VARIABLES
+// --------------------------------------------------------------------------
+$breakpoints: (
+    xs: 0,        // mobile default
+    sm: 578px,
+    md: 768px,
+    lg: 992px,
+    xl: 1200px,
+    xxl: 1600px,
+    xxxl: 2000px
+);
+
+$font-size: 15px;
+
+$font-size-xs: 0.7em;
+$font-size-sm: 0.9em;
+$font-size-md: 1.2em;
+$font-size-l: 1.4em;
+$font-size-xl: 1.8em;
+$font-size-xxl: 2.3em;
+$font-size-xxxl: 2.8em;
+
+$font-xbold: 700;
+$font-bold: 600;
+$font-medium2: 500;
+$font-medium: 500;
+$font-regular: 400;
+$font-light: 300;
+
+$border-radius: 8px;
+
+$header_top: 40px;
+$header_mobile: 70px;
+$header_desktop: 80px;
+$header_scroll: 60px;
+$footer: 45px;
+
+$success: #28a745;
+$danger: #dc3545;
+$warning: #ffc107;
+
+$white: #fff;
+$gray: #333;
+$gray-light: #f9f9f9;
+$gray-dark: #111;
+
+$gutter: 20px;
+$gutter2: 40px;
+$gutter3: 60px;
+
+$brand: #002986;
+$brand-light: #e5edf7;
+$brand-dark: #000f1b;
+
+
+// --------------------------------------------------------------------------
+// CSS VARIABLES (THEMES)
+// --------------------------------------------------------------------------
+:root {
+    --brand: #002986;
+    --brand-light: #e5edf7;
+    --brand-dark: #000f1b;
+
+    --font-color: #111;
+    --bg-color: #f4f4f4;
+
+    --border-color: #e8e8e8;
+    --border-hover: #bbb;
+    --border-light: #ddd;
+
+    --gray-dark: #111;
+    --gray: #333;
+    --gray-light: #f1f1f1;
+
+    --white: #fff;
+    --black: #010101;
+}
+
+.theme-dark {
+    --brand-light: #000f1b;
+    --brand-dark: #e5edf7;
+
+    --font-color: #fcfcfc;
+    --bg-color: #010509;
+
+    --border-color: #111;
+    --border-hover: #444;
+
+    --gray-dark: #111;
+    --gray-light: #151515;
+
+    --white: #010101;
+    --black: #fff;
+}
+
+.theme-contrast {
+    --brand: #ff0;
+    --brand-light: #111;
+    --brand-dark: #fff;
+
+    --font-color: #fff;
+    --bg-color: #010509;
+
+    --border-color: #fff;
+    --border-hover: #ff0;
+
+    --gray-dark: #111;
+    --gray-light: #151515;
+
+    --white: #010101;
+    --black: #fff;
+}
+
+
+// --------------------------------------------------------------------------
+// MIXINS — TRANSITIONS / FX
+// --------------------------------------------------------------------------
+@mixin fade {
+    transition: all 0.2s ease-in-out;
+}
+
+@mixin fade-slow {
+    transition: all 0.7s cubic-bezier(.77, 0, .175, 1);
+}
+
+@mixin fade2 {
+    transition: all 0.7s ease-in-out;
+}
+
+@mixin opacity($opacity) {
+    opacity: $opacity;
+}
+
+@mixin invert($value) {
+    filter: invert($value);
+}
+
+@mixin shadow {
+    box-shadow: 0 0 40px 0 rgba(0, 0, 0, 0.19);
+    @include fade;
+}
+
+@mixin shadow-light {
+    box-shadow: 0 0 30px 0 rgba(0, 0, 0, 0.10);
+}
+
+@mixin shadow-none {
+    box-shadow: none;
+}
+
+@mixin noise {
+    background-image: url(../images/noise.webp);
+    position: absolute;
+    inset: 0;
+    content: "";
+    @include opacity(0.05);
+}
+
+
+// --------------------------------------------------------------------------
+// MIXINS — TYPO (WEIGHTS / SIZES)
+// --------------------------------------------------------------------------
+@mixin font-light { font-weight: $font-light; }
+@mixin font-regular { font-weight: $font-regular; }
+@mixin font-medium { font-weight: $font-medium; }
+@mixin font-medium2 { font-weight: $font-medium2; }
+@mixin font-bold { font-weight: $font-bold; }
+@mixin font-xbold { font-weight: $font-xbold; }
+
+@mixin font-xs { font-size: $font-size-xs; }
+@mixin font-sm { font-size: $font-size-sm; }
+@mixin font-md { font-size: $font-size-md; }
+@mixin font-r { font-size: $font-size; }
+@mixin font-l { font-size: $font-size-l; }
+@mixin font-xl { font-size: $font-size-xl; }
+@mixin font-xxl { font-size: $font-size-xxl; }
+@mixin font-xxxl { font-size: $font-size-xxxl; }
+
+@mixin muted {
+    @include opacity(0.7);
+}
+
+
+// --------------------------------------------------------------------------
+// MIXINS — LAYOUT / HELPERS
+// --------------------------------------------------------------------------
+@mixin reset {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+@mixin list-style-no {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+@mixin flexbox {
+    display: flex;
+}
+
+@mixin flexbox-justify {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+// --------------------------------------------------------------------------
+// MIXINS — BORDERS
+// --------------------------------------------------------------------------
+@mixin border { border: 1px solid var(--border-color); }
+@mixin border-hover { border-color: var(--border-hover); }
+
+@mixin border-bottom { border-bottom: 1px solid var(--border-color); }
+@mixin border-bottom2 { border-bottom: 2px solid var(--border-color); }
+@mixin border-top { border-top: 1px solid var(--border-color); }
+@mixin border-left { border-left: 1px solid var(--border-color); }
+@mixin border-right { border-right: 1px solid var(--border-color); }
+
+@mixin border-radius { border-radius: $border-radius; }
+
+// kompatybilność (bo masz literówkę w starym kodzie)
+@mixin marign-bottom { margin-bottom: 30px; }
+@mixin margin-bottom { margin-bottom: 30px; }
+
+
+// --------------------------------------------------------------------------
+// MIXINS — MEDIA QUERIES
+// --------------------------------------------------------------------------
+@mixin media-up($breakpoint) {
+    $value: map-get($breakpoints, $breakpoint);
+
+    @if $value == null {
+        @warn "Nie znaleziono breakpointa: #{$breakpoint}";
+    } @else {
+        @media (min-width: $value) {
+            @content;
+        }
+    }
+}
+
+@mixin media-down($breakpoint) {
+    $value: map-get($breakpoints, $breakpoint);
+
+    @if $value == null {
+        @warn "Nie znaleziono breakpointa: #{$breakpoint}";
+    } @else {
+        @media (max-width: $value) {
+            @content;
+        }
+    }
+}
+
+@mixin media-between($from, $to) {
+    $from-value: map-get($breakpoints, $from);
+    $to-value: map-get($breakpoints, $to);
+
+    @if $from-value == null or $to-value == null {
+        @warn "Zły breakpoint w mq-between: #{$from} → #{$to}";
+    } @else {
+        @media (min-width: $from-value) and (max-width: $to-value) {
+            @content;
+        }
+    }
+}
+
+
+// ==========================================================================
+// BASE RESET
+// ==========================================================================
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    height: auto;
+    overflow: auto;
+    scroll-behavior: auto;
+}
+
+body {
+    background: var(--bg-color);
+    color: var(--font-color);
+    font-family: $font-p;
+    font-weight: $font-regular;
+    font-size: $font-size;
+    font-optical-sizing: auto;
+    line-height: 1.5;
+    top: 0 !important;
+
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
+}
+
+
+// --------------------------------------------------------------------------
+// MEDIA ELEMENTS
+// --------------------------------------------------------------------------
+img,
+picture,
+video,
+canvas,
+svg {
+    display: block;
+    max-width: 100%;
+}
+
+img {
+    max-height: 100%;
+    border-style: none;
+}
+
+
+// --------------------------------------------------------------------------
+// TYPO BASICS
+// --------------------------------------------------------------------------
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    overflow-wrap: break-word;
+}
+
+b,
+strong,
+.text-strong {
+    @include font-bold;
+}
+
+h1,
+h2,
+h3 {
+    font-family: $font-h;
+    @include font-xbold;
+
+    small {
+        font-weight: $font-regular;
+    }
+}
+
+h1 {
+    @include font-xxxl;
+    @include font-bold;
+    line-height: 1.2;
+}
+
+h2 {
+    @include font-xxl;
+    line-height: 1.2;
+}
+
+h3 {
+    @include font-xl;
+    line-height: 1.2;
+}
+
+h4 {
+    @include font-l;
+    @include font-bold;
+    line-height: 1.1;
+}
+
+h5 {
+    @include font-md;
+    @include font-bold;
+    line-height: 1.2;
+}
+
+
+// --------------------------------------------------------------------------
+// LISTS / BLOCK ELEMENTS
+// --------------------------------------------------------------------------
+ul,
+ol {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+blockquote,
+figure {
+    margin: 0;
+}
+
+hr {
+    border: none;
+    border-bottom: 1px solid var(--border-color);
+    margin: 20px 0;
+}
+
+address {
+    font-style: normal;
+}
+
+
+// --------------------------------------------------------------------------
+// FORMS — BASE RESET
+// --------------------------------------------------------------------------
+input,
+button,
+textarea,
+select {
+    font: inherit;
+    color: inherit;
+    background: transparent;
+    border: none;
+    outline: none;
+}
+
+select {
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+button {
+    cursor: pointer;
+    color: var(--font-color);
+    background: transparent;
+    border: none;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+fieldset {
+    border: none;
+    margin: 0;
+    padding: 0;
+}
+
+legend {
+    padding: 0;
+}
+
+
+// --------------------------------------------------------------------------
+// FORMS — SPECIFIC INPUT FIXES
+// --------------------------------------------------------------------------
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="search"] {
+    -webkit-appearance: none;
+    outline-offset: 0;
+}
+
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+}
+
+button::-moz-focus-inner,
+[type="button"]::-moz-focus-inner,
+[type="reset"]::-moz-focus-inner,
+[type="submit"]::-moz-focus-inner {
+    border: 0;
+    padding: 0;
+}
+
+// auto-zoom iOS: input >= 16px
+@media (max-width: 768px) {
+    input,
+    textarea,
+    select {
+        font-size: max(16px, $font-size);
+    }
+}
+
+
+// --------------------------------------------------------------------------
+// LINKS
+// --------------------------------------------------------------------------
+a {
+    color: var(--brand);
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+
+    &:hover {
+        color: var(--brand);
+        cursor: pointer;
+    }
+}
+
+
+// --------------------------------------------------------------------------
+// FOCUS STATES (A11Y)
+// --------------------------------------------------------------------------
+a,
+button,
+input,
+textarea,
+select {
+    &:focus {
+        outline: none;
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--brand);
+        outline-offset: 2px;
+    }
+}
+
+.no-focus-visible a:focus,
+.no-focus-visible button:focus,
+.no-focus-visible input:focus,
+.no-focus-visible textarea:focus,
+.no-focus-visible select:focus {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+}
+
+
+// --------------------------------------------------------------------------
+// TABLES (BASE)
+// --------------------------------------------------------------------------
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+}
+
+th,
+td {
+    padding: 0;
+    text-align: left;
+}
+
+
+// --------------------------------------------------------------------------
+// SCROLLBARS
+// --------------------------------------------------------------------------
+html,
+body,
+.scrollable {
+    &::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: var(--scrollbar-track, var(--bg-color));
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: var(--scrollbar-thumb, var(--gray));
+        border-radius: 999px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background: var(--scrollbar-thumb-hover, var(--gray-dark));
+    }
+}
+
+html,
+body,
+.scrollable {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb, var(--gray)) var(--scrollbar-track, var(--bg-color));
+}
+
+
+// --------------------------------------------------------------------------
+// SELECTION
+// --------------------------------------------------------------------------
+::selection {
+    background: rgba(0, 0, 0, 0.12);
+    color: inherit;
+}
+
+::-moz-selection {
+    background: rgba(0, 0, 0, 0.12);
+    color: inherit;
+}
+
+
+// --------------------------------------------------------------------------
+// TOUCH (disable blue highlight)
+// --------------------------------------------------------------------------
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+
+// --------------------------------------------------------------------------
+// ROOT ISOLATION (framework-friendly)
+// --------------------------------------------------------------------------
+#root,
+#__next {
+    isolation: isolate;
+}
+
+
+// ==========================================================================
+// LAYOUT: CONTAINER
+// ==========================================================================
+.container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: $gutter;
+    padding-right: $gutter;
+
+    @include media-up(sm) { max-width: 540px; }
+    @include media-up(md) { max-width: 720px; }
+    @include media-up(lg) { max-width: 960px; }
+    @include media-up(xl) { max-width: 1140px; }
+}
+
+@media (min-width: 1400px) {
+    .container {
+        max-width: 1620px;
+    }
+}
+
+
+// ==========================================================================
+// GRID: ROW + COLS (BASE)
+// ==========================================================================
+.row {
+    @include media-up(lg) {
+        @include flexbox;
+        flex-wrap: wrap;
+        margin-right: -$gutter;
+    }
+}
+
+// row modifiers
+.row--center { @include flexbox; justify-content: center; }
+.row--between { @include flexbox; justify-content: space-between; }
+.row--around { @include flexbox; justify-content: space-around; }
+.row--middle { @include flexbox; align-items: center; }
+.row--top { @include flexbox; align-items: flex-start; }
+.row--bottom { @include flexbox; align-items: flex-end; }
+
+// base cols (mobile = 100%)
+.col-2,
+.col-3,
+.col-4,
+.col-5,
+.col-6,
+.col-7,
+.col-8,
+.col-9,
+.col-10,
+.col-11,
+.col-12 {
+    width: 100%;
+    flex-basis: 100%;
+}
+
+// flex helpers
+.col-auto {
+    flex: 0 0 auto;
+    width: auto;
+}
+
+.col-grow {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+.col-shrink {
+    flex: 0 1 auto;
+    min-width: 0;
+}
+
+// lg+
+@include media-up(lg) {
+    .col-6,
+    .col-4,
+    .col-5 {
+        width: calc(50% - $gutter);
+        flex-basis: calc(50% - $gutter);
+        margin: 0 $gutter 0 0;
+    }
+
+    .col-3 {
+        width: calc(33.33% - $gutter);
+        flex-basis: calc(33.33% - $gutter);
+        margin: 0 $gutter 0 0;
+    }
+
+    .col-2 {
+        width: calc(16.66% - $gutter);
+        flex-basis: calc(16.66% - $gutter);
+        margin: 0 $gutter 0 0;
+    }
+
+    .col-9 {
+        width: calc(75% - $gutter);
+        flex-basis: calc(75% - $gutter);
+        margin: 0 $gutter 0 0;
+    }
+
+    .col-10 {
+        width: calc(83.33% - $gutter);
+        flex-basis: calc(83.33% - $gutter);
+        margin: 0 $gutter 0 0;
+    }
+
+    .col-11 {
+        width: calc(91.66% - $gutter);
+        flex-basis: calc(91.66% - $gutter);
+        margin: 0 $gutter 0 0;
+    }
+
+    .col-12 {
+        width: calc(100% - $gutter);
+        flex-basis: calc(100% - $gutter);
+        margin: 0 $gutter 0 0;
+    }
+}
+
+// xl+
+@include media-up(xl) {
+    .col-6 {
+        width: calc(50% - $gutter);
+        flex-basis: calc(50% - $gutter);
+        margin: 0 $gutter 0 0;
+    }
+
+    .col-4 {
+        width: calc(33.33% - $gutter);
+        flex-basis: calc(33.33% - $gutter);
+        margin: 0 $gutter 0 0;
+    }
+
+    .col-5 {
+        width: calc(41.66% - $gutter);
+        flex-basis: calc(41.66% - $gutter);
+        margin: 0 $gutter 0 0;
+    }
+
+    .col-7 {
+        width: calc(58.33% - $gutter);
+        flex-basis: calc(58.33% - $gutter);
+        margin: 0 $gutter 0 0;
+    }
+
+    .col-8 {
+        width: calc(66.66% - $gutter);
+        flex-basis: calc(66.66% - $gutter);
+        margin: 0 $gutter 0 0;
+    }
+
+    .col-2,
+    .col-9,
+    .col-10,
+    .col-11,
+    .col-12,
+    .col-3 {
+        margin: 0 $gutter 0 0;
+    }
+
+    .col-3 {
+        width: calc(25% - $gutter);
+        flex-basis: calc(25% - $gutter);
+    }
+
+    .col-2 {
+        width: calc(16.66% - $gutter);
+        flex-basis: calc(16.66% - $gutter);
+    }
+
+    .col-9 {
+        width: calc(75% - $gutter);
+        flex-basis: calc(75% - $gutter);
+    }
+
+    .col-10 {
+        width: calc(83.33% - $gutter);
+        flex-basis: calc(83.33% - $gutter);
+    }
+
+    .col-11 {
+        width: calc(91.66% - $gutter);
+        flex-basis: calc(91.66% - $gutter);
+    }
+
+    .col-12 {
+        width: calc(100% - $gutter);
+        flex-basis: calc(100% - $gutter);
+    }
+}
+
+
+// ==========================================================================
+// GRID: RESPONSIVE COLS (bootstrap-like generator)
+// ==========================================================================
+$grid-columns: 12;
+
+$grid-breakpoints: (
+    sm: sm,
+    md: md,
+    lg: lg,
+    xl: xl
+);
+
+@each $bp, $mq in $grid-breakpoints {
+    @include media-up($mq) {
+        $gutter-current: $gutter;
+
+        @for $i from 1 through $grid-columns {
+            $width: (100% / $grid-columns) * $i;
+
+            .col-#{$bp}-#{$i} {
+                width: calc(#{$width} - #{$gutter-current});
+                flex-basis: calc(#{$width} - #{$gutter-current});
+                margin-right: $gutter-current;
+            }
+        }
+
+        .col-#{$bp} {
+            flex: 1 0 0;
+            min-width: 0;
+            margin-right: $gutter-current;
+        }
+    }
+}
+
+
+// ==========================================================================
+// UTILITIES
+// ==========================================================================
+
+// text / font
+.text-center { text-align: center; }
+.font-sm { @include font-sm; }
+.font-md { @include font-md; }
+.font-l { @include font-l; }
+.muted { @include muted; }
+
+// flex helpers
+.flex { @include flexbox; }
+.flex-justify { @include flexbox-justify; }
+.align-center { align-items: center; }
+
+.w-100 {
+    width: 100%;
+    flex-basis: 100%;
+}
+
+// backgrounds
+.bg_gray { background-color: var(--gray); }
+.bg_black { background-color: var(--black); }
+.bg_white {
+    background-color: var(--white);
+    color: var(--gray-dark);
+}
+
+.bg_brand { background-color: var(--brand); }
+.bg_brand_dark { background-color: var(--brand-dark); }
+
+.glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(4px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+// ratio helper
+.ratio {
+    aspect-ratio: 16 / 9;
+
+    iframe {
+        aspect-ratio: 16 / 9;
+        width: 100%;
+    }
+}
+
+// misc
+.no-border { border: 0 !important; }
+.d-none { display: none !important; }
+
+// scroll lock (utility)
+html.scroll-lock,
+body.scroll-lock {
+    overflow: hidden;
+}
+
+.mainBody.scroll-lock {
+    overscroll-behavior: contain;
+}
+
+// mobile helpers
+@media (max-width: 768px) {
+    .mobile-hide {
+        display: none !important;
+        visibility: hidden !important;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+        padding: 0;
+
+        &::-webkit-scrollbar {
+            height: 0;
+            display: none;
+        }
+    }
+}
+
+// spacing utils
+.m-0 { margin: 0 !important; }
+.ml-auto { margin-left: auto !important; }
+.mr-auto { margin-right: auto !important; }
+.mt-auto { margin-top: auto !important; }
+.mb-auto { margin-bottom: auto !important; }
+
+$space-step: 10px;
+$space-max: 10;
+
+@for $i from 0 through $space-max {
+    .ml-#{$i} { margin-left: $space-step * $i !important; }
+    .mr-#{$i} { margin-right: $space-step * $i !important; }
+    .mb-#{$i} { margin-bottom: $space-step * $i !important; }
+    .mt-#{$i} { margin-top: $space-step * $i !important; }
+}

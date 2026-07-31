@@ -1,0 +1,188 @@
+
+// fonts
+@mixin font-light{
+	font-weight: $font-light;
+}
+@mixin font-regular{
+	font-weight: $font-regular;
+}
+@mixin font-medium{
+	font-weight: $font-medium;
+}
+@mixin font-medium2{
+	font-weight: $font-medium2;
+}
+@mixin font-bold{
+	font-weight: $font-bold;
+}
+@mixin font-xbold{
+	font-weight: $font-xbold;
+}
+
+
+// rozmiary
+@mixin font-xs{
+	font-size: $font-size-xs;
+}
+
+@mixin font-sm{
+	font-size: $font-size-sm;
+}
+@mixin font-md{
+	font-size: $font-size-md;
+}
+@mixin font-r{
+	font-size: $font-size;
+}
+
+@mixin font-l{
+	font-size: $font-size-l;
+}
+@mixin font-xl{
+	font-size: $font-size-xl;
+}
+@mixin font-xxl{
+	font-size: $font-size-xxl;
+}
+
+@mixin font-xxxl{
+	font-size: $font-size-xxxl;
+}
+
+@mixin muted{
+    @include opacity(.7);
+}
+
+@mixin noise{
+
+    background-image: url(../images/noise.webp);
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    content: "";
+    @include opacity(.05);
+
+}
+
+
+
+// Obramowania
+
+
+@mixin border{
+	border: 1px solid var(--border-color);
+}
+
+@mixin border-hover{
+	border: 1px solid var(--border-color-hover);
+}
+
+@mixin border-bottom{
+	border-bottom: 1px solid var(--border-color);
+}
+
+@mixin border-bottom2{
+	border-bottom: 2px solid var(--border-color);
+}
+@mixin border-top{
+	border-top: 1px solid var(--border-color);
+}
+
+@mixin border-left{
+	border-left: 1px solid var(--border-color);
+}
+@mixin border-right{
+	border-right: 1px solid var(--border-color);
+}
+@mixin border-radius{
+	border-radius: $border-radius;
+}
+
+@mixin marign-bottom{
+	margin-bottom: 30px;
+}
+
+@mixin reset{
+    margin:0;
+    padding:0;
+    -webkit-box-sizing:border-box;
+    -moz-box-sizing:border-box;
+    box-sizing:border-box;
+}
+@mixin list-style-no{
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+@mixin shadow{
+	-webkit-box-shadow: 0px 0px 40px 0px rgba(0,0,0,0.19);
+    -moz-box-shadow: 0px 0px 40px 0px rgba(0,0,0,0.19);
+    box-shadow: 0px 0px 40px 0px rgba(0,0,0,0.19);
+    @include fade;
+}
+
+@mixin shadow-light{
+	-webkit-box-shadow: 0px 0px 30px 0px rgba(0,0,0,0.1);
+-moz-box-shadow: 0px 0px 30px 0px rgba(0,0,0,0.1);
+box-shadow: 0px 0px 30px 0px rgba(0,0,0,0.1);
+}
+
+@mixin shadow-none{
+	-webkit-box-shadow:  0px 0px 0px 0px rgba(0,0,0,0);
+-moz-box-shadow: 0px 0px 0px 0px rgba(0,0,0,0);
+box-shadow:0px 0px 0px 0px rgba(0,0,0,0);
+}
+
+@mixin flexbox {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+}
+
+@mixin flexbox-justify {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+@mixin fade{
+	 -webkit-transition: all .25s  ease-in-out;
+	 -moz-transition: all .25s ease-in-out;
+	 -o-transition: all .25s ease-in-out;
+	 transition: all .25s ease-in-out;
+}
+@mixin fade2{
+    -webkit-transition: all .6s cubic-bezier(.77,0,.175,1);
+	 -moz-transition: all .6s cubic-bezier(.77,0,.175,1);
+	 -o-transition: aall .6s cubic-bezier(.77,0,.175,1);
+	 transition: all .6s cubic-bezier(.77,0,.175,1);
+}
+
+
+@mixin fade-slow{
+	 -webkit-transition: all 2s  ease-in-out;
+	 -moz-transition: all 2s ease-in-out;
+	 -o-transition: all 2s ease-in-out;
+	 transition: all 2s ease-in-out;
+}
+
+@mixin opacity($opacity){
+	-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=$opacity)";
+	filter: alpha(opacity=$opacity);
+	-moz-opacity:$opacity;
+	-khtml-opacity: $opacity;
+	opacity: $opacity;
+//	
+//	transition: all 0.3s;
+//    -moz-transition: all 0.3s;
+//    -webkit-transition: all 0.3s;
+//    -o-transition: all 0.3s;
+	
+}

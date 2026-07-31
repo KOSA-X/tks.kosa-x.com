@@ -1,0 +1,492 @@
+// ----------------------------------------------------------
+// ----- FORM WRAPPER
+// ----------------------------------------------------------
+
+.form {
+	position: relative;
+
+	&-id {
+		position: absolute;
+		top: -($header_desktop * 2);
+	}
+}
+
+.form-button {
+	// @include flexbox;
+	// justify-content: center;
+	// margin: 30px auto;
+}
+
+
+// ----------------------------------------------------------
+// ----- FORM ELEMENTS
+// ----------------------------------------------------------
+// darkMode, contrastMode, fontSize
+.form-switch {
+	display: inline-block;
+	@include flexbox;
+	align-items: center;
+	white-space: nowrap;
+
+	.label {
+		margin-left: 10px;
+		@include font-sm;
+		@include font-regular;
+		display: none;
+	}
+
+	label {
+		@include border-radius;
+		@include border;
+		@include fade;
+		display: inline-block;
+		cursor: pointer;
+		@include flexbox;
+		align-items: center;
+		position: relative;
+		width: 50px;
+		height: 28px;
+
+		img {
+			position: absolute;
+			width: 10px;
+			left: 11px;
+			@include fade;
+			z-index: 1;
+			@include opacity(.9);
+		}
+
+		&:hover {
+			@include border-hover;
+		}
+	}
+
+	input:checked + label {
+		@include border-hover;
+		background: var(--gray);
+
+		img {
+			left: 30px;
+			filter: invert(1);
+		}
+	}
+
+	input {
+		display: none;
+	}
+}
+
+
+.form-label {
+	display: block;
+	margin-bottom: 10px;
+	@include font-medium;
+}
+
+.form-item {
+	margin-bottom: $gutter;
+    position: relative;
+    @include flexbox;
+    flex-direction: column;
+    
+    label, .form-label{
+        order: 1;
+        @include font-medium;
+        margin-bottom: 10px;
+    }
+    .form-control{
+        order: 2;
+    }
+    
+    .form-text{
+        order: 3;
+        width: 100%;
+    }
+}
+
+.togglePassword{
+    position: absolute;
+    right: $gutter;
+    top: $gutter;
+    @include opacity(.5);
+    @include fade;
+    z-index: 1;
+    img{
+        width: 20px;
+    }
+    &:hover{
+        @include opacity(1);
+    }
+}
+
+.form-file {
+	display: block;
+	width: 100%;
+	padding: 15px;
+	background: var(--gray-light);
+	@include border-radius;
+	@include border;
+	@include font-sm;
+
+	label {
+		display: block;
+		@include font-medium;
+	}
+}
+
+.form-text {
+	display: block;
+	margin-top: 5px;
+	@include font-sm;
+	@include muted;
+}
+
+// bazowa kontrolka
+.form-control {
+	width: 100%;
+    flex-basis: 100%;
+	padding: 15px 20px;
+	background: var(--white);
+	color: var(--font-color);
+	outline: none;
+	border: 0;
+	@include border;
+	@include border-radius;
+	@include font-medium2;
+	@include font-sm;
+	transition: all 0.3s ease; // płynne przejścia między stanami
+	
+	// HOVER - najechanie myszką (desktop)
+	&:hover {
+		border-color: var(--border-hover); // podświetlenie ramki
+	}
+	
+	// FOCUS - kliknięcie/aktywacja pola (kursor w środku)
+	&:focus {
+		outline: none;
+		border-color: var(--border-dark);
+		box-shadow: 0 0 0 3px rgba(var(--brand), 0.1); // delikatna poświata
+	}
+	
+	// ACTIVE - moment kliknięcia (bardzo krótki stan)
+	&:active {
+		outline: none;
+//		transform: scale(0.99); // delikatne przyciśnięcie
+	}
+	
+	// FILLED - wypełnione pole (gdy użytkownik coś wpisał)
+	&:not(:placeholder-shown):not([type="date"]) {
+		border-color: var(--border-hover); // neutralna ramka = wypełnione
+//		background: var(--light-bg);
+	}
+	
+	// VALID - poprawnie wypełnione (wymaga atrybutu pattern lub JS)
+	&:valid:not(:placeholder-shown):not([type="date"]) {
+		border-color: $success;
+		background-image: url("data:image/svg+xml,..."); // checkmark icon
+	}
+	
+	// INVALID - błędnie wypełnione
+	&:invalid:not(:placeholder-shown):not([type="date"]) {
+		border-color: $danger;
+//		background: $danger;
+	}
+    
+    // Date — tylko po interakcji
+    &[type="date"].touched:valid {
+        border-color: $success;
+    }
+
+    &[type="date"].touched:invalid {
+        border-color: $danger;
+    }
+	
+	// DISABLED - zablokowane pole
+	&:disabled {
+		background: $danger;
+		cursor: not-allowed;
+		opacity: 0.6;
+	}
+	
+	// READONLY - tylko do odczytu
+	&:read-only {
+//		background: var(--gray-light);
+		cursor: default;
+	}
+	
+	// REQUIRED - wymagane pole (opcjonalnie wizualne oznaczenie)
+	&:required {
+		// border-left: 3px solid var(--primary-color); // pasek z lewej
+	}
+	
+	// PLACEHOLDER (styl tekstu placeholder)
+	&::placeholder {
+        @include font-regular;
+//		color: var(--placeholder-color);
+//		opacity: 0.6;
+	}
+}
+
+// form-control wewnątrz widgetu
+.card {
+	.form-control {
+//		background: var(--gray-light);
+	}
+}
+
+
+.formCheckBox{
+    @include flexbox;
+    align-items: stretch;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    margin-right: -$gutter;
+    order: 2;
+    .form-check{
+        position: relative;
+        min-width: 0;
+        margin: 0 5px 5px 0;
+        .form-check-input{
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            z-index: 2;
+            height: 1px;
+            width: 1px;
+            @include opacity(0);
+        }
+        .form-check-label {
+            background: var(--white);
+            @include border;
+            @include fade;
+            @include flexbox;
+            flex-direction: column;
+            justify-content: center;
+//            align-items: center;
+            
+            height: 100%;
+            cursor: pointer;
+            @include border-radius;
+//            @include font-md;
+            
+            padding: 8px 15px;
+            
+            .name{
+                @include font-medium;
+                margin-bottom: 5px;
+            }
+            .value{
+                @include font-bold;
+                @include font-md;
+            }
+        }
+        
+        &:hover .form-check-label{
+          border-color: var(--border-hover);
+        }
+
+        // SELECTED (radio/checkbox checked)
+        .form-check-input:checked + .form-check-label{
+          border-color: var(--border-hover);
+          // tło delikatne:
+          background: rgba($black, .1);
+        }
+
+        // FOCUS dla klawiatury
+        .form-check-input:focus-visible + .form-check-label{
+          box-shadow: 0 0 0 3px var(--glow-brand);
+        }
+
+        // DISABLED
+        .form-check-input:disabled + .form-check-label{
+          opacity: .5;
+          cursor: not-allowed;
+        }
+        
+        
+ 
+    }
+}
+
+
+
+
+// ----------------------------------------------------------
+// ----- FLOATING LABELS
+// ----------------------------------------------------------
+
+.form-floating {
+	position: relative;
+
+	.form-control {
+		display: block;
+		padding: 25px $gutter 10px $gutter;
+	}
+
+	label {
+		position: absolute;
+		top: 18px;
+		left: 0;
+		width: 100%;
+		height: 20px;
+		padding: 0 $gutter;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		pointer-events: none;
+		transform-origin: 0 0;
+		@include fade;
+		@include font-medium;
+		@include font-sm;
+	}
+}
+
+// ukrywanie placeholdera dla floating label
+.form-floating > .form-control-plaintext::placeholder,
+.form-floating > .form-control::placeholder {
+	color: transparent;
+}
+
+// wysokość textarea w floating label
+form {
+	.form-floating > textarea.form-control {
+		height: calc(7rem + 2px);
+	}
+
+	.form-select {
+		&.selected {
+			border-color: black;
+		}
+	}
+}
+
+// autofill + stan aktywny → podniesiony label
+.form-floating > .form-control:-webkit-autofill ~ label,
+.form-floating > .form-control-plaintext ~ label,
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label,
+.form-floating > .form-select ~ label {
+	@include font-xs;
+	@include opacity(.6);
+	top: 8px;
+}
+
+.form-floating > .form-control-plaintext ~ label {
+	border-width: 1px 0;
+}
+
+// dodatkowe paddingi przy autofill (WebKit)
+.form-floating > .form-control-plaintext:-webkit-autofill,
+.form-floating > .form-control:-webkit-autofill {
+	padding-top: 1.625rem;
+	padding-bottom: 0.625rem;
+}
+
+
+// ----------------------------------------------------------
+// ----- CHECKBOX / FORM-CHECK
+// ----------------------------------------------------------
+
+.form-check {
+    @include flexbox;
+	flex-direction: row;
+    label{
+        margin: 0;
+    }
+    
+//	@include font-sm;
+}
+
+.form-check-input {
+	margin-right: 10px;
+	accent-color: var(--brand);
+
+	&[type="checkbox"] {
+		border-radius: 0;
+		border-color: var(--white);
+	}
+}
+
+.form-check-label {
+	display: block;
+	cursor: pointer;
+
+	&:hover,
+	&.checked {
+		// np. wyróżnienie tekstu zaznaczonego
+		// @include font-regular;
+	}
+}
+
+.form-check a {
+	@include font-medium;
+}
+
+
+// ----------------------------------------------------------
+// ----- RECAPTCHA
+// ----------------------------------------------------------
+
+.g-recaptcha {
+	margin: 25px 0 0 25px;
+}
+
+
+// ----------------------------------------------------------
+// ----- RANGE SLIDER
+// ----------------------------------------------------------
+
+input[type="range"] {
+	-webkit-appearance: none;
+	appearance: none;
+	background: transparent;
+	cursor: pointer;
+
+	&:focus {
+		outline: none;
+	}
+
+	// WebKit track
+	&::-webkit-slider-runnable-track {
+		background-color: var(--gray-dark);
+		border-radius: 0.5rem;
+		height: 10px;
+	}
+
+	// WebKit thumb
+	&::-webkit-slider-thumb {
+		-webkit-appearance: none;
+		appearance: none;
+		background-color: var(--black);
+		height: 20px;
+		width: 10px;
+	}
+
+	&:focus::-webkit-slider-thumb {
+		border: 1px solid var(--gray-dark);
+		outline: 3px solid var(--gray-dark);
+		outline-offset: 0.125rem;
+	}
+
+	// Firefox track
+	&::-moz-range-track {
+		background-color: var(--gray-dark);
+		border-radius: 0.5rem;
+		height: 10px;
+	}
+
+	// Firefox thumb
+	&::-moz-range-thumb {
+		border: none;
+		border-radius: 0;
+		background-color: var(--gray-light);
+		height: 20px;
+		width: 10px;
+	}
+
+	&:focus::-moz-range-thumb {
+		border: 1px solid var(--gray-dark);
+		outline: 3px solid var(--gray-dark);
+		outline-offset: 0.125rem;
+	}
+}
