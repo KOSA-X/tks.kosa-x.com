@@ -40,6 +40,11 @@ $config['form_page'] = "20";
 $config['sitemap_page'] = "3";
 $config['payment_page'] = "14";
 
+// Moduł transmisji live (TKS): rodzic drużyn — podstrony to drużyny,
+// a ich podstrony to zawodnicy (pages.sNumber, pages.sSquad).
+// Tworzone przez: php database/migrations/2026-07-31-live-schema.php
+$config['teams_page'] = "28";
+
 // Strony TREŚCI używane w szablonach (dawniej magiczne ID w kodzie).
 // Zmień ID per projekt zamiast edytować szablony.
 $config['transfer_page']      = "13";   // "Dane do wpłaty" (przelew) — page-order.php

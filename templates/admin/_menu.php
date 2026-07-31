@@ -74,6 +74,14 @@ $menu = [
         'icon'  => 'users.svg',
     ],
     [
+        'id'    => 'squad-import',
+        'label' => 'Transmisja',
+        'icon'  => 'play.svg',
+        'submenu' => [
+            ['id' => 'squad-import', 'label' => 'Import składu'],
+        ],
+    ],
+    [
         'id'    => 'settings',
         'label' => $lang['Settings'],
         'icon'  => 'users.svg',
