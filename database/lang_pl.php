@@ -178,4 +178,8 @@ $lang['Url_name'] = "Nazwa url";
 $lang['Use_language'] = "Stwórz język na podstawie";
 $lang['Wrong_email_or_pass'] = "Nieprawidłowy email lub hasło";
 $lang['Wrong_value'] = "Podaj poprawną wartość";
+
+// Transmisja live — panel operatora
+$lang['live_panel_login_required'] = "Panel meczowy wymaga zalogowania do panelu administracyjnego.";
+$lang['live_panel_placeholder'] = "Panel meczowy — w przygotowaniu.";
 ?>
