@@ -423,6 +423,485 @@ body.scroll-lock {
 
 
 // ----------------------------------------------------------
+// ----- LIVE PANEL — panel operatora transmisji meczowej
+// ----------------------------------------------------------
+// Narzędzie produkcyjne (page-live-panel.php + js/page-live-panel.js):
+// duże cele dotykowe pod telefon przy boisku, sticky wynik+zegar,
+// kafelki zawodników, arkusz akcji, lista zdarzeń.
+
+.livePanel {
+    padding: $gutter 0 $gutter3;
+    font-family: $font-p;
+
+    &__section {
+        margin-top: $gutter2;
+    }
+
+    &__sectionTitle {
+        font-family: $font-h;
+        font-size: $font-size-md;
+        font-weight: $font-bold;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        margin-bottom: $gutter;
+    }
+
+    &__hint {
+        color: var(--gray);
+        @include opacity(.7);
+    }
+
+    // --- konfiguracja meczu -------------------------------------
+    &__setup {
+        border: 1px solid var(--border-color);
+        border-radius: $border-radius;
+        background: var(--white);
+        margin-bottom: $gutter;
+    }
+
+    &__setupSummary {
+        cursor: pointer;
+        padding: 14px $gutter;
+        font-weight: $font-bold;
+        user-select: none;
+    }
+
+    &__setupBody {
+        padding: 0 $gutter $gutter;
+        display: grid;
+        gap: 12px;
+    }
+
+    &__setupLabel {
+        display: block;
+        font-size: $font-size-sm;
+        margin-bottom: 4px;
+        color: var(--gray);
+    }
+
+    &__setupButtons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    // --- wynik + zegar (sticky, poniżej nagłówka strony) --------
+    &__scoreboard {
+        position: sticky;
+        top: $header_mobile + 8px;
+        z-index: 30;
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        gap: 10px;
+        padding: 12px;
+        border-radius: $border-radius;
+        background: $brand2-dark;
+        color: $white;
+        box-shadow: 0 10px 30px var(--glow-brand);
+    }
+
+    &__scoreTeam {
+        display: grid;
+        gap: 8px;
+        justify-items: center;
+        min-width: 0;
+    }
+
+    &__scoreTeamName {
+        font-size: $font-size-sm;
+        font-weight: $font-medium;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    &__scoreButtons {
+        display: flex;
+        gap: 8px;
+    }
+
+    &__scoreBtn {
+        min-width: 52px;
+        min-height: 48px;
+        font-size: $font-size-l;
+        font-weight: $font-bold;
+        padding: 0;
+        line-height: 1;
+    }
+
+    &__scoreCenter {
+        text-align: center;
+    }
+
+    &__scoreValue {
+        font-family: $font-h;
+        font-size: $font-size-xxl;
+        font-weight: $font-xbold;
+        line-height: 1;
+    }
+
+    &__clockValue {
+        font-variant-numeric: tabular-nums;
+        font-size: $font-size-l;
+        font-weight: $font-bold;
+        margin-top: 4px;
+
+        &.is-extra {
+            color: $warning;
+        }
+    }
+
+    &__clockHalf {
+        font-size: $font-size-sm;
+        @include opacity(.7);
+    }
+
+    // --- przyciski panelu ---------------------------------------
+    // Bazowy .button motywu jest brandowy (czerwony) — w panelu operatora
+    // domyślny stan musi być NEUTRALNY, żeby stany aktywne/danger były
+    // widoczne na pierwszy rzut oka.
+    .button {
+        background: var(--white);
+        border-color: var(--border-color);
+        color: var(--font-color);
+
+        &:hover {
+            background: var(--white);
+            border-color: $brand;
+            color: $brand;
+        }
+    }
+
+    &__buttonRow {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+
+        .button {
+            min-height: 48px; // wygodny cel dotykowy
+        }
+    }
+
+    &__board.is-active {
+        background: $brand;
+        border-color: $brand;
+        color: $white;
+
+        &:hover {
+            background: $brand;
+            border-color: $brand;
+            color: $white;
+        }
+    }
+
+    &__danger {
+        border-color: $danger;
+        color: $danger;
+
+        &:hover {
+            background: $danger;
+            border-color: $danger;
+            color: $white;
+        }
+    }
+
+    // --- zawodnicy ----------------------------------------------
+    &__teams {
+        display: grid;
+        gap: $gutter2;
+    }
+
+    &__teamName {
+        font-family: $font-h;
+        font-size: $font-size-md;
+        font-weight: $font-bold;
+        margin-bottom: 6px;
+    }
+
+    &__groupLabel {
+        margin: 14px 0 8px;
+        font-size: $font-size-sm;
+        font-weight: $font-medium;
+        text-transform: uppercase;
+        letter-spacing: .08em;
+        color: var(--gray);
+    }
+
+    &__players {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 8px;
+    }
+
+    &__player {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-height: 52px;
+        padding: 8px 12px;
+        border: 1px solid var(--border-color);
+        border-radius: $border-radius;
+        background: var(--white);
+        color: var(--font-color);
+        text-align: left;
+        cursor: pointer;
+        @include fade;
+
+        &:hover {
+            border-color: $brand;
+        }
+
+        &.is-bench {
+            @include opacity(.75);
+        }
+
+        &.is-off {
+            @include opacity(.45);
+        }
+
+        // stan z historii zmian: wszedł / zszedł
+        &.is-on {
+            border-color: $success;
+            box-shadow: inset 3px 0 0 $success;
+            opacity: 1;
+        }
+
+        &.is-out {
+            border-color: var(--border-color);
+            @include opacity(.45);
+        }
+    }
+
+    &__playerNumber {
+        flex: 0 0 auto;
+        min-width: 34px;
+        text-align: center;
+        font-family: $font-h;
+        font-weight: $font-xbold;
+        color: $brand;
+    }
+
+    &__playerName {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    // --- arkusz akcji zawodnika ---------------------------------
+    &__sheet {
+        position: fixed;
+        inset: 0;
+        z-index: 90;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        background: rgba($black, .6);
+
+        // display:flex nadpisałoby przeglądarkowe [hidden] — przywracamy
+        &[hidden] {
+            display: none;
+        }
+    }
+
+    &__sheetCard {
+        width: 100%;
+        max-width: 560px;
+        background: var(--white);
+        border-radius: $border-radius $border-radius 0 0;
+        padding: $gutter;
+        display: grid;
+        gap: 14px;
+        @include motion-safe {
+            animation: livePanelSheetUp .25s ease both;
+        }
+    }
+
+    &__sheetHeader {
+        font-family: $font-h;
+        font-size: $font-size-md;
+        font-weight: $font-bold;
+    }
+
+    &__sheetMinute {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: $font-medium;
+
+        input {
+            width: 90px;
+            text-align: center;
+            font-size: $font-size-md;
+        }
+    }
+
+    // Uwaga: arkusz jest przenoszony przez JS do <body> (transform na .mainBody
+    // łamie position:fixed), więc style przycisków definiujemy tu wprost —
+    // akcje zostają brandowe, „Anuluj" neutralny.
+    &__sheetActions {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+
+        .button {
+            min-height: 52px;
+        }
+    }
+
+    &__sheetCancel {
+        background: var(--white);
+        border-color: var(--border-color);
+        color: var(--font-color);
+
+        &:hover {
+            background: var(--white);
+            border-color: $brand;
+            color: $brand;
+        }
+    }
+
+    // --- lista zdarzeń ------------------------------------------
+    &__eventList {
+        display: grid;
+        gap: 8px;
+    }
+
+    &__event {
+        display: grid;
+        grid-template-columns: 64px 1fr auto auto;
+        gap: 8px 10px;
+        align-items: center;
+        padding: 8px 10px;
+        border: 1px solid var(--border-color);
+        border-radius: $border-radius;
+        background: var(--white);
+
+        &[data-event-action="goal"],
+        &[data-event-action="own_goal"] {
+            box-shadow: inset 3px 0 0 $brand;
+        }
+
+        &[data-event-action="yellow_card"] {
+            box-shadow: inset 3px 0 0 $warning;
+        }
+
+        &[data-event-action="red_card"] {
+            box-shadow: inset 3px 0 0 $danger;
+        }
+    }
+
+    &__eventMinute {
+        text-align: center;
+        font-variant-numeric: tabular-nums;
+    }
+
+    &__eventAction {
+        font-weight: $font-bold;
+    }
+
+    &__eventPlayer {
+        grid-column: 2 / -1;
+        grid-row: 2;
+        color: var(--gray);
+        font-size: $font-size-sm;
+    }
+
+    &__eventTeam {
+        font-size: $font-size-sm;
+        color: var(--gray);
+        @include opacity(.7);
+    }
+
+    &__eventBtn {
+        min-height: 40px;
+        padding: 4px 12px;
+        font-size: $font-size-sm;
+    }
+
+    // --- toast --------------------------------------------------
+    &__toast {
+        position: fixed;
+        left: 50%;
+        bottom: 24px;
+        transform: translate3d(-50%, 20px, 0);
+        z-index: 100;
+        padding: 12px 20px;
+        border-radius: $border-radius;
+        background: $brand2-dark;
+        color: $white;
+        font-weight: $font-medium;
+        pointer-events: none;
+        @include opacity(0);
+        @include motion-safe {
+            transition: opacity .25s ease, transform .25s ease;
+        }
+
+        &.is-visible {
+            @include opacity(1);
+            transform: translate3d(-50%, 0, 0);
+        }
+
+        &.is-error {
+            background: $danger;
+        }
+    }
+
+    // --- desktop ------------------------------------------------
+    @include media-up(lg) {
+        &__scoreboard {
+            top: $header_desktop + 8px;
+        }
+
+        &__setupBody {
+            grid-template-columns: 1fr 1fr;
+
+            .livePanel__setupButtons {
+                grid-column: 1 / -1;
+            }
+        }
+
+        &__teams {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        &__sheet {
+            align-items: center;
+        }
+
+        &__sheetCard {
+            border-radius: $border-radius;
+        }
+
+        &__sheetActions {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        &__event {
+            grid-template-columns: 64px auto 1fr auto auto auto;
+
+            .livePanel__eventPlayer {
+                grid-column: auto;
+                grid-row: auto;
+            }
+        }
+    }
+}
+
+@keyframes livePanelSheetUp {
+    from {
+        transform: translate3d(0, 30px, 0);
+        opacity: 0;
+    }
+    to {
+        transform: translate3d(0, 0, 0);
+        opacity: 1;
+    }
+}
+
+
+// ----------------------------------------------------------
 // ----- RESPONSYWNOŚĆ
 // ----------------------------------------------------------
 
