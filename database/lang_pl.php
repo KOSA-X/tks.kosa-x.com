@@ -212,4 +212,5 @@ $lang['live_confirm_delete'] = "Usunąć to zdarzenie?";
 $lang['live_no_events'] = "Brak zdarzeń.";
 $lang['live_no_teams'] = "Ustaw drużyny meczu w sekcji konfiguracji.";
 $lang['live_half_short'] = "poł.";
+$lang['live_broadcast_footer'] = "Transmisja live";
 ?>

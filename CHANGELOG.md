@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-07-31 — Transmisja live (TKS): nakładki OBS, krok 3 — nakładka (KOMPLET sterowania live)
+- `page-live-overlay.php` — standalone nakładka OBS (Browser Source 1920×1080, `background: transparent`): pasek wyniku+zegar (skróty z `sDesc` drużyny, herby `iType=2`), plansze: dzień meczowy (treść z `match_page`), składy obu drużyn (`sNumber`/`sSquad` z importera + sztab z bloku `.teamStaff`), podsumowanie (oś zdarzeń per drużyna), sponsorzy/realizacja (`live_sponsors_page`/`live_production_page`, 0 = plansza wyłączona), plakat meczowy
+- Własny lekki arkusz `css/live-overlay.css` (źródło `_source/live-overlay.scss`, 8 KB zamiast 120 KB motywu) — animacje tylko `transform`/`opacity` (GPU), broadcast look na tokenach `_brand`
+- `js/page-live-overlay.js` (vanilla, bez jQuery): jedno żądanie stanu co 1 s (`state?since=ID`), zegar tyka lokalnie między odpowiedziami (płynny przy lagu), popupy zdarzeń w kolejce (jeden naraz, auto-ukrycie 8 s), po odświeżeniu źródła w OBS historia NIE jest odtwarzana (kursor od bieżącego ID)
+- API: zdjęcie zawodnika w payloadzie zdarzeń (popup pokazuje fotkę albo herb; bez obu — czysty layout)
+- Testy Playwright (przezroczystość, zegar/wynik, kolejka popupów, przełączanie plansz, podsumowanie) — wyłapały m.in. rzutowanie kluczy `'2'`→int w PHP, przez które nie renderował się duży wynik
+
 ## 2026-07-31 — Transmisja live (TKS): nakładki OBS, krok 2 — panel operatora
 - `page-live-panel.php` + `js/page-live-panel.js` + sekcja `.livePanel` w `_content.scss`: pełny panel sterowania meczem (tylko zalogowany admin)
 - Sticky pasek wyniku i zegara (+/- per drużyna, MM:SS z limitem 45/90 i oznaczeniem doliczonego), sterowanie zegarem (1./2. połowa, pauza/wznów wg stanu, ±1 min, reset), przyciski plansz ze stanem aktywności, konfiguracja meczu (wybór drużyn + nowy mecz)

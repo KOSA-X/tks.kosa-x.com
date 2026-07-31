@@ -52,6 +52,12 @@ $config['match_page']        = "31";
 $config['live_panel_page']   = "32";
 $config['live_overlay_page'] = "33";
 
+// Strony-źródła treści plansz nakładki OBS (0 = plansza bez treści, nie renderuje się):
+// sponsorzy = zakładka z logotypami (obrazki strony), realizacja = zakładka
+// promująca produkcję transmisji (tytuł + zdjęcia).
+$config['live_sponsors_page']   = "0";
+$config['live_production_page'] = "0";
+
 // Strony TREŚCI używane w szablonach (dawniej magiczne ID w kodzie).
 // Zmień ID per projekt zamiast edytować szablony.
 $config['transfer_page']      = "13";   // "Dane do wpłaty" (przelew) — page-order.php

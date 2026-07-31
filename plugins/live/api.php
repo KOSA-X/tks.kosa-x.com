@@ -77,7 +77,9 @@ function liveApiState(Sql $oSql, int $iSince): array
     $iLastId = $iSince;
     $oQuery  = $oSql->prepare(
         'SELECT e.id, e.iPlayer, e.iTeam, e.sAction, e.sMinute,
-                COALESCE(p.sName, "") AS sPlayerName, COALESCE(p.sNumber, "") AS sPlayerNumber
+                COALESCE(p.sName, "") AS sPlayerName, COALESCE(p.sNumber, "") AS sPlayerNumber,
+                COALESCE(( SELECT f.sFileName FROM files f WHERE f.iPage = e.iPlayer AND f.iSize > 0
+                           ORDER BY f.iDefault DESC, f.iPosition ASC LIMIT 1 ), "") AS sPlayerImage
          FROM live_events e LEFT JOIN pages p ON p.iPage = e.iPlayer
          WHERE e.id > :since ORDER BY e.id ASC'
     );
@@ -93,6 +95,7 @@ function liveApiState(Sql $oSql, int $iSince): array
                 'id'     => (int) $aRow['iPlayer'],
                 'name'   => (string) $aRow['sPlayerName'],
                 'number' => (string) $aRow['sPlayerNumber'],
+                'photo'  => (string) $aRow['sPlayerImage'],
             ],
         ];
     }
@@ -127,7 +130,9 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'GET') {
         $aEvents = [];
         $oQuery  = $oSql->getQuery(
             'SELECT e.id, e.iPlayer, e.iTeam, e.sAction, e.sMinute,
-                    COALESCE(p.sName, "") AS sPlayerName, COALESCE(p.sNumber, "") AS sPlayerNumber
+                    COALESCE(p.sName, "") AS sPlayerName, COALESCE(p.sNumber, "") AS sPlayerNumber,
+                    COALESCE(( SELECT f.sFileName FROM files f WHERE f.iPage = e.iPlayer AND f.iSize > 0
+                               ORDER BY f.iDefault DESC, f.iPosition ASC LIMIT 1 ), "") AS sPlayerImage
              FROM live_events e LEFT JOIN pages p ON p.iPage = e.iPlayer
              ORDER BY CAST(e.sMinute AS INTEGER) ASC, e.id ASC'
         );
@@ -141,6 +146,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'GET') {
                     'id'     => (int) $aRow['iPlayer'],
                     'name'   => (string) $aRow['sPlayerName'],
                     'number' => (string) $aRow['sPlayerNumber'],
+                    'photo'  => (string) $aRow['sPlayerImage'],
                 ],
             ];
         }
