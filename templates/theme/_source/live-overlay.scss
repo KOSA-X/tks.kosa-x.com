@@ -76,6 +76,12 @@ img {
         transform: translate3d(0, 0, 0);
     }
 
+    // druga pozycja: prawy górny róg (przełączana z panelu operatora)
+    &--right {
+        left: auto;
+        right: 44px;
+    }
+
     &__team {
         display: flex;
         align-items: center;
@@ -463,6 +469,54 @@ img {
             font-variant-numeric: tabular-nums;
         }
     }
+}
+
+// --- statystyki meczu (plansza podsumowania) ----------------
+.obsStats {
+    max-width: 640px;
+    margin: 34px auto 0;
+
+    &__row {
+        display: grid;
+        grid-template-columns: 90px 1fr 90px;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba($white, .1);
+
+        &:last-child {
+            border-bottom: 0;
+        }
+    }
+
+    &__value {
+        font-family: $font-h;
+        font-size: 30px;
+        font-weight: 900;
+        text-align: center;
+        font-variant-numeric: tabular-nums;
+        color: $brand-light;
+    }
+
+    &__label {
+        text-align: center;
+        font-size: 16px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: .14em;
+        opacity: .75;
+    }
+}
+
+// --- sędziowie (opis skrócony strony „Mecz") ----------------
+.obsReferees {
+    max-width: 760px;
+    margin: 0 auto;
+    font-size: 24px;
+    line-height: 1.8;
+    text-align: center;
+
+    p { margin: 0 0 12px; }
+    strong { color: $brand-light; }
 }
 
 // --- podsumowanie (oś zdarzeń per drużyna) ------------------

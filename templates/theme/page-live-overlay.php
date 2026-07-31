@@ -106,6 +106,7 @@ $aTeam2 = $fTeamData($iTeam2);
 $sMatchName = (string) (getData($iMatch, 'sName') ?? '');
 $sMatchDate = (string) (getData($iMatch, 'sDate') ?? '');
 $sMatchDesc = (string) (getData($iMatch, 'sDescriptionFull') ?? '');
+$sReferees  = (string) (getData($iMatch, 'sDescriptionShort') ?? ''); // sędziowie — opis SKRÓCONY strony „Mecz"
 $sPoster    = $fPageImage($iMatch, 1);
 
 $aSponsorImages    = $fPageImages((int) ($config['live_sponsors_page'] ?? 0));
@@ -215,6 +216,7 @@ $fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($fSquad, $fStaffBlock, $a
         </header>
         <div class="obsBoard__content">
             <?php echo $fMatchHead(); ?>
+            <div class="obsStats" id="obs-stats"></div>
             <div class="obsSummary">
                 <ul class="obsSummary__list" id="obs-summary-1"></ul>
                 <ul class="obsSummary__list" id="obs-summary-2"></ul>
@@ -222,6 +224,20 @@ $fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($fSquad, $fStaffBlock, $a
         </div>
         <footer class="obsBoard__footer"><?php echo html($config['logo']); ?> • <?php echo $lang['live_broadcast_footer']; ?></footer>
     </div>
+
+    <?php if ($sReferees !== ''): ?>
+    <!-- PLANSZA: SĘDZIOWIE -->
+    <div class="obsBoard obsShow" data-board="sedziowie">
+        <header class="obsBoard__header">
+            <span class="title"><?php echo html($aBoardLabels['sedziowie'] ?? ''); ?></span>
+            <?php if ($sMatchName !== ''): ?><span class="meta"><?php echo html($sMatchName); ?></span><?php endif; ?>
+        </header>
+        <div class="obsBoard__content">
+            <div class="obsReferees"><?php echo parseShortcodes($sReferees); ?></div>
+        </div>
+        <footer class="obsBoard__footer"><?php echo html($config['logo']); ?> • <?php echo $lang['live_broadcast_footer']; ?></footer>
+    </div>
+    <?php endif; ?>
 
     <?php if (!empty($aSponsorImages)): ?>
     <!-- PLANSZA: SPONSORZY -->
@@ -276,6 +292,12 @@ window.liveOverlayConfig = <?php echo json_encode(Array(
     'labels' => Array(
         'halfShort' => $lang['live_half_short'],
         'noEvents'  => $lang['live_no_events'],
+        'stats'     => Array(
+            'goals'  => $lang['live_stat_goals'],
+            'yellow' => $lang['live_stat_yellow'],
+            'red'    => $lang['live_stat_red'],
+            'subs'   => $lang['live_stat_subs'],
+        ),
     ),
 ), JSON_UNESCAPED_UNICODE); ?>;
 </script>

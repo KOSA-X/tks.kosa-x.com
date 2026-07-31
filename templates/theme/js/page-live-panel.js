@@ -73,6 +73,48 @@
     }
 
     // ------------------------------------------------------------
+    // ZNACZNIKI ZAWODNIKÓW — badge akcji + kropka statusu komunikatu
+    // (statusy wyświetlania liczy serwer — symulacja kolejki nakładki)
+    // ------------------------------------------------------------
+    var BADGE_ORDER = ['goal', 'own_goal', 'yellow_card', 'red_card', 'in', 'out'];
+
+    function updatePlayerMarkers(events) {
+        var perPlayer = {};
+        $.each(events, function (i, ev) {
+            if (ev.player.id <= 0) {
+                return;
+            }
+            var entry = perPlayer[ev.player.id] = perPlayer[ev.player.id] || { counts: {}, showing: false, queued: false };
+            entry.counts[ev.action] = (entry.counts[ev.action] || 0) + 1;
+            if (ev.display === 'showing') { entry.showing = true; }
+            if (ev.display === 'queued') { entry.queued = true; }
+        });
+
+        $('.livePanel__player').each(function () {
+            var $player = $(this);
+            var entry = perPlayer[$player.data('player')];
+            var $badges = $player.find('.livePanel__playerBadges').empty();
+            var $dot = $player.find('.livePanel__playerDot');
+
+            if (!entry) {
+                $dot.attr('data-state', '');
+                return;
+            }
+            $.each(BADGE_ORDER, function (i, action) {
+                var count = entry.counts[action];
+                if (!count) {
+                    return;
+                }
+                $badges.append(
+                    $('<span class="lp-badge lp-badge--' + action + '">')
+                        .text((cfg.badges[action] || action) + (count > 1 ? ' ×' + count : ''))
+                );
+            });
+            $dot.attr('data-state', entry.showing ? 'showing' : (entry.queued ? 'queued' : ''));
+        });
+    }
+
+    // ------------------------------------------------------------
     // ODCZYT STANU (co 1 s)
     // ------------------------------------------------------------
     function refreshState() {
@@ -95,6 +137,11 @@
                 $.each(state.boards, function (name, visible) {
                     $('.livePanel__board[data-board="' + name + '"]').toggleClass('is-active', visible === 1);
                 });
+
+                $('#lp-scorebar-pos').attr('data-pos', state.scorebar);
+                $('#lp-scorebar-label').text(state.scorebar === 1 ? cfg.labels.posRight : cfg.labels.posLeft);
+
+                updatePlayerMarkers(state.events);
             });
     }
 
@@ -220,6 +267,17 @@
             $.each(response.boards, function (name, visible) {
                 $('.livePanel__board[data-board="' + name + '"]').toggleClass('is-active', visible === 1);
             });
+        });
+    });
+
+    // ------------------------------------------------------------
+    // POZYCJA PASKA WYNIKU NA NAKŁADCE
+    // ------------------------------------------------------------
+    $('#lp-scorebar-pos').on('click', function () {
+        var next = (parseInt($(this).attr('data-pos'), 10) === 1) ? 0 : 1;
+        api('scorebar_pos', { pos: next }, function (response) {
+            $('#lp-scorebar-pos').attr('data-pos', response.scorebar);
+            $('#lp-scorebar-label').text(response.scorebar === 1 ? cfg.labels.posRight : cfg.labels.posLeft);
         });
     });
 

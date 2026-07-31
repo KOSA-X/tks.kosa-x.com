@@ -213,4 +213,12 @@ $lang['live_no_events'] = "Brak zdarzeń.";
 $lang['live_no_teams'] = "Ustaw drużyny meczu w sekcji konfiguracji.";
 $lang['live_half_short'] = "poł.";
 $lang['live_broadcast_footer'] = "Transmisja live";
+$lang['live_dot_title'] = "Status komunikatu na nakładce: żółty = w kolejce, zielony = wyświetlany";
+$lang['live_scorebar_pos'] = "Pasek wyniku";
+$lang['live_pos_left'] = "lewy róg";
+$lang['live_pos_right'] = "prawy róg";
+$lang['live_stat_goals'] = "Gole";
+$lang['live_stat_yellow'] = "Żółte kartki";
+$lang['live_stat_red'] = "Czerwone kartki";
+$lang['live_stat_subs'] = "Zmiany";
 ?>

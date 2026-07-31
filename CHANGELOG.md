@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-07-31 — Transmisja live (TKS): poprawki po teście na produkcji + szlif
+- OCR: nazwiska zapisywane jako „Imię Nazwisko" zamiast DRUKOWANYCH — instrukcja w prompcie + `liveOcrTitleCase()` (mb, polskie znaki; konwertuje TYLKO stringi w całości wielkimi literami, „Piotr van der Berg" zostaje bez zmian)
+- Panel: zawodnicy w osobnych wierszach (1 kolumna); przy nazwisku badge zapisanych akcji (`$config['live_action_badges']`: GOL/SAM/ŻÓŁTA/CZERW/▲/▼, z licznikiem ×N) + kropka stanu komunikatu na nakładce: żółta = czeka w kolejce, zielona (pulsująca) = właśnie wyświetlany, brak = już zniknął
+- API: symulacja harmonogramu wyświetlania popupów po stronie serwera (`queued`/`showing`/`done` per zdarzenie w `state` — nakładka nie ma dostępu zapisu, więc stan liczony z `iClock` + czasy animacji nakładki) + `iScorebarPos` w stanie + komenda POST `scorebar_pos`
+- Nakładka: plansza „Sędziowie" (treść = opis SKRÓCONY strony „Mecz", renderowana tylko gdy niepusta), statystyki na planszy podsumowania (gole z uwzgl. samobójów, żółte/czerwone kartki, zmiany — per drużyna), pasek wyniku przełączany lewy/prawy górny róg (przycisk w panelu, klasa `.obsScorebar--right`)
+- Migracja `database/migrations/2026-07-31-live-extras.php` (idempotentna): kolumna `live_state.iScorebarPos` + plansza „sedziowie" (iPosition=9) — **uruchom na serwerze po wdrożeniu**
+- Testy Playwright (9 asercji E2E): wiersze, badge, pełny cykl kropki queued→showing→zniknięcie, przełącznik paska, plansza sędziów, statystyki — wszystko zielone, zero błędów JS
+
 ## 2026-07-31 — Transmisja live (TKS): nakładki OBS, krok 3 — nakładka (KOMPLET sterowania live)
 - `page-live-overlay.php` — standalone nakładka OBS (Browser Source 1920×1080, `background: transparent`): pasek wyniku+zegar (skróty z `sDesc` drużyny, herby `iType=2`), plansze: dzień meczowy (treść z `match_page`), składy obu drużyn (`sNumber`/`sSquad` z importera + sztab z bloku `.teamStaff`), podsumowanie (oś zdarzeń per drużyna), sponsorzy/realizacja (`live_sponsors_page`/`live_production_page`, 0 = plansza wyłączona), plakat meczowy
 - Własny lekki arkusz `css/live-overlay.css` (źródło `_source/live-overlay.scss`, 8 KB zamiast 120 KB motywu) — animacje tylko `transform`/`opacity` (GPU), broadcast look na tokenach `_brand`

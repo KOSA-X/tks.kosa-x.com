@@ -631,7 +631,7 @@ body.scroll-lock {
 
     &__players {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        grid-template-columns: 1fr; // jeden zawodnik = jeden wiersz
         gap: 8px;
     }
 
@@ -687,6 +687,75 @@ body.scroll-lock {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+    }
+
+    // badge akcji zapisanych dla zawodnika (GOL, ŻÓŁTA, CZERW…)
+    &__playerBadges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        margin-left: auto;
+
+        .lp-badge {
+            font-size: 11px;
+            font-weight: $font-bold;
+            letter-spacing: .04em;
+            padding: 3px 7px;
+            border-radius: 4px;
+            line-height: 1;
+            background: var(--gray-light);
+            color: var(--font-color);
+            white-space: nowrap;
+
+            &--goal {
+                background: $brand;
+                color: $white;
+            }
+
+            &--own_goal {
+                background: $danger;
+                color: $white;
+            }
+
+            &--yellow_card {
+                background: $warning;
+                color: $black;
+            }
+
+            &--red_card {
+                background: $danger;
+                color: $white;
+            }
+
+            &--in {
+                color: $success;
+            }
+
+            &--out {
+                color: $danger;
+            }
+        }
+    }
+
+    // kropka statusu komunikatu na nakładce: żółta = w kolejce,
+    // zielona (pulsująca) = właśnie wyświetlany, brak = zniknął / brak akcji
+    &__playerDot {
+        flex: 0 0 auto;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: transparent;
+
+        &[data-state="queued"] {
+            background: $warning;
+        }
+
+        &[data-state="showing"] {
+            background: $success;
+            @include motion-safe {
+                animation: livePanelDotPulse 1s ease-in-out infinite;
+            }
+        }
     }
 
     // --- arkusz akcji zawodnika ---------------------------------
@@ -886,6 +955,17 @@ body.scroll-lock {
                 grid-row: auto;
             }
         }
+    }
+}
+
+@keyframes livePanelDotPulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.45);
+        opacity: .6;
     }
 }
 

@@ -266,6 +266,16 @@ $config['live_actions'] = Array(
   'out'         => 'Zejście (zmiana)',
 );
 
+// Krótkie etykiety zdarzeń — badge przy nazwisku w panelu operatora
+$config['live_action_badges'] = Array(
+  'goal'        => 'GOL',
+  'own_goal'    => 'SAM',
+  'yellow_card' => 'ŻÓŁTA',
+  'red_card'    => 'CZERW',
+  'in'          => '▲',
+  'out'         => '▼',
+);
+
 
 // @claude-lock
 // ============================================================

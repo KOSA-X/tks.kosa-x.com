@@ -13,6 +13,7 @@
  *   score_adjust {team: 1|2, delta: 1|-1}
  *   timer_start {half: 1|2}   timer_pause   timer_resume   timer_adjust {delta}   timer_reset
  *   board_toggle {sName, iVisible}   teams_set {iTeam1, iTeam2}   match_reset
+ *   scorebar_pos {pos: 0|1} — pozycja paska wyniku (lewy/prawy górny róg)
  *
  * Bezpieczeństwo (w odróżnieniu od starego _old/ajax.php): każdy zapis wymaga
  * sesji admina + CSRF, wszystkie zapytania przez prepared statements.
@@ -72,6 +73,20 @@ function liveApiState(Sql $oSql, int $iSince): array
         $aBoards[$aRow['sName']] = (int) $aRow['iVisible'];
     }
 
+    // Statusy wyświetlania popupów na nakładce — symulacja czasowa po stronie
+    // serwera (nakładka nie ma prawa zapisu). Model: nakładka podnosi event
+    // ~1 s po INSERT (poll), pokazuje 8 s + 0,6 s animacji, jeden naraz.
+    // Przybliżenie zakłada, że nakładka jest otwarta i odpytuje na bieżąco.
+    $aDisplay = [];
+    $fPrevEnd = 0.0;
+    foreach ($oSql->getQuery('SELECT id, iClock FROM live_events ORDER BY id ASC') as $aRow) {
+        $fStart = max((float) $aRow['iClock'] + 1.0, $fPrevEnd);
+        $fEnd   = $fStart + 8.6;
+        $iNow   = time();
+        $aDisplay[(int) $aRow['id']] = ($iNow < $fStart) ? 'queued' : (($iNow < $fEnd) ? 'showing' : 'done');
+        $fPrevEnd = $fEnd;
+    }
+
     // zdarzenia nowsze niż wskazany ID — z danymi zawodnika w jednym zapytaniu
     $aEvents = [];
     $iLastId = $iSince;
@@ -91,6 +106,7 @@ function liveApiState(Sql $oSql, int $iSince): array
             'action'  => (string) $aRow['sAction'],
             'minute'  => (string) $aRow['sMinute'],
             'team'    => (int) $aRow['iTeam'],
+            'display' => $aDisplay[(int) $aRow['id']] ?? 'done',
             'player'  => [
                 'id'     => (int) $aRow['iPlayer'],
                 'name'   => (string) $aRow['sPlayerName'],
@@ -109,6 +125,7 @@ function liveApiState(Sql $oSql, int $iSince): array
         ],
         'score'  => [(int) ($aState['iScore1'] ?? 0), (int) ($aState['iScore2'] ?? 0)],
         'teams'  => [(int) ($aState['iTeam1'] ?? 0), (int) ($aState['iTeam2'] ?? 0)],
+        'scorebar' => (int) ($aState['iScorebarPos'] ?? 0),
         'boards' => $aBoards,
         'events' => $aEvents,
         'last_event_id' => $iLastId,
@@ -312,6 +329,14 @@ switch ($sAction) {
             $aBoards[$aRow['sName']] = (int) $aRow['iVisible'];
         }
         liveApiOut(['ok' => true, 'boards' => $aBoards]);
+    }
+
+    case 'scorebar_pos': {
+        // pozycja paska wyniku na nakładce: 0 = lewy górny, 1 = prawy górny
+        $iPos = ((int) ($_POST['pos'] ?? 0) === 1) ? 1 : 0;
+        $oPos = $oSql->prepare('UPDATE live_state SET iScorebarPos = :pos WHERE id = 1');
+        $oPos->execute([':pos' => $iPos]);
+        liveApiOut(['ok' => true, 'scorebar' => $iPos]);
     }
 
     // --------------------------------------------------------
