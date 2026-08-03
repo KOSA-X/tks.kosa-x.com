@@ -243,7 +243,7 @@ if( ( $_SERVER['REQUEST_METHOD'] ?? 'GET' ) === 'POST' && ( $_POST['sAction'] ??
 
     // --- drużyna: istniejąca podstrona „Drużyn" albo nowa ---
     if( $iTeamsPage === 0 ){
-        $aErrors[] = 'Brak zakładki „Drużyny" — uruchom migrację: php database/migrations/2026-07-31-live-schema.php i ustaw $config[\'teams_page\'] w database/config_pl.php.';
+        $aErrors[] = 'Brak zakładki „Drużyny" — utwórz zakładkę (menu: Systemowe) i ustaw jej ID w $config[\'teams_page\'] w database/config_pl.php (w bazie z repozytorium to ID 28).';
     }
     elseif( $iTeam === -1 ){
         if( $sNewTeam === '' ){

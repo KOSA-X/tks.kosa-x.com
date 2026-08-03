@@ -42,18 +42,19 @@ $config['payment_page'] = "14";
 
 // Moduł transmisji live (TKS): rodzic drużyn — podstrony to drużyny,
 // a ich podstrony to zawodnicy (pages.sNumber, pages.sSquad).
-// Tworzone przez: php database/migrations/2026-07-31-live-schema.php
+// Zakładki 28-34 i cały schemat live SĄ JUŻ w database/database.db —
+// świeże wdrożenie repo działa bez żadnych migracji.
 $config['teams_page'] = "28";
 
-// Transmisja live — strony meczowe (php database/migrations/2026-07-31-live-tables.php):
-// „Mecz" = treść meczu dnia (opis, plakat, data w sDate);
-// panel operatora i nakładka OBS mają dedykowane szablony (themes 11 i 12).
+// Transmisja live — strony meczowe:
+// „Mecz" = treść meczu dnia (opis, plakat, data w sDate, sędziowie w opisie
+// skróconym); panel operatora i nakładka OBS mają dedykowane szablony
+// (themes 11 i 12).
 $config['match_page']        = "31";
 $config['live_panel_page']   = "32";
 $config['live_overlay_page'] = "33";
 
 // Telebim — ekran LED przy boisku (theme 13, cieszynki wideo + powtórki OBS).
-// Tworzone przez: php database/migrations/2026-07-31-live-telebim.php
 $config['telebim_page'] = "34";
 
 // Strony-źródła treści plansz nakładki OBS (0 = plansza bez treści, nie renderuje się):
