@@ -1,5 +1,25 @@
 # Changelog
 
+## 2026-08-03 — Baza danych KOMPLETNA w repo — koniec migracji
+- `database/database.db` zawiera już CAŁY schemat i dane systemowe modułu live:
+  kolumny `pages.sNumber`/`pages.sSquad`, tabele `live_state` (z `iScorebarPos`
+  i `iReplayCount`), `live_events`, `live_boards` (9 plansz, w tym „Sędziowie"),
+  zakładki 28 „Drużyny" / 29 „TKS Tomasovia" / 31 „Mecz" / 32 „Panel meczowy" /
+  33 „Nakładka OBS" / 34 „Telebim" + przebudowany cache routingu
+  (`database/cache/links*`)
+- **Wgranie całego repozytorium = działająca strona.** Zero kroków CLI po
+  wdrożeniu; instrukcje „uruchom migrację na serwerze" z wcześniejszych wpisów
+  są NIEAKTUALNE
+- Skrypty `database/migrations/*` usunięte (ich efekty siedzą w bazie);
+  komentarze w `config_pl.php` i komunikat w imporcie składu zaktualizowane
+- Zweryfikowane na czystej kopii repo (git archive → PHP): front `/`,
+  `/telebim/`, `/panel-meczowy/`, `/nakladka-obs/`, `/druzyny/`, `/mecz/`,
+  API state (czysty stan, 9 plansz), logowanie do panelu i moduł
+  Transmisja → Import składu — wszystko działa od ręki
+- ⚠️ Wdrożenie NADPISUJE bazę na serwerze — treści dodane przez panel
+  (zaimportowani zawodnicy, opisy) wracają do stanu bazowego; sekrety jak
+  dotąd w `database/config.secrets.php` (poza repo)
+
 ## 2026-07-31 — Telebim: przebudowa layoutu pod czytelność z trybun (wzór: _old)
 - **Scena wyniku** (plansza „wynik") = pełny ekran zamiast paska: zegar 4rem w białej pigule u góry, wynik **11rem**, herby 11rem + skróty drużyn 3.2rem — proporcje jak w starym telebimie (zegar 150px / wynik 300px / herby 500px @1080p)
 - **Zdarzenia przejmują CAŁY ekran** (jak w _old): gruba kolorowa ramka per typ (gol=brand, żółta=warning, czerwona/zejście/samobój=danger, wejście=success), etykieta akcji 3.6rem, nazwisko 4rem z numerem w brandowej pigule, zdjęcie zawodnika w medalionie 13rem
