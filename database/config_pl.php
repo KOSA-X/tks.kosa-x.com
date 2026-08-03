@@ -52,6 +52,10 @@ $config['match_page']        = "31";
 $config['live_panel_page']   = "32";
 $config['live_overlay_page'] = "33";
 
+// Telebim — ekran LED przy boisku (theme 13, cieszynki wideo + powtórki OBS).
+// Tworzone przez: php database/migrations/2026-07-31-live-telebim.php
+$config['telebim_page'] = "34";
+
 // Strony-źródła treści plansz nakładki OBS (0 = plansza bez treści, nie renderuje się):
 // sponsorzy = zakładka z logotypami (obrazki strony), realizacja = zakładka
 // promująca produkcję transmisji (tytuł + zdjęcia).

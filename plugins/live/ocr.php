@@ -133,6 +133,19 @@ function liveOcrPrepareImage($sPath)
 }
 
 /**
+ * „KONRAD KOSIORSKI" → „Konrad Kosiorski". Działa tylko na tekstach zapisanych
+ * w CAŁOŚCI wersalikami (nie psuje poprawnego zapisu typu „van der Berg");
+ * obsługuje polskie znaki i nazwiska z myślnikiem.
+ */
+function liveOcrTitleCase($sName)
+{
+    if ($sName === '' || mb_strtoupper($sName, 'UTF-8') !== $sName) {
+        return $sName; // ma małe litery — zostaw jak jest
+    }
+    return mb_convert_case(mb_strtolower($sName, 'UTF-8'), MB_CASE_TITLE, 'UTF-8');
+}
+
+/**
  * Normalizuje i waliduje dane z modelu (druga linia obrony za schematem).
  */
 function liveOcrNormalize($aData)
@@ -140,7 +153,7 @@ function liveOcrNormalize($aData)
     $aResult = array('players' => array(), 'staff' => array());
 
     foreach ((array) ($aData['players'] ?? array()) as $aPlayer) {
-        $sName = trim((string) ($aPlayer['name'] ?? ''));
+        $sName = liveOcrTitleCase(trim((string) ($aPlayer['name'] ?? '')));
         if ($sName === '') {
             continue;
         }
@@ -153,7 +166,7 @@ function liveOcrNormalize($aData)
     }
 
     foreach ((array) ($aData['staff'] ?? array()) as $aStaff) {
-        $sName = trim((string) ($aStaff['name'] ?? ''));
+        $sName = liveOcrTitleCase(trim((string) ($aStaff['name'] ?? '')));
         if ($sName === '') {
             continue;
         }
@@ -241,7 +254,8 @@ function liveOcrProtocol($sImagePath, $sTeamName = '')
         .'Wyodrębnij zawodników JEDNEJ drużyny: numer na koszulce, imię i nazwisko oraz skład '
         .'(1 = wyjściowa jedenastka / zawodnicy podstawowi, 2 = rezerwowi). '
         .'Wyodrębnij też sztab szkoleniowy (funkcja + imię i nazwisko), np. trener, asystent, kierownik drużyny, masażysta. '
-        .'Przepisuj nazwiska dokładnie tak, jak są zapisane, z polskimi znakami. '
+        .'Nazwiska zapisuj w formacie „Imię Nazwisko" (pierwsza litera wielka, reszta małe, z polskimi znakami) '
+        .'— nawet jeśli w protokole są drukowanymi literami. '
         .'Nie pomijaj nikogo z listy. '
         .($sTeamName !== ''
             ? 'Jeśli protokół zawiera dwie drużyny, wybierz tę, której nazwa najlepiej odpowiada: „'.$sTeamName.'". '

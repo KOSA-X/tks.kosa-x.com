@@ -1,5 +1,31 @@
 # Changelog
 
+## 2026-07-31 — Telebim: przebudowa layoutu pod czytelność z trybun (wzór: _old)
+- **Scena wyniku** (plansza „wynik") = pełny ekran zamiast paska: zegar 4rem w białej pigule u góry, wynik **11rem**, herby 11rem + skróty drużyn 3.2rem — proporcje jak w starym telebimie (zegar 150px / wynik 300px / herby 500px @1080p)
+- **Zdarzenia przejmują CAŁY ekran** (jak w _old): gruba kolorowa ramka per typ (gol=brand, żółta=warning, czerwona/zejście/samobój=danger, wejście=success), etykieta akcji 3.6rem, nazwisko 4rem z numerem w brandowej pigule, zdjęcie zawodnika w medalionie 13rem
+- **Gol = mrugające tło**: warstwa radialnego brandowego glow pulsująca opacity (`tbGoalFlash` .9s infinite, GPU) + pulsowanie etykiety „GOL" (`tbGoalPulse`); wyłączane przy `prefers-reduced-motion`
+- **Plansze uproszczone i powiększone**: skład = SAMA lista (bez sztabu i logo — nieczytelne z daleka), zawodnik 1.9rem; belka tytułu 2.4rem; sędziowie 2.4rem; nagłówek meczowy 8rem wyniku / herby 8.5rem (na podsumowaniu skalowany w dół, bo wynik powtarza się w statystykach); wszystkie plansze pełnoekranowe z własnym tłem
+- Warstwy: scena wyniku (1) → plansze (2) → zdarzenia (5) → wideo (10)
+- Retest E2E: 8/8 zielone, zero błędów JS; dodatkowe kadry mrugnięcia tła gola
+
+## 2026-07-31 — Transmisja live (TKS): TELEBIM (Etapy 4-6) — cieszynki wideo + powtórki z OBS
+- **Widok telebimu** — `page-telebim.php` (theme 13, zakładka „Telebim" iPage=34, `telebim_page`), standalone jak nakładka OBS, ale z CIEMNYM tłem (fizyczny ekran LED) i layoutem skalowanym do dowolnej rozdzielczości (`1rem = 1/48 szerokości`, projekt bazowy 768×512); pasek wyniku na całą szerokość, plansze niemal pełnoekranowe — sterowane TYMI SAMYMI `live_boards` co nakładka (operator przełącza raz, oba ekrany reagują); arkusz `_source/telebim.scss` → `css/telebim.css` (10 KB), vanilla `js/page-telebim.js`
+- **Cieszynki wideo po golu (Etap 4)** — klip mp4/webm wgrany STANDARDOWYM uploadem plików na podstronie zawodnika (rozszerzenia dopisane do `allowed_not_image_extensions` poza blokiem `@claude-lock`); preload wszystkich klipów obu drużyn na starcie (ukryte `<video preload>`); gol strzelca z klipem = pełnoekranowe wideo z podpisem (numer+nazwisko+minuta), brak klipu → zwykły popup, USZKODZONY klip → fallback na popup (zdarzenie nie przepada); kolejkowanie zdarzeń w trakcie odtwarzania
+- **Powtórki z OBS (Etap 5)** — `plugins/live/replay/replay-server.py` (Python stdlib, zero zależności): lokalny mini-serwer na komputerze z OBS serwujący NAJNOWSZY plik replay buffera pod `http://localhost:8766/replay.mp4` (CORS, Range/206, bind 127.0.0.1); przycisk „▶ Powtórka na telebimie" w panelu → POST `replay_show` → `live_state.iReplayCount++` → telebim wykrywa wzrost licznika i gra klip (powtórka przerywa cieszynkę; localhost zwolniony z mixed-content w Chrome); adres konfigurowalny `$config['live_replay_url']`
+- **Kiosk mode (Etap 6)** — instrukcja w `plugins/live/replay/README.md` (chrome `--kiosk --autoplay-policy=no-user-gesture-required --window-position=…`, konfiguracja OBS Replay Buffer + format mp4)
+- `plugins/live/view-helpers.php` — wspólne gettery danych widoków live (`liveTeamData`, `liveSquad`, `liveStaffBlock`, `livePageImage(s)`, `liveTeamClips`) — ta sama logika co closury nakładki, wyniesiona do funkcji (nakładkę można zmigrować w osobnym kroku)
+- API: `player.video` w payloadzie zdarzeń stanu, `replay` (licznik) w state, POST `replay_show`
+- Migracja `database/migrations/2026-07-31-live-telebim.php` (idempotentna): zakładka Telebim + `live_state.iReplayCount` — **uruchom na serwerze po wdrożeniu**
+- Testy: 8 scenariuszy E2E w Chromium (klip testowy webm generowany MediaRecorderem) — scorebar/plansze, popup bez klipu, cieszynka gra i się chowa, fallback po uszkodzonym klipie, toast panelu, powtórka z realnego lokalnego serwera (curl: 200/206/CORS), statystyki podsumowania; wyłapały brakujący `</div>` w planszy składu (wszystkie kolejne plansze zagnieżdżały się w niewidocznej)
+
+## 2026-07-31 — Transmisja live (TKS): poprawki po teście na produkcji + szlif
+- OCR: nazwiska zapisywane jako „Imię Nazwisko" zamiast DRUKOWANYCH — instrukcja w prompcie + `liveOcrTitleCase()` (mb, polskie znaki; konwertuje TYLKO stringi w całości wielkimi literami, „Piotr van der Berg" zostaje bez zmian)
+- Panel: zawodnicy w osobnych wierszach (1 kolumna); przy nazwisku badge zapisanych akcji (`$config['live_action_badges']`: GOL/SAM/ŻÓŁTA/CZERW/▲/▼, z licznikiem ×N) + kropka stanu komunikatu na nakładce: żółta = czeka w kolejce, zielona (pulsująca) = właśnie wyświetlany, brak = już zniknął
+- API: symulacja harmonogramu wyświetlania popupów po stronie serwera (`queued`/`showing`/`done` per zdarzenie w `state` — nakładka nie ma dostępu zapisu, więc stan liczony z `iClock` + czasy animacji nakładki) + `iScorebarPos` w stanie + komenda POST `scorebar_pos`
+- Nakładka: plansza „Sędziowie" (treść = opis SKRÓCONY strony „Mecz", renderowana tylko gdy niepusta), statystyki na planszy podsumowania (gole z uwzgl. samobójów, żółte/czerwone kartki, zmiany — per drużyna), pasek wyniku przełączany lewy/prawy górny róg (przycisk w panelu, klasa `.obsScorebar--right`)
+- Migracja `database/migrations/2026-07-31-live-extras.php` (idempotentna): kolumna `live_state.iScorebarPos` + plansza „sedziowie" (iPosition=9) — **uruchom na serwerze po wdrożeniu**
+- Testy Playwright (9 asercji E2E): wiersze, badge, pełny cykl kropki queued→showing→zniknięcie, przełącznik paska, plansza sędziów, statystyki — wszystko zielone, zero błędów JS
+
 ## 2026-07-31 — Transmisja live (TKS): nakładki OBS, krok 3 — nakładka (KOMPLET sterowania live)
 - `page-live-overlay.php` — standalone nakładka OBS (Browser Source 1920×1080, `background: transparent`): pasek wyniku+zegar (skróty z `sDesc` drużyny, herby `iType=2`), plansze: dzień meczowy (treść z `match_page`), składy obu drużyn (`sNumber`/`sSquad` z importera + sztab z bloku `.teamStaff`), podsumowanie (oś zdarzeń per drużyna), sponsorzy/realizacja (`live_sponsors_page`/`live_production_page`, 0 = plansza wyłączona), plakat meczowy
 - Własny lekki arkusz `css/live-overlay.css` (źródło `_source/live-overlay.scss`, 8 KB zamiast 120 KB motywu) — animacje tylko `transform`/`opacity` (GPU), broadcast look na tokenach `_brand`

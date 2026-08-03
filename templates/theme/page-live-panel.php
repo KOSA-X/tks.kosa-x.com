@@ -90,6 +90,8 @@ if (!$bLiveAdmin) {
                     .' data-number="'.html((string) $aPlayer['sNumber']).'">'
                     .'<span class="livePanel__playerNumber">'.html((string) $aPlayer['sNumber'] !== '' ? (string) $aPlayer['sNumber'] : '–').'</span>'
                     .'<span class="livePanel__playerName">'.html((string) $aPlayer['sName']).'</span>'
+                    .'<span class="livePanel__playerBadges"></span>'
+                    .'<span class="livePanel__playerDot" data-state="" title="'.$lang['live_dot_title'].'"></span>'
                     .'</button>';
             }
             $content .= '</div>';
@@ -177,6 +179,11 @@ if (!$bLiveAdmin) {
                         data-board="<?php echo html((string) $aBoard['sName']); ?>"><?php echo html((string) $aBoard['sLabel']); ?></button>
             <?php endforeach; ?>
         </div>
+        <div class="livePanel__buttonRow mt-2">
+            <button type="button" class="button" id="lp-scorebar-pos"
+                    data-pos="<?php echo (int) ($aLive['iScorebarPos'] ?? 0); ?>"><?php echo $lang['live_scorebar_pos']; ?>: <span id="lp-scorebar-label">—</span></button>
+            <button type="button" class="button livePanel__replay" id="lp-replay">▶ <?php echo $lang['live_replay_button']; ?></button>
+        </div>
     </div>
 
     <!-- ZAWODNICY -->
@@ -224,6 +231,7 @@ window.livePanelConfig = <?php echo json_encode(Array(
     'api'     => $config['base_path_with_slash'].'plugins/live/api.php',
     'csrf'    => hash('sha256', 'csrf|'.$config['session_key_name']),
     'actions' => $config['live_actions'],
+    'badges'  => $config['live_action_badges'],
     'teams'   => Array('1' => $iTeam1, '2' => $iTeam2),
     'teamNames' => Array(
         (string) $iTeam1 => (string) ($aTeamOptions[$iTeam1] ?? ''),
@@ -237,6 +245,9 @@ window.livePanelConfig = <?php echo json_encode(Array(
         'save'            => $lang['live_save'],
         'delete'          => $lang['live_delete'],
         'halfShort'       => $lang['live_half_short'],
+        'posLeft'         => $lang['live_pos_left'],
+        'posRight'        => $lang['live_pos_right'],
+        'replaySent'      => $lang['live_replay_sent'],
     ),
 ), JSON_UNESCAPED_UNICODE); ?>;
 </script>

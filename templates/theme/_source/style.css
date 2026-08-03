@@ -4821,7 +4821,7 @@ body.scroll-lock {
 }
 .livePanel__players {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-template-columns: 1fr;
   gap: 8px;
 }
 .livePanel__player {
@@ -4883,6 +4883,63 @@ body.scroll-lock {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.livePanel__playerBadges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-left: auto;
+}
+.livePanel__playerBadges .lp-badge {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 3px 7px;
+  border-radius: 4px;
+  line-height: 1;
+  background: var(--gray-light);
+  color: var(--font-color);
+  white-space: nowrap;
+}
+.livePanel__playerBadges .lp-badge--goal {
+  background: #d00e1c;
+  color: #fff;
+}
+.livePanel__playerBadges .lp-badge--own_goal {
+  background: #c1121f;
+  color: #fff;
+}
+.livePanel__playerBadges .lp-badge--yellow_card {
+  background: #fb8500;
+  color: #010101;
+}
+.livePanel__playerBadges .lp-badge--red_card {
+  background: #c1121f;
+  color: #fff;
+}
+.livePanel__playerBadges .lp-badge--in {
+  color: #6a994e;
+}
+.livePanel__playerBadges .lp-badge--out {
+  color: #c1121f;
+}
+.livePanel__playerDot {
+  flex: 0 0 auto;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: transparent;
+}
+.livePanel__playerDot[data-state=queued] {
+  background: #fb8500;
+}
+.livePanel__playerDot[data-state=showing] {
+  background: #6a994e;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .livePanel__playerDot[data-state=showing] {
+    animation: livePanelDotPulse 1s ease-in-out infinite;
+  }
 }
 .livePanel__sheet {
   position: fixed;
@@ -5059,6 +5116,16 @@ body.scroll-lock {
   }
 }
 
+@keyframes livePanelDotPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.45);
+    opacity: 0.6;
+  }
+}
 @keyframes livePanelSheetUp {
   from {
     transform: translate3d(0, 30px, 0);

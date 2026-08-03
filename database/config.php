@@ -80,6 +80,7 @@ $config['themes'] = Array(
   10 => 'page-payment.php',
   11 => 'page-live-panel.php',
   12 => 'page-live-overlay.php',
+  13 => 'page-telebim.php',
 );
 
 
@@ -265,6 +266,21 @@ $config['live_actions'] = Array(
   'in'          => 'Wejście (zmiana)',
   'out'         => 'Zejście (zmiana)',
 );
+
+// Krótkie etykiety zdarzeń — badge przy nazwisku w panelu operatora
+$config['live_action_badges'] = Array(
+  'goal'        => 'GOL',
+  'own_goal'    => 'SAM',
+  'yellow_card' => 'ŻÓŁTA',
+  'red_card'    => 'CZERW',
+  'in'          => '▲',
+  'out'         => '▼',
+);
+
+// Powtórki z OBS na telebimie: adres lokalnego mini-serwera replay buffera
+// (plugins/live/replay/replay-server.py na komputerze z OBS; telebim = drugi
+// ekran tego samego komputera, więc localhost działa mimo zdalnego hostingu).
+$config['live_replay_url'] = 'http://localhost:8766/replay.mp4';
 
 
 // @claude-lock
@@ -572,6 +588,15 @@ function getPageId( ){
   }
   return false;
 } // end function getPageId
+
+
+// ============================================================
+// TRANSMISJA LIVE — DOZWOLONE PLIKI WIDEO (nadpisanie poza @claude-lock)
+// ============================================================
+// Cieszynki zawodników na telebim: klip mp4/webm wgrywany STANDARDOWYM
+// uploadem plików na podstronie zawodnika (panel → zakładka „Pliki").
+// Wartość bazowa siedzi w rdzeniu (@claude-lock) — dlatego rozszerzenie tutaj.
+$config['allowed_not_image_extensions'] .= '|mp4|webm';
 
 
 // ============================================================
