@@ -14,19 +14,7 @@ update_views($currentPageId);
 ?>
 
 <header class="mainHeader">
-    <div class="mainHeader__top">
-        <div class="container">
-           <?php echo contactIcon(); ?>
-            <?php echo contacts(['phone' => true, 'email' => true, 'location' => TRUE]); ?>
-            <?php echo socialMedia(); ?>
-            <?php echo language(); ?>
-            <?php if (feature('search')) echo searchIcon(); ?>
-            <?php echo darkMode(); ?>
-            <?php echo contrastMode(); ?>
-            <?php echo fontSizeToggle(); ?>
-        </div>
-    </div>
-
+    
     <div class="mainHeader__center">
         <div class="container">
             <div class="mainHeader__logo">

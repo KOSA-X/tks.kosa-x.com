@@ -1209,35 +1209,7 @@
     }, 200);
   })();
 
-  /* =========================================================
-     12) Cookie consent (Twoje, ale na Cookie module)
-  ========================================================= */
-  function initCookieConsent() {
-    function show() {
-      if (App.Cookie.get("cookies_accepted") === "T") return;
-
-      const message_container = document.createElement("div");
-      message_container.id = "cookies-message-container";
-
-      const html_code =
-        '<div id="cookies-message">' +
-        '<img src="images/icons/info.svg" class="invert" alt="Informacja">' +
-        '<p>Korzystając z tej strony akceptujesz warunki zawarte w <a href="./?polityka-prywatnosci">Polityce Prywatności</a>.</p>' +
-        '<a href="javascript:void(0);" id="accept-cookies-checkbox" class="button w-100">Akceptuję</a>' +
-        "</div>";
-
-      message_container.innerHTML = html_code;
-      document.body.appendChild(message_container);
-
-      document.getElementById("accept-cookies-checkbox")?.addEventListener("click", function () {
-        App.Cookie.set("cookies_accepted", "T", { days: 365 });
-        const box = document.getElementById("cookies-message-container");
-        if (box) box.remove();
-      });
-    }
-
-    show();
-  }
+ 
 
   /* =========================================================
      13) Lazy loading obrazków (IntersectionObserver)
@@ -1418,7 +1390,6 @@
     initInputWhitelist();
 
     initLanguage();
-    initCookieConsent();
     initLazyImages();
     initInstaReelVideos();
   }

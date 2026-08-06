@@ -9,7 +9,7 @@
 // ------------------------------------------------------
 // 1. Stałe i ścieżki
 // ------------------------------------------------------
-$baseUrl = rtrim('https://cms.kosa-x.com', '/'); // <-- jak chcesz, podmień tu na swoją domenę
+$baseUrl = rtrim('https://tks.kosa-x.com', '/'); // <-- jak chcesz, podmień tu na swoją domenę
 
 define('BASE_URL', $baseUrl);
 define('CURRENT_URL', BASE_URL.$_SERVER['REQUEST_URI']);
@@ -21,9 +21,9 @@ define('SHOP_PAGE', !empty($config['current_page_id']) && !empty($config['shop_p
 //define('PRODUCT_PAGE', $aData['sType'] == 1 ? TRUE : FALSE);
 
 // wersjonowanie plików css/js/logo
-$logoFile = __DIR__.'/images/logo.svg';
+$logoFile = __DIR__.'/images/logo.png';
 $logoVer  = file_exists($logoFile) ? filemtime($logoFile) : time();
-define('LOGO_URL', IMAGES.'logo.svg?ver='.$logoVer);
+define('LOGO_URL', IMAGES.'logo.png?ver='.$logoVer);
 
 $cssPath = __DIR__.'/templates/'.$config['skin'].'/css/style.css';
 $jsPath  = __DIR__.'/templates/'.$config['skin'].'/js/scripts.js';
@@ -31,10 +31,10 @@ $jsPath  = __DIR__.'/templates/'.$config['skin'].'/js/scripts.js';
 $css_file = THEME.'css/style.css?ver='.(file_exists($cssPath) ? filemtime($cssPath) : time());
 $js_file  = THEME.'js/scripts.js?ver='.(file_exists($jsPath) ? filemtime($jsPath) : time());
 
-define('FAVICON', IMAGES.'favicon.webp');
+define('FAVICON', IMAGES.'logo.png');
 
 // logo html
-$logo = '<img src="'.LOGO_URL.'" alt="'.$config['logo'].'" class="logo_img logo_light"><img src="'.IMAGES.'logo-dark.svg" alt="'.$config['logo'].'" class="logo_img logo_dark">';
+$logo = '<img src="'.LOGO_URL.'" alt="'.$config['logo'].'" class="logo_img logo_light">';
 define('LOGO', $logo);
 
 $theme = 'templates/'.$config['skin'].'/';

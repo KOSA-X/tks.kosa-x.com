@@ -13,32 +13,32 @@ setlocale( LC_CTYPE, 'pl_PL' );
 // PODSTAWOWE DANE STRONY
 // ============================================================
 $config['start_page'] = "1";
-$config['logo'] = "KOS X";
-$config['title'] = "KOSA X | Digital Content Creator";
-$config['description'] = "Opis w Google";
-$config['slogan'] = "Digital Content Creator";
+$config['logo'] = "Tomasovia";
+$config['title'] = "Tomasovia LIVE";
+$config['description'] = "Transmisje na żywo TKS Tomasovia";
+$config['slogan'] = "Transmisje na żywo TKS Tomasovia";
 $config['foot_info'] = "Copyright ©";
 
 // ============================================================
 // ID ZAKŁADEK — patrz @claude-note na górze pliku
 // ============================================================
-$config['shop_page'] = "10";
-$config['user_page'] = "9";
-$config['order_page'] = "12";
-$config['blog_page'] = "21";
-$config['about_page'] = "17";
-$config['private_policy'] = "6";
-$config['terms_page'] = "7";
+$config['shop_page'] = "0";
+$config['user_page'] = "0";
+$config['order_page'] = "0";
+$config['blog_page'] = "0";
+$config['about_page'] = "0";
+$config['private_policy'] = "0";
+$config['terms_page'] = "0";
 $config['video_page'] = "0";
-$config['slider_page'] = "1";
-$config['contact_page'] = "2";
-$config['offer_page'] = "18";
-$config['projects_page'] = "19";
-$config['faq_page'] = "16";
-$config['search_page'] = "8";
-$config['form_page'] = "20";
-$config['sitemap_page'] = "3";
-$config['payment_page'] = "14";
+$config['slider_page'] = "0";
+$config['contact_page'] = "0";
+$config['offer_page'] = "0";
+$config['projects_page'] = "0";
+$config['faq_page'] = "0";
+$config['search_page'] = "0";
+$config['form_page'] = "0";
+$config['sitemap_page'] = "0";
+$config['payment_page'] = "0";
 
 // Moduł transmisji live (TKS): rodzic drużyn — podstrony to drużyny,
 // a ich podstrony to zawodnicy (pages.sNumber, pages.sSquad).
@@ -86,21 +86,21 @@ $config['google-site-verification'] = "";
 // DANE KONTAKTOWE FIRMY
 // ============================================================
 // @claude-note: dane per-projekt — kontakt konkretnej firmy, dla której robiona jest strona
-$config['phone'] = "+48 785 942 911";
+$config['phone'] = "";
 $config['phone2'] = "";
 $config['email'] = "konrad@kosiorski.pl";
 
-$config['facebook'] = "https://www.facebook.com/#";
-$config['instagram'] = "https://www.instagram.com/kosa.x";
+$config['facebook'] = "https://www.facebook.com/TomasoviaTKS";
+$config['instagram'] = "https://www.instagram.com/tomasovia";
 // Klucz konta użyty w sekcji Instagram na stronie głównej (renderInstaFeed).
 // Pusty = sekcja się nie pokazuje.
 $config['instagram_account'] = "main";
-$config['youtube'] = "";
+$config['youtube'] = "https://www.youtube.com/@TKSTomasovia";
 $config['xcom'] = "";
 $config['whatsapp'] = "";
 $config['linkedin'] = "";
-$config['tiktok'] = "https://www.tiktok.com/@kosa.x";
-$config['maps'] = "https://maps.app.goo.gl/CLR69hKMUwJCV8kf6";
+$config['tiktok'] = "";
+$config['maps'] = "";
 
 // ============================================================
 // INSTAGRAM — WIDGET / INSTAFEED (plugins/instagram/)
@@ -125,16 +125,16 @@ $config['instagram_accounts'] = array(
 );
 
 $config['city'] = "Tomaszów Lubelski";
-$config['code'] = "22-600";
-$config['street'] = "Lwowska";
+$config['code'] = "";
+$config['street'] = "";
 
 // ============================================================
 // GODZINY OTWARCIA
 // ============================================================
-$config['hours_1'] = "07:00";
-$config['hours_2'] = "17:00";
-$config['hours_3'] = "09:00";
-$config['hours_4'] = "14:00";
+$config['hours_1'] = "";
+$config['hours_2'] = "";
+$config['hours_3'] = "";
+$config['hours_4'] = "";
 $config['hours_5'] = "";
 $config['hours_6'] = "";
 

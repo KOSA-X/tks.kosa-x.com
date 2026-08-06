@@ -102,9 +102,9 @@ h5 {
 // ----------------------------------------------------------
 
 ul, ol {
-	list-style: none;
-	padding-left: 0;
-	margin: 0;
+//	list-style: none;
+	padding-left: $gutter;
+//	margin: 0;
 }
 
 blockquote, figure {

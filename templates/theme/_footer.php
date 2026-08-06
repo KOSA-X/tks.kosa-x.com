@@ -6,44 +6,7 @@ if (!defined('CUSTOMER_PAGE')) {
 </div> <!-- /mainPage -->
 
 <footer class="mainFooter">
-    <?php
-    // Bezpieczne sprawdzenie iTheme (na wypadek 404 / braku $aData)
-    $theme = isset($aData['iTheme']) ? (int)$aData['iTheme'] : null;
-    $showFooterTop = !in_array($theme, [3, 4, 5, 10], true);
-
-    if ($showFooterTop): ?>
-        <div class="container">
-            <div class="mainFooter__row">
-                <div class="mainFooter__column">
-                    <div class="mainFooter__logo"><?php echo LOGO; ?></div>
-                    <?php if (!empty($config['slogan'])): ?>
-                        <div class="mainFooter__slogan"><?php echo $config['slogan']; ?></div>
-                    <?php endif; ?>
-                    <?php if (!empty($config['description'])): ?>
-                        <div class="mainFooter__desc"><?php echo $config['description']; ?></div>
-                    <?php endif; ?>
-
-                    <?php echo socialMedia(); ?>
-                </div>
-
-                <div class="mainFooter__column">
-                    <h5 class="mainFooter__title">Nawigacja</h5>
-                    <?php
-                    echo $oPage->listPagesMenu(1, [
-                        'sClassName' => 'footerMenu',
-                        'bExpanded'  => false,
-                        'iDepthLimit'=> 0
-                    ]);
-                    ?>
-                </div>
-
-                <div class="mainFooter__column">
-                    <h5 class="mainFooter__title">Kontakt</h5>
-                    <?php echo contacts(['phone' => true, 'email' => true, 'location' => true]); ?>
-                </div>
-            </div>
-        </div>
-    <?php endif; ?>
+ 
 
     <div class="mainFooter__bottom">
         <div class="container">
@@ -89,59 +52,7 @@ if (!defined('CUSTOMER_PAGE')) {
 </main> <!-- /mainBody -->
 
 <!--<div class="overlayWindow"></div>-->
- 
- <div id="modal-contact" class="modal" style="display:none" data-selectable="true">
-   <div class="card">
-          <header class="card__header">
-            <h5 class="card__title">
-                <img src="<?= ICONS; ?>email.svg" alt="">
-                Kontakt
-            </h5>
-        </header>
-          <div class="card__wrapper">
-           <ul class="list">
-               <li>
-                   <div class="contactItem contactItem-phone">
-                       <div class="content">
-                           <span class="label"><?php echo $lang['phone']; ?></span>
-                           <a href="tel:<?php echo $config['phone']; ?>" class="value"><?php echo $config['phone']; ?></a>
-                       </div>
-                       <div class="action">
-                           <a href="tel:<?php echo $config['phone']; ?>" class="button"><img src="<?php echo ICONS; ?>phone-line.svg" alt="<?php echo $lang['phone']; ?>" class="invert m-0"></a>
-                       </div>
-                   </div>
-               </li>
-               <li>
-                   <div class="contactItem contactItem-email">
-                       <div class="content">
-                           <span class="label"><?php echo $lang['email']; ?></span>
-                           <a href="mailto:<?php echo $config['email']; ?>" class="value"><?php echo $config['email']; ?></a>
-                       </div>
-                       <div class="action">
-                           <a href="mailto:<?php echo $config['email']; ?>" class="button"><img src="<?php echo ICONS; ?>email-line.svg" alt="<?php echo $lang['email']; ?>" class="invert m-0"></a>
-                       </div>
-                   </div>
-               </li>
-               <li>
-                   <div class="contactItem contactItem-location">
-                       <div class="content">
-                           <span class="label"><?php echo $lang['location']; ?></span>
-                           <a href="<?php echo $config['maps']; ?>" target="_blank" class="value"><?php echo $config['street']; ?>, <?php echo $config['city']; ?></a>
-                       </div>
-                       <div class="action">
-                           <a href="<?php echo $config['maps']; ?>" target="_blank" class="button"><img src="<?php echo ICONS; ?>location-line.svg" alt="<?php echo $lang['location']; ?>" class="invert m-0"></a>
-                       </div>
-
-                   </div>
-               </li>
-           </ul>
-       </div>
-    </div>
-</div>
- 
- 
- 
-
+  
 
             
 
@@ -166,46 +77,7 @@ if (!defined('CUSTOMER_PAGE')) {
 
 </div>
 <?php endif; ?>
-
-<?php if (feature('search')): // modal wyszukiwarki tylko gdy moduł włączony ?>
- <div id="search-widget" class="modal"  style="display:none" data-selectable="true">
-    <div class="card">
-        <header class="card__header">
-            <h5 class="card__title">
-                <img src="<?= ICONS; ?>search.svg" alt="">
-                Szukaj
-            </h5>
-        </header>
-        <div class="card__wrapper">
-            <div class="card__content">
-                <form action="<?php echo getUrl($config['search_page']); ?>" method="get" class="searchForm">
-                    <div class="row">
-                        <div class="col-8">
-                            <div class="form-floating form-item">
-                                <input
-                                    type="text"
-                                    name="q"
-                                    id="q"
-                                    class="form-control"
-                                    placeholder="Szukaj..."
-                                    value=""
-                                    required
-                                >
-                                <label for="q">Wpisz szukaną frazę</label>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <button type="submit" class="button button-lg w-100 h-100">
-                                Szukaj
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
- </div>
-<?php endif; ?>
+ 
 
 <?php echo $oPage->listPagesPopup($config['footer_popups_page']); ?>
  

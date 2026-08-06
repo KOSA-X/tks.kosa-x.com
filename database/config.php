@@ -40,8 +40,8 @@ $config['login_pass']  = "haslo";
 * Więcej: https://opensolution.org/docs/?p=pl-settings#images_thumbnails
 */
 $config['images_thumbnails'] = Array( 500, 920 ); // domyślna wartość: Array( 100, 200, 300 )
-$config['images_locations']  = Array( 1 => 'Slider', 2 => 'Ikona / logo', 3 => 'Grid', 4 => 'Zdjęcie w tle', 0 => 'Ukryte' ); // domyślna wartość: 1 => 'Lewa strona', 2 => 'Prawa strona', 3 => 'Galeria', 0 => 'Brak'
-$config['pages_menus']       = Array( 1 => 'Nawigacja', 2 => 'Sklep - kategorie', 3 => 'Systemowe', 0 => 'Ukryte' ); // domyślna wartość: Array( 1 => 'Menu górne', 0 => 'Ukryte' )
+$config['images_locations']  = Array( 1 => 'Galeria', 0 => 'Ukryte' ); // domyślna wartość: 1 => 'Lewa strona', 2 => 'Prawa strona', 3 => 'Galeria', 0 => 'Brak'
+$config['pages_menus']       = Array( 1 => 'Nawigacja', 2 => 'Sklep - kategorie', 3 => 'Plansze', 4 => 'Drużyny', 0 => 'Ukryte' ); // domyślna wartość: Array( 1 => 'Menu górne', 0 => 'Ukryte' )
 // @claude-unlock
 
 
@@ -230,7 +230,7 @@ $config['payu_client_id'] = '499307';
 $config['payu_client_secret'] = 'e37256e08322cabc5020357914a6c447';
 $config['payu_second_key'] = 'f1197ca121c6b8a600d65cb70ac83f55'; // dla autoryzacji notify
 $config['payu_currency'] = 'PLN';
-$config['payment_page'] = 39; // strona powrotu w Quick.CMS
+$config['payment_page'] = "0"; // strona powrotu w Quick.CMS
 $config['payu_debug'] = false;
 
 // @claude-note: token do generowania linków do strony ze szczegółami zamówienia
@@ -250,7 +250,7 @@ $config['squad_types'] = Array(
 // Klucze API modułu live — tu tylko PLACEHOLDERY. Prawdziwe klucze wstawiaj
 // w database/config.secrets.php (poza repo — patrz config.secrets.dist.php),
 // który ładuje się na końcu tego pliku i nadpisuje te wartości.
-$config['anthropic_api_key']  = '';   // Etap 1: import składu z protokołu (vision OCR)
+$config['anthropic_api_key']  = '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';   // Etap 1: import składu z protokołu (vision OCR)
 $config['elevenlabs_api_key'] = '';   // Etap 2: komunikaty głosowe (TTS)
 
 // Model vision do OCR protokołu (plugins/live/ocr.php)
@@ -263,8 +263,8 @@ $config['live_actions'] = Array(
   'own_goal'    => 'Gol samobójczy',
   'yellow_card' => 'Żółta kartka',
   'red_card'    => 'Czerwona kartka',
-  'in'          => 'Wejście (zmiana)',
-  'out'         => 'Zejście (zmiana)',
+  'in'          => 'Wchodzi',
+  'out'         => 'Schodzi',
 );
 
 // Krótkie etykiety zdarzeń — badge przy nazwisku w panelu operatora

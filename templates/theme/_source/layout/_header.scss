@@ -16,51 +16,7 @@
 
     @include fade;
     @include border-bottom;
-
-    // ------------------------------------
-    // TOP BAR
-    // ------------------------------------
-    &__top{
-        display: block;
-        background: var(--white);
-        position: relative;
-        z-index: 10;
-
-        @include font-sm;
-        @include border-bottom;
-
-        > .container{
-            height: $header_top;
-            @include flexbox-justify;
-        }
-
-        .contactsList{
-            display: none;
-        }
-
-        .socialMediaIcons{
-            display: none;
-            margin-right: $gutter;
-
-            .icon{
-                height: 28px;
-            }
-        }
-        
-        .contactIconPopup{
-            margin-right: auto;
-        }
-
-        .socialMediaIcons .icon,
-        .chooseLanguage__button{
-            // dodatkowe modyfikatory jeśli potrzeba
-        }
-        
-        a{
-            color: var(--text-color);
-        }
-    }
-
+ 
 
     // ------------------------------------
     // CENTER (logo + menu + ikony)
@@ -122,7 +78,7 @@
         }
 
         .logo_img{
-            height: 25px;
+            height: 40px;
             @include fade;
             // @include invert(1);
         }
@@ -668,61 +624,8 @@
 // ----------------------------------------------------------
 // ----- RESPONSIVE BEHAVIOUR
 // ----------------------------------------------------------
-
-// SPECJALNY CASE: STRONA GŁÓWNA Z PRZEZROCZYSTYM HEADEREM (MOBILE/TABLET)
-//@media (max-width: 1200px){
-#page-1{
-    .mainHeader:not(.scroll, .mainHeaderOpen){
-        background: transparent;
-        -webkit-backdrop-filter: saturate(100%) blur(0);
-        backdrop-filter: saturate(100%) blur(0);
-        border-bottom: 1px solid transparent;
-
-        .bigIcon img{
-            @include invert(1);
-        }
-
-        .menuHamburger:not(.open) span{
-            background: var(--white);
-        }
-
-        .mainHeader__logo{
-            .logo_text{
-                color: $white;
-            }
-
-            .logo_light{
-                display: none;
-            }
-
-            .logo_dark{
-                display: block;
-            }
-        }
-
-        .mainHeader__menu,
-        .cartIcon{
-            // można ukrywać, jeśli header video
-        }
-        
-        .headerMenu{
-            .menu_item_submenu{
-                .menu_link{
-                    background-image: url(../images/arrow-down-white.svg);
-                }
-            }
-            .menu_link{
-                color: $white;
-            }
-
-        }
-    }
-    
-   
-    
-}
-//}
-
+ 
+ 
 
 // >= 768px (md)
 @include media-up(md){
