@@ -63,7 +63,7 @@ body {
 }
 
 body {
-  font-family: "Montserrat", sans-serif;
+  font-family: "Zalando Sans Expanded", sans-serif;
   color: #fff;
   -webkit-font-smoothing: antialiased;
 }
@@ -150,7 +150,7 @@ img {
   border-radius: 50%;
 }
 .obsScorebar__dot--yellow {
-  background: #fb8500;
+  background: #ffdd00;
 }
 .obsScorebar__dot--red {
   background: #c1121f;
@@ -301,7 +301,7 @@ img {
   transform: rotate(8deg);
 }
 .obsEvent__icon--yellow_card {
-  background: #fb8500;
+  background: #ffdd00;
 }
 .obsEvent__icon--red_card {
   background: #c1121f;
@@ -323,7 +323,7 @@ img {
   border-left-color: #c1121f;
 }
 .obsEvent--yellow_card .obsEvent__body {
-  border-left-color: #fb8500;
+  border-left-color: #ffdd00;
 }
 .obsEvent--red_card .obsEvent__body {
   border-left-color: #c1121f;

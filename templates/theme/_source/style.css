@@ -1103,7 +1103,7 @@ html, body {
 body {
   background: var(--bg-color);
   color: var(--font-color);
-  font-family: "Montserrat", sans-serif;
+  font-family: "Zalando Sans Expanded", sans-serif;
   font-weight: 400;
   font-size: 15px;
   font-optical-sizing: auto;
@@ -2664,8 +2664,8 @@ input[type=range]:focus::-moz-range-thumb {
   border-color: rgb(32.3911382735%, 46.7532467532%, 23.8349885409%);
 }
 .alert-warning {
-  background: #fb8500;
-  border-color: rgb(78.431372549%, 41.5592531833%, 0%);
+  background: #ffdd00;
+  border-color: rgb(80%, 69.3333333333%, 0%);
 }
 
 .loadingPage {
@@ -4451,7 +4451,7 @@ body.scroll-lock {
 }
 .livePanel {
   padding: 20px 0 60px;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Zalando Sans Expanded", sans-serif;
 }
 .livePanel__section {
   margin-top: 40px;
@@ -4556,7 +4556,7 @@ body.scroll-lock {
   margin-top: 4px;
 }
 .livePanel__clockValue.is-extra {
-  color: #fb8500;
+  color: #ffdd00;
 }
 .livePanel__clockHalf {
   font-size: 0.9em;
@@ -4712,7 +4712,7 @@ body.scroll-lock {
   color: #fff;
 }
 .livePanel__playerBadges .lp-badge--yellow_card {
-  background: #fb8500;
+  background: #ffdd00;
   color: #010101;
 }
 .livePanel__playerBadges .lp-badge--red_card {
@@ -4733,7 +4733,7 @@ body.scroll-lock {
   background: transparent;
 }
 .livePanel__playerDot[data-state=queued] {
-  background: #fb8500;
+  background: #ffdd00;
 }
 .livePanel__playerDot[data-state=showing] {
   background: #6a994e;
@@ -4821,7 +4821,7 @@ body.scroll-lock {
   box-shadow: inset 3px 0 0 #143582;
 }
 .livePanel__event[data-event-action=yellow_card] {
-  box-shadow: inset 3px 0 0 #fb8500;
+  box-shadow: inset 3px 0 0 #ffdd00;
 }
 .livePanel__event[data-event-action=red_card] {
   box-shadow: inset 3px 0 0 #c1121f;
@@ -6715,8 +6715,8 @@ a:hover {
   box-shadow: 0 0 10px rgba(106, 153, 78, 0.7);
 }
 .productAvailability__status-order::before {
-  background: #fb8500;
-  box-shadow: 0 0 10px rgba(251, 133, 0, 0.6);
+  background: #ffdd00;
+  box-shadow: 0 0 10px rgba(255, 221, 0, 0.6);
 }
 .productAvailability__note {
   display: block;

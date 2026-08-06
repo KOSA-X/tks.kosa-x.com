@@ -18,7 +18,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Zalando+Sans+Expanded:ital,wght@0,200..900;1,200..900&display=swap');
 
 $font-h: "Zalando Sans Expanded", sans-serif;   // nagłówki
-$font-p: "Montserrat", sans-serif;              // treść
+$font-p: "Zalando Sans Expanded", sans-serif;             // treść
 
 
 // ----------------------------------------------------------
@@ -55,7 +55,7 @@ $gray-dark:  #111;
 // ----------------------------------------------------------
 $success: #6a994e;
 $danger:  #c1121f;
-$warning: #fb8500;
+$warning: #ffdd00;
 $info:    #105585;
 
 

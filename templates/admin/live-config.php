@@ -170,17 +170,17 @@ require_once 'templates/admin/_menu.php';
         </li>
 
         <li>
-            <h5 class="form-separator">Plansze — źródła treści</h5>
-            <p class="form-text">Wskaż zakładki, z których plansze biorą treść (opisy + zdjęcia w gridzie). Zakładki tworzysz w Strony (typ menu „Plansze").</p>
+            <h5 class="form-separator">Plansze</h5>
+<!--            <p class="form-text">Wskaż zakładki, z których plansze biorą treść (opisy + zdjęcia w gridzie). Zakładki tworzysz w Strony (typ menu „Plansze").</p>-->
         </li>
 
         <?php
-        echo liveCfgPageSelect( 'match_page', 'Plansza DZIEŃ MECZOWY (mecz dnia: opis, plakat)', $config, $oPage );
-        echo liveCfgPageSelect( 'live_referees_page', 'Plansza SĘDZIOWIE (opis + zdjęcia)', $config, $oPage );
-        echo liveCfgPageSelect( 'live_sponsors_page', 'Plansza SPONSORZY (grid logotypów)', $config, $oPage );
-        echo liveCfgPageSelect( 'live_partners_page', 'Plansza PARTNERZY GŁÓWNI (grid logotypów)', $config, $oPage );
-        echo liveCfgPageSelect( 'live_match_sponsor_page', 'Plansza SPONSOR MECZU (duże logo + opis pełny)', $config, $oPage );
-        echo liveCfgPageSelect( 'live_production_page', 'Plansza REALIZACJA TRANSMISJI (tytuł + zdjęcia)', $config, $oPage );
+        echo liveCfgPageSelect( 'match_page', 'DZIEŃ MECZOWY', $config, $oPage );
+        echo liveCfgPageSelect( 'live_referees_page', 'SĘDZIOWIE', $config, $oPage );
+        echo liveCfgPageSelect( 'live_sponsors_page', 'SPONSORZY', $config, $oPage );
+        echo liveCfgPageSelect( 'live_partners_page', 'PARTNERZY GŁÓWNI', $config, $oPage );
+        echo liveCfgPageSelect( 'live_match_sponsor_page', 'SPONSOR MECZU', $config, $oPage );
+        echo liveCfgPageSelect( 'live_production_page', 'REALIZACJA TRANSMISJI', $config, $oPage );
         ?>
 
     </ul>
