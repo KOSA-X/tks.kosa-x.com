@@ -1,5 +1,40 @@
 # Changelog
 
+## 2026-08-06 — Plansza „Skład 3D" (boisko w perspektywie, styl Ligi Mistrzów)
+- **Dwie nowe plansze** `sklad3d_gospodarza` / `sklad3d_goscia` (wiersze
+  w `live_boards`): wyjściowa 11 na boisku pochylonym w 3D — płaszczyzna
+  murawy `rotateX`, zawodnicy z kontr-rotacją „stoją" na boisku, a perspektywa
+  sama pomniejsza postaci w głębi; linie boiska rysowane inline SVG
+  w `currentColor` (kolor i poświata tylko w SCSS, §10.0); murawa CELOWO
+  w granacie marki, nie w zieleni — scena nakładki jest kluczowana chroma
+  i zielone boisko OBS wyciąłby z obrazu
+- **Zawodnik = okrągłe zdjęcie** (pierwszy obrazek podstrony zawodnika,
+  `files/500/`) + tabliczka numer/nazwisko w stylu `ul.teamList`; brak
+  zdjęcia w bazie → numer na tle marki; **kaskadowe wejście** chipów od
+  bramkarza po atak (scale od stóp, opóźnienie wg `--i`, tylko
+  transform/opacity, reset przy ukryciu planszy, respektuje
+  `prefers-reduced-motion`)
+- **Formacje predefiniowane** w `$config['live_formations']` (config.php,
+  sekcja live): 4-4-2, 4-3-3, 4-2-3-1, 4-2-2-2, 4-5-1, 4-1-4-1, 3-5-2,
+  3-4-3, 5-3-2, 5-4-1 — każda to 11 slotów `[x%, y%]`; nowa formacja =
+  wpis w mapie, zero zmian w kodzie
+- **Panel admina → Drużyny → Kadra**: select „Ustawienie taktyczne"
+  (zapis do `pages.sFormation` drużyny) + przy każdym zawodniku select
+  „Pozycja (Skład 3D)" 1–11 z etykietami linii (BR/OBR/POM/ATAK
+  wyprowadzanymi z członów nazwy formacji, zapis do `pages.sLineup`);
+  wybór zajętego slotu zdejmuje go z poprzedniego zawodnika; wszystko
+  w tym samym zbiorczym zapisie kadry (walidacja formacji i slotu 1–11)
+- **Wybór 11 na planszy**: zawodnicy z przypisanym slotem (duplikat →
+  wygrywa pierwszy wg iPosition); bez żadnych przypisań fallback =
+  pierwsza 11 z sSquad=1 wg iPosition (sloty po kolei); nieznana/pusta
+  formacja → bezpieczne 4-4-2
+- Baza: `pages.sFormation` + `pages.sLineup` (TEXT, default "") — schema
+  w commitowanym `database.db`, bez migracji
+- E2E: 11 chipów (4-2-2-2 i 4-3-3), zdjęcia wypełniają kółka, kaskada
+  widoczna w połowie animacji (obrona wjechała, pomoc w trakcie, atak
+  czeka), zapis formacji+slotów z panelu admina roundtrip, fallback bez
+  slotów, bilans divów OK — zielone
+
 ## 2026-08-06 — Nakładka OBS: wspólna ul.teamList, kaskadowy wjazd wierszy, jedna stopka
 - **Wspólna lista `ul.teamList`** — jedna klasa i style dla wszystkich list
   „kwadracik + nazwisko" na planszach: składy drużyn (kwadracik = numer)

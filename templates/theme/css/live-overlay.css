@@ -1637,6 +1637,163 @@ img {
     transform: translate3d(0, 0, 0);
   }
 }
+.obsPitchBoard {
+  --pitch-tilt: 50deg;
+}
+.obsPitchBoard .obsBoard__content {
+  padding: 10px 40px 0;
+  overflow: hidden;
+}
+
+.obsPitch {
+  position: relative;
+  height: 640px;
+  perspective: 1500px;
+}
+.obsPitch__scene {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+.obsPitch__field {
+  position: absolute;
+  left: 50%;
+  top: 54%;
+  width: 1500px;
+  height: 970px;
+  transform: translate(-50%, -50%) rotateX(var(--pitch-tilt));
+  transform-style: preserve-3d;
+  border-radius: 12px;
+  background: repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.05) 0 125px, rgba(255, 255, 255, 0) 125px 250px), radial-gradient(ellipse at 50% 35%, rgba(20, 53, 130, 0.9) 0%, rgba(0, 15, 27, 0.97) 78%);
+  box-shadow: 0 60px 140px rgba(1, 1, 1, 0.65), inset 0 0 160px rgba(1, 1, 1, 0.5);
+}
+.obsPitch__lines {
+  position: absolute;
+  inset: 24px;
+  width: calc(100% - 48px);
+  height: calc(100% - 48px);
+  color: rgba(255, 255, 255, 0.7);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 3;
+  filter: drop-shadow(0 0 12px rgba(255, 244, 245, 0.35));
+}
+.obsPitch__lines .spot {
+  fill: currentColor;
+  stroke: none;
+}
+.obsPitch__player {
+  position: absolute;
+  left: var(--x, 50%);
+  top: var(--y, 50%);
+  width: 0;
+  height: 0;
+  transform: rotateX(calc(var(--pitch-tilt) * -1));
+  transform-origin: 0 0;
+  transform-style: preserve-3d;
+}
+.obsPitch__inner {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  transform: translateX(-50%);
+  transform-origin: 50% 100%;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.obsPitch__chip {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid #fff;
+  background: #143582;
+  box-shadow: 0 14px 30px rgba(1, 1, 1, 0.55), 0 0 0 4px rgba(20, 53, 130, 0.35);
+}
+.obsPitch__chip img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.obsPitch__chipNumber {
+  width: 100%;
+  height: 100%;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Oswald", sans-serif;
+  font-weight: 900;
+  font-size: 34px;
+  color: #fff;
+}
+.obsPitch__plaque {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  align-items: stretch;
+  line-height: 1;
+  font-family: "Oswald", sans-serif;
+  text-transform: uppercase;
+  white-space: nowrap;
+  background: #fff;
+  color: #000f1b;
+  box-shadow: 0 10px 24px rgba(1, 1, 1, 0.45);
+}
+.obsPitch__plaque .number {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 30px;
+  padding: 7px 6px;
+  background: #143582;
+  color: #fff;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+}
+.obsPitch__plaque .name {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+  padding: 7px 12px;
+  font-weight: 800;
+  font-size: 15px;
+}
+
+.obsPitchBoard .obsPitch__inner {
+  opacity: 0;
+  transform: translateX(-50%) scale(0.5);
+}
+
+.obsPitchBoard.is-visible .obsPitch__inner {
+  animation: obsChipIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: calc(0.35s + var(--i, 0) * 0.12s);
+}
+
+@keyframes obsChipIn {
+  to {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+}
 .obsSummary {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1844,6 +2001,11 @@ img {
   .obsBoard .teamList li {
     opacity: 1;
     transform: none;
+    animation: none;
+  }
+  .obsPitchBoard .obsPitch__inner {
+    opacity: 1;
+    transform: translateX(-50%);
     animation: none;
   }
 }

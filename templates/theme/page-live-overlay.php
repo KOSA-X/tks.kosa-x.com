@@ -208,6 +208,115 @@ $fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($fSquad, $fStaffBlock, $a
     // wciąga kolejne plansze DO WNĘTRZA niewidocznej planszy składu)
     return $content.'</div></div>'.$sBoardFooter.'</div>';
 };
+
+// ------------------------------------------------------------
+// SKŁAD 3D — wyjściowa 11 na pochylonym boisku (styl Ligi Mistrzów)
+// ------------------------------------------------------------
+// sloty 1-11 z pages.sLineup (panel admina → Drużyny → Kadra); przy
+// duplikacie slotu wygrywa pierwszy wg iPosition. Fallback bez żadnych
+// przypisań: pierwsza 11 z sSquad=1 wg iPosition → sloty 1..11 po kolei.
+$fLineup = function ($iTeam) use ($oSql) {
+    $aSlots = Array();
+    if ($iTeam <= 0) {
+        return $aSlots;
+    }
+    $oQuery = $oSql->prepare(
+        'SELECT iPage, sName, sNumber, sLineup FROM pages
+         WHERE iPageParent = :team AND iStatus = 1 AND sLineup != ""
+         ORDER BY iPosition ASC, sName COLLATE NOCASE ASC'
+    );
+    $oQuery->execute(Array(':team' => $iTeam));
+    while ($aRow = $oQuery->fetch(PDO::FETCH_ASSOC)) {
+        $iSlot = (int) $aRow['sLineup'];
+        if ($iSlot >= 1 && $iSlot <= 11 && !isset($aSlots[$iSlot])) {
+            $aSlots[$iSlot] = $aRow;
+        }
+    }
+    if (empty($aSlots)) {
+        $oQuery = $oSql->prepare(
+            'SELECT iPage, sName, sNumber FROM pages
+             WHERE iPageParent = :team AND iStatus = 1 AND sSquad = "1"
+             ORDER BY iPosition ASC, sName COLLATE NOCASE ASC LIMIT 11'
+        );
+        $oQuery->execute(Array(':team' => $iTeam));
+        $iSlot = 1;
+        while ($aRow = $oQuery->fetch(PDO::FETCH_ASSOC)) {
+            $aSlots[$iSlot++] = $aRow;
+        }
+    }
+    return $aSlots;
+};
+
+// formacja drużyny (pages.sFormation, wybór w panelu Drużyny);
+// bez wyboru albo z nieznaną nazwą — bezpieczne 4-4-2
+$fFormation = function ($iTeam) use ($oSql, $config) {
+    $sFormation = '';
+    if ($iTeam > 0) {
+        $oQuery = $oSql->prepare('SELECT sFormation FROM pages WHERE iPage = :page');
+        $oQuery->execute(Array(':page' => $iTeam));
+        $sFormation = (string) ($oQuery->fetchColumn() ?: '');
+    }
+    return isset($config['live_formations'][$sFormation]) ? $sFormation : '4-4-2';
+};
+
+// plansza „Skład 3D": boisko pochylone w 3D (rotateX), zawodnicy jako
+// okrągłe zdjęcia stojące na murawie (kontr-rotacja), pozycje ze
+// współrzędnych $config['live_formations'][formacja] (x wzdłuż boiska,
+// własna bramka z LEWEJ; y w poprzek). Kaskadowy wjazd chipów wg --i.
+$fPitchBoard = function ($sBoard, $iTeam, $aTeam) use ($fLineup, $fFormation, $fPageImage, $aBoardLabels, $sFiles, $config, $sBoardFooter) {
+    $sFormation = $fFormation($iTeam);
+    $aCoords    = $config['live_formations'][$sFormation];
+    $aSlots     = $fLineup($iTeam);
+
+    // linie boiska: SVG w currentColor — kolor i poświatę nadaje SCSS (§10.0);
+    // viewBox 1050x680 = proporcje boiska 105x68 m, własna bramka z lewej
+    $sLines = '<svg class="obsPitch__lines" viewBox="0 0 1050 680" preserveAspectRatio="none" aria-hidden="true">'
+        .'<rect x="10" y="10" width="1030" height="660" />'
+        .'<line x1="525" y1="10" x2="525" y2="670" />'
+        .'<circle cx="525" cy="340" r="91.5" />'
+        .'<circle class="spot" cx="525" cy="340" r="4" />'
+        .'<rect x="10" y="138.5" width="165" height="403" />'
+        .'<rect x="10" y="248.5" width="55" height="183" />'
+        .'<circle class="spot" cx="120" cy="340" r="4" />'
+        .'<path d="M 175 266.9 A 91.5 91.5 0 0 1 175 413.1" />'
+        .'<rect x="875" y="138.5" width="165" height="403" />'
+        .'<rect x="985" y="248.5" width="55" height="183" />'
+        .'<circle class="spot" cx="930" cy="340" r="4" />'
+        .'<path d="M 875 266.9 A 91.5 91.5 0 0 0 875 413.1" />'
+        .'<path d="M 10 25 A 15 15 0 0 0 25 10" /><path d="M 1025 10 A 15 15 0 0 0 1040 25" />'
+        .'<path d="M 1040 655 A 15 15 0 0 0 1025 670" /><path d="M 25 670 A 15 15 0 0 0 10 655" />'
+        .'</svg>';
+
+    $content  = '<div class="obsBoard obsBoardBig obsPitchBoard obsShow" data-board="'.html($sBoard).'">';
+    $content .= '<header class="obsBoard__header">'
+        .'<span class="meta">'.html($aBoardLabels[$sBoard] ?? '').'</span>'
+        .'<span class="title">'.($aTeam['logo'] !== '' ? '<img src="'.$sFiles.html($aTeam['logo']).'" alt="" />' : '').html($aTeam['name']).'</span>'
+        .'<span class="meta">'.html($sFormation).'</span>'
+        .'</header>';
+    $content .= '<div class="obsBoard__content"><div class="obsPitch"><div class="obsPitch__scene"><div class="obsPitch__field">'.$sLines;
+
+    $iOrder = 0;
+    foreach ($aCoords as $iSlot => $aXY) {
+        if (!isset($aSlots[$iSlot])) {
+            continue;
+        }
+        $aPlayer = $aSlots[$iSlot];
+        $sPhoto  = $fPageImage((int) $aPlayer['iPage']);
+        $content .= '<div class="obsPitch__player" style="--x:'.(float) $aXY[0].'%;--y:'.(float) $aXY[1].'%;--i:'.$iOrder.'">'
+            .'<div class="obsPitch__inner">'
+            .'<div class="obsPitch__chip">'
+            .($sPhoto !== ''
+                ? '<img src="'.$sFiles.html($sPhoto).'" alt="" />'
+                : '<span class="obsPitch__chipNumber">'.html((string) $aPlayer['sNumber']).'</span>')
+            .'</div>'
+            .'<div class="obsPitch__plaque"><span class="number">'.html((string) $aPlayer['sNumber']).'</span><span class="name">'.html((string) $aPlayer['sName']).'</span></div>'
+            .'</div></div>';
+        $iOrder++;
+    }
+
+    // domyka: field, scene, pitch, content → stopka → obsBoard (licz divy!)
+    return $content.'</div></div></div></div>'.$sBoardFooter.'</div>';
+};
 ?><!doctype html>
 <html lang="pl">
 <head>
@@ -268,6 +377,10 @@ $fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($fSquad, $fStaffBlock, $a
     <!-- PLANSZE: SKŁADY -->
     <?php echo $fSquadBoard('sklad_gospodarza', $iTeam1, $aTeam1); ?>
     <?php echo $fSquadBoard('sklad_goscia', $iTeam2, $aTeam2); ?>
+
+    <!-- PLANSZE: SKŁAD 3D (wyjściowa 11 na pochylonym boisku) -->
+    <?php echo $fPitchBoard('sklad3d_gospodarza', $iTeam1, $aTeam1); ?>
+    <?php echo $fPitchBoard('sklad3d_goscia', $iTeam2, $aTeam2); ?>
 
     <!-- PLANSZA: PODSUMOWANIE (bez tabelki statystyk — wszystko na osi zdarzeń) -->
     <div class="obsBoard obsShow" data-board="podsumowanie">

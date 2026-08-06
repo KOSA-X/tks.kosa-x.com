@@ -27,6 +27,17 @@ if( ( $_SERVER['REQUEST_METHOD'] ?? 'GET' ) === 'POST' && ( $_POST['sAction'] ??
     $iTeam    = (int) ( $_POST['iTeam'] ?? 0 );
     $aNumbers = (array) ( $_POST['aNumbers'] ?? Array( ) );
     $aSquads  = (array) ( $_POST['aSquads'] ?? Array( ) );
+    $aLineup  = (array) ( $_POST['aLineup'] ?? Array( ) );
+
+    // ustawienie taktyczne drużyny (plansza Skład 3D) — tylko znana formacja
+    $sFormation = (string) ( $_POST['sFormation'] ?? '' );
+    if( $sFormation !== '' && !isset( $config['live_formations'][$sFormation] ) ){
+        $sFormation = '';
+    }
+    $oFormation = $oSql->prepare(
+        'UPDATE pages SET sFormation = :formation WHERE iPage = :id AND iMenu = :menu AND iPageParent = 0'
+    );
+    $oFormation->execute( Array( ':formation' => $sFormation, ':id' => $iTeam, ':menu' => $iTeamsMenu ) );
 
     // tylko realni zawodnicy tej drużyny (obrona przed podmianą iPage w POST)
     $aAllowed = Array( );
@@ -37,7 +48,7 @@ if( ( $_SERVER['REQUEST_METHOD'] ?? 'GET' ) === 'POST' && ( $_POST['sAction'] ??
     }
 
     $oUpdate = $oSql->prepare(
-        'UPDATE pages SET sNumber = :number, sSquad = :squad, iPosition = :position WHERE iPage = :id'
+        'UPDATE pages SET sNumber = :number, sSquad = :squad, sLineup = :lineup, iPosition = :position WHERE iPage = :id'
     );
     foreach( $aNumbers as $iPage => $sNumber ){
         $iPage = (int) $iPage;
@@ -46,9 +57,11 @@ if( ( $_SERVER['REQUEST_METHOD'] ?? 'GET' ) === 'POST' && ( $_POST['sAction'] ??
         }
         $sNumber = trim( (string) $sNumber );
         $iSquad  = (int) ( $aSquads[$iPage] ?? 0 );
+        $iSlot   = (int) ( $aLineup[$iPage] ?? 0 ); // pozycja na boisku: 1-11, 0 = brak
         $oUpdate->execute( Array(
             ':number'   => $sNumber,
             ':squad'    => isset( $config['squad_types'][$iSquad] ) ? (string) $iSquad : '',
+            ':lineup'   => ( $iSlot >= 1 && $iSlot <= 11 ) ? (string) $iSlot : '',
             ':position' => (int) $sNumber, // sortowanie list wg numeru (jak importer)
             ':id'       => $iPage,
         ) );
@@ -91,9 +104,11 @@ require_once 'templates/admin/_menu.php';
 // ============================================================
 if( $iTeam > 0 ){
 
-    $oCheck = $oSql->prepare( 'SELECT sName FROM pages WHERE iPage = :id AND iMenu = :menu AND iPageParent = 0' );
+    $oCheck = $oSql->prepare( 'SELECT sName, sFormation FROM pages WHERE iPage = :id AND iMenu = :menu AND iPageParent = 0' );
     $oCheck->execute( Array( ':id' => $iTeam, ':menu' => $iTeamsMenu ) );
-    $sTeamName = (string) $oCheck->fetchColumn( );
+    $aTeamRow       = $oCheck->fetch( PDO::FETCH_ASSOC ) ?: Array( );
+    $sTeamName      = (string) ( $aTeamRow['sName'] ?? '' );
+    $sTeamFormation = (string) ( $aTeamRow['sFormation'] ?? '' );
 
     if( $sTeamName === '' ){
         echo '<div class="alert alert-danger">Nie ma takiej drużyny.</div>';
@@ -102,7 +117,7 @@ if( $iTeam > 0 ){
     }
 
     $oPlayers = $oSql->prepare(
-        'SELECT iPage, sName, sNumber, sSquad, iStatus FROM pages WHERE iPageParent = :team
+        'SELECT iPage, sName, sNumber, sSquad, sLineup, iStatus FROM pages WHERE iPageParent = :team
          ORDER BY CASE WHEN sSquad = "1" THEN 0 WHEN sSquad = "2" THEN 1 ELSE 2 END,
                   iPosition ASC, sName COLLATE NOCASE ASC'
     );
@@ -110,6 +125,28 @@ if( $iTeam > 0 ){
     $aPlayers = $oPlayers->fetchAll( PDO::FETCH_ASSOC );
 
     $aSquadButtons = Array( '1' => '11', '2' => 'Rezerwa', '' => 'Poza kadrą' );
+
+    // etykiety slotów 1-11 wg wybranej formacji: 1 = BR, dalej człony nazwy
+    // (pierwszy = OBR, ostatni = ATAK, środkowe = POM) — czysto opisowe
+    $fLineupLabels = function( $sFormation ) use ( $config ){
+        $aLabels = Array( 1 => '1 — BR' );
+        $iSlot = 2;
+        if( $sFormation !== '' && isset( $config['live_formations'][$sFormation] ) ){
+            $aSegments = array_map( 'intval', explode( '-', $sFormation ) );
+            foreach( $aSegments as $iIndex => $iCount ){
+                $sLine = $iIndex === 0 ? 'OBR' : ( $iIndex === count( $aSegments ) - 1 ? 'ATAK' : 'POM' );
+                for( $i = 0; $i < $iCount && $iSlot <= 11; $i++ ){
+                    $aLabels[$iSlot] = $iSlot.' — '.$sLine;
+                    $iSlot++;
+                }
+            }
+        }
+        for( ; $iSlot <= 11; $iSlot++ ){
+            $aLabels[$iSlot] = (string) $iSlot;
+        }
+        return $aLabels;
+    };
+    $aLineupLabels = $fLineupLabels( $sTeamFormation );
     ?>
 
     <style>
@@ -135,6 +172,21 @@ if( $iTeam > 0 ){
             <div class="alert alert-success mb-3"><?php echo $lang['Operation_completed']; ?></div>
         <?php endif; ?>
 
+        <div class="card mb-4">
+            <div class="card__wrapper"><div class="card__content">
+                <div class="form-item" style="max-width:360px">
+                    <label for="sFormation">Ustawienie taktyczne (plansza „Skład 3D")</label>
+                    <select name="sFormation" id="sFormation" class="form-control">
+                        <option value="">— brak —</option>
+                        <?php foreach( array_keys( $config['live_formations'] ) as $sFormationKey ): ?>
+                            <option value="<?php echo html( $sFormationKey ); ?>"<?php echo $sTeamFormation === $sFormationKey ? ' selected="selected"' : ''; ?>><?php echo html( $sFormationKey ); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <p class="mb-0" style="opacity:.7">Po zmianie formacji zapisz — etykiety pozycji (OBR/POM/ATAK) w tabeli dopasują się do nowego ustawienia.</p>
+            </div></div>
+        </div>
+
         <?php if( empty( $aPlayers ) ): ?>
             <div class="alert alert-info mb-3">Brak zawodników — dodaj ich przez Import składu (Transmisja) albo jako podstrony drużyny.</div>
         <?php else: ?>
@@ -147,11 +199,13 @@ if( $iTeam > 0 ){
                             <th style="width:100px">Numer</th>
                             <th>Imię i nazwisko</th>
                             <th style="width:320px">Skład meczowy</th>
+                            <th style="width:170px">Pozycja (Skład 3D)</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach( $aPlayers as $aPlayer ):
-                            $sSquad = in_array( (string) $aPlayer['sSquad'], Array( '1', '2' ), true ) ? (string) $aPlayer['sSquad'] : '';
+                            $sSquad  = in_array( (string) $aPlayer['sSquad'], Array( '1', '2' ), true ) ? (string) $aPlayer['sSquad'] : '';
+                            $iLineup = (int) $aPlayer['sLineup'];
                         ?>
                         <tr<?php echo $sSquad === '' ? ' class="squad-off"' : ''; ?>>
                             <td>
@@ -170,6 +224,14 @@ if( $iTeam > 0 ){
                                     <?php endforeach; ?>
                                     <input type="hidden" name="aSquads[<?php echo (int) $aPlayer['iPage']; ?>]" value="<?php echo html( $sSquad ); ?>" />
                                 </span>
+                            </td>
+                            <td>
+                                <select name="aLineup[<?php echo (int) $aPlayer['iPage']; ?>]" class="form-control teamLineupSelect">
+                                    <option value="0">—</option>
+                                    <?php foreach( $aLineupLabels as $iSlot => $sSlotLabel ): ?>
+                                        <option value="<?php echo $iSlot; ?>"<?php echo $iLineup === $iSlot ? ' selected="selected"' : ''; ?>><?php echo html( $sSlotLabel ); ?></option>
+                                    <?php endforeach; ?>
+                                </select>
                             </td>
                         </tr>
                         <?php endforeach; ?>
@@ -199,6 +261,20 @@ if( $iTeam > 0 ){
                 $( this ).addClass( 'is-active' );
                 $toggle.find( 'input[type=hidden]' ).val( $( this ).data( 'squad' ) );
                 $toggle.closest( 'tr' ).toggleClass( 'squad-off', $( this ).data( 'squad' ) === '' );
+            } );
+
+            // pozycja na boisku jest unikatowa — wybór slotu zdejmuje go
+            // z zawodnika, który miał go do tej pory
+            $( '.teamLineupSelect' ).on( 'change', function( ){
+                var sSlot = $( this ).val( );
+                if( sSlot === '0' ){
+                    return;
+                }
+                $( '.teamLineupSelect' ).not( this ).each( function( ){
+                    if( $( this ).val( ) === sSlot ){
+                        $( this ).val( '0' );
+                    }
+                } );
             } );
         } );
     </script>

@@ -655,6 +655,175 @@ img {
     }
 }
 
+// ----------------------------------------------------------
+// ----- SKŁAD 3D (boisko w perspektywie, styl Ligi Mistrzów)
+// ----------------------------------------------------------
+// Płaszczyzna boiska pochylona rotateX(var(--pitch-tilt)); każdy zawodnik
+// dostaje kontr-rotację i „stoi" na murawie — perspektywa sama pomniejsza
+// postaci w głębi. Murawa CELOWO w granacie marki, nie w zieleni: scena
+// nakładki jest kluczowana chroma (zielone tło), zielone boisko OBS
+// wyciąłby z obrazu. Tylko transform/opacity — płynne w OBS.
+.obsPitchBoard {
+    --pitch-tilt: 50deg;
+
+    .obsBoard__content {
+        padding: 10px 40px 0;
+        overflow: hidden;
+    }
+}
+
+.obsPitch {
+    position: relative;
+    height: 640px;
+    perspective: 1500px;
+
+    &__scene {
+        position: absolute;
+        inset: 0;
+        transform-style: preserve-3d;
+    }
+
+    &__field {
+        position: absolute;
+        left: 50%;
+        top: 54%;
+        width: 1500px;
+        height: 970px;
+        transform: translate(-50%, -50%) rotateX(var(--pitch-tilt));
+        transform-style: preserve-3d;
+        border-radius: 12px;
+        background:
+            repeating-linear-gradient(90deg, rgba($white, .05) 0 125px, rgba($white, 0) 125px 250px),
+            radial-gradient(ellipse at 50% 35%, rgba($brand, .9) 0%, rgba($brand-dark, .97) 78%);
+        box-shadow: 0 60px 140px rgba($black, .65), inset 0 0 160px rgba($black, .5);
+    }
+
+    // linie boiska (SVG w PHP rysuje w currentColor — kolor tylko tutaj)
+    &__lines {
+        position: absolute;
+        inset: 24px;
+        width: calc(100% - 48px);
+        height: calc(100% - 48px);
+        color: rgba($white, .7);
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 3;
+        filter: drop-shadow(0 0 12px rgba($brand-light, .35));
+
+        .spot {
+            fill: currentColor;
+            stroke: none;
+        }
+    }
+
+    // punkt kotwiczenia zawodnika na murawie: element 0x0 w (--x, --y)
+    // boiska, kontr-rotacja stawia jego oś pionowo nad tym punktem
+    &__player {
+        position: absolute;
+        left: var(--x, 50%);
+        top: var(--y, 50%);
+        width: 0;
+        height: 0;
+        transform: rotateX(calc(var(--pitch-tilt) * -1));
+        transform-origin: 0 0;
+        transform-style: preserve-3d;
+    }
+
+    // kolumna chip + tabliczka, „stopy" w punkcie kotwiczenia
+    &__inner {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        transform: translateX(-50%);
+        transform-origin: 50% 100%;
+        @include flexbox;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+    }
+
+    // okrągłe zdjęcie zawodnika (fallback: numer na tle marki)
+    &__chip {
+        width: 96px;
+        height: 96px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 3px solid $white;
+        background: $brand;
+        box-shadow: 0 14px 30px rgba($black, .55), 0 0 0 4px rgba($brand, .35);
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+
+    &__chipNumber {
+        width: 100%;
+        height: 100%;
+        @include flexbox;
+        align-items: center;
+        justify-content: center;
+        font-family: $font-h;
+        font-weight: 900;
+        font-size: 34px;
+        color: $white;
+    }
+
+    // tabliczka numer + nazwisko — echo kwadracików ul.teamList
+    &__plaque {
+        @include flexbox;
+        align-items: stretch;
+        line-height: 1;
+        font-family: $font-h;
+        text-transform: uppercase;
+        white-space: nowrap;
+        background: $white;
+        color: $brand-dark;
+        box-shadow: 0 10px 24px rgba($black, .45);
+
+        .number {
+            @include flexbox;
+            align-items: center;
+            justify-content: center;
+            min-width: 30px;
+            padding: 7px 6px;
+            background: $brand;
+            color: $white;
+            font-weight: 900;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .name {
+            @include flexbox;
+            align-items: center;
+            padding: 7px 12px;
+            font-weight: 800;
+            font-size: 15px;
+        }
+    }
+}
+
+// kaskadowe wejście zawodników po pokazaniu planszy: chip wyrasta od
+// stóp (scale od dołu) z opóźnieniem wg --i; ukrycie resetuje animację
+.obsPitchBoard .obsPitch__inner {
+    opacity: 0;
+    transform: translateX(-50%) scale(.5);
+}
+
+.obsPitchBoard.is-visible .obsPitch__inner {
+    animation: obsChipIn .5s cubic-bezier(.22, 1, .36, 1) forwards;
+    animation-delay: calc(.35s + var(--i, 0) * .12s);
+}
+
+@keyframes obsChipIn {
+    to {
+        opacity: 1;
+        transform: translateX(-50%) scale(1);
+    }
+}
+
 // --- sędziowie (zakładka live_referees_page: opis + zdjęcia) --
 .obsReferees {
 //    max-width: 760px;
@@ -923,6 +1092,12 @@ img {
     .obsBoard .teamList li {
         opacity: 1;
         transform: none;
+        animation: none;
+    }
+
+    .obsPitchBoard .obsPitch__inner {
+        opacity: 1;
+        transform: translateX(-50%);
         animation: none;
     }
 }
