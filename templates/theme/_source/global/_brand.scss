@@ -15,10 +15,10 @@
 // ----------------------------------------------------------
 // ----- TYPOGRAFIA
 // ----------------------------------------------------------
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Zalando+Sans+Expanded:ital,wght@0,200..900;1,200..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Zalando+Sans+Expanded:ital,wght@0,200..900;1,200..900&display=swap');
 
-$font-h: "Zalando Sans Expanded", sans-serif;   // nagłówki
-$font-p: "Zalando Sans Expanded", sans-serif;             // treść
+$font-h: "Oswald", sans-serif;    // nagłówki
+$font-p: "Zalando Sans Expanded", sans-serif;            // treść
 
 
 // ----------------------------------------------------------
@@ -30,9 +30,9 @@ $brand-light: #fff4f5;   // subtelne tło akcentu
 $brand-dark:  #000f1b;   // mocny kontrast
 
 // Drugi kolor marki (opcjonalny). Ustaw per projekt; domyślnie granat.
-$brand2:       #14233f;
-$brand2-light: #e9eef7;
-$brand2-dark:  #0a1424;
+$brand2:       #143582;
+$brand2-light: #fff4f5;
+$brand2-dark:  #000f1b;
 
 // Trzeci kolor — TYLKO w wyjątkowych projektach. Odkomentuj gdy trzeba.
 // $brand3:       #000000;

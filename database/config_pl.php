@@ -65,7 +65,7 @@ $config['telebim_page'] = "34";
 // Zarządzanie: panel → Transmisja → Konfiguracja.
 $config['live_referees_page'] = "38";
 $config['live_sponsors_page'] = "41";
-$config['live_partners_page'] = "0";
+$config['live_partners_page'] = "44";
 $config['live_match_sponsor_page'] = "43";
 $config['live_production_page'] = "39";
 
