@@ -124,8 +124,14 @@ $sReferees      = $iRefereesPage > 0
 $aRefereeImages = $iRefereesPage > 0 ? $fPageImages($iRefereesPage) : Array();
 
 $aSponsorImages    = $fPageImages((int) ($config['live_sponsors_page'] ?? 0));
+$aPartnerImages    = $fPageImages((int) ($config['live_partners_page'] ?? 0));
 $aProductionImages = $fPageImages((int) ($config['live_production_page'] ?? 0));
 $sProductionTitle  = (string) (getData((int) ($config['live_production_page'] ?? 0), 'sName') ?? '');
+
+// sponsor meczu: 1 duże logo (pierwszy obrazek zakładki) + opis pełny
+$iMatchSponsor     = (int) ($config['live_match_sponsor_page'] ?? 0);
+$sMatchSponsorLogo = $iMatchSponsor > 0 ? $fPageImage($iMatchSponsor) : '';
+$sMatchSponsorDesc = $iMatchSponsor > 0 ? (string) (getData($iMatchSponsor, 'sDescriptionFull') ?? '') : '';
 
 $sCssVer = @filemtime('templates/'.$config['skin'].'/css/live-overlay.css') ?: 1;
 $sJsVer  = @filemtime('templates/'.$config['skin'].'/js/page-live-overlay.js') ?: 1;
@@ -284,6 +290,48 @@ $fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($fSquad, $fStaffBlock, $a
         <footer class="obsBoard__footer"><?php echo html($config['logo']); ?> • <?php echo $lang['live_broadcast_footer']; ?></footer>
     </div>
     <?php endif; ?>
+
+    <?php if (!empty($aPartnerImages)): ?>
+    <!-- PLANSZA: PARTNERZY GŁÓWNI (grid logotypów jak sponsorzy) -->
+    <div class="obsBoard obsShow" data-board="partnerzy_glowni">
+        <header class="obsBoard__header"><span class="title"><?php echo html($aBoardLabels['partnerzy_glowni'] ?? ''); ?></span></header>
+        <div class="obsBoard__content">
+            <div class="obsGallery">
+                <?php foreach ($aPartnerImages as $sImage): ?>
+                    <img src="<?php echo $sFiles.html($sImage); ?>" alt="" />
+                <?php endforeach; ?>
+            </div>
+        </div>
+        <footer class="obsBoard__footer"><?php echo html($config['logo']); ?> • <?php echo $lang['live_broadcast_footer']; ?></footer>
+    </div>
+    <?php endif; ?>
+
+    <?php if ($sMatchSponsorLogo !== '' || $sMatchSponsorDesc !== ''): ?>
+    <!-- PLANSZA: SPONSOR MECZU (duże logo + opis pełny) -->
+    <div class="obsBoard obsShow" data-board="sponsor_meczu">
+        <header class="obsBoard__header"><span class="title"><?php echo html($aBoardLabels['sponsor_meczu'] ?? ''); ?></span></header>
+        <div class="obsBoard__content">
+            <div class="obsMatchSponsor">
+                <?php if ($sMatchSponsorLogo !== ''): ?><img class="obsMatchSponsor__logo" src="<?php echo $sFiles.html($sMatchSponsorLogo); ?>" alt="" /><?php endif; ?>
+                <?php if ($sMatchSponsorDesc !== ''): ?><div class="obsMatchSponsor__desc"><?php echo parseShortcodes($sMatchSponsorDesc); ?></div><?php endif; ?>
+            </div>
+        </div>
+        <footer class="obsBoard__footer"><?php echo html($config['logo']); ?> • <?php echo $lang['live_broadcast_footer']; ?></footer>
+    </div>
+    <?php endif; ?>
+
+    <!-- PLANSZA: AKTUALNY WYNIK (dolny pasek: wynik + strzelcy bramek) -->
+    <div class="obsCurrentScore obsShow" data-board="aktualny_wynik">
+        <header class="obsCurrentScore__header">
+            <span class="obsCurrentScore__team"><?php echo html($aTeam1['name']); ?></span>
+            <span class="obsCurrentScore__score"><span class="js-score1">0</span>:<span class="js-score2">0</span></span>
+            <span class="obsCurrentScore__team obsCurrentScore__team--away"><?php echo html($aTeam2['name']); ?></span>
+        </header>
+        <div class="obsCurrentScore__goals">
+            <ul class="obsCurrentScore__list" id="obs-goals-1"></ul>
+            <ul class="obsCurrentScore__list" id="obs-goals-2"></ul>
+        </div>
+    </div>
 
     <?php if (!empty($aProductionImages)): ?>
     <!-- PLANSZA: REALIZACJA TRANSMISJI -->

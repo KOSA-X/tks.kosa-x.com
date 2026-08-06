@@ -158,21 +158,34 @@
         $.each(events, function (i, ev) {
             var actionLabel = cfg.actions[ev.action] || ev.action;
             var teamName = cfg.teamNames[String(ev.team)] || '';
-            var playerText = ev.player.id > 0
-                ? (ev.player.number !== '' ? ev.player.number + '. ' : '') + ev.player.name
-                : '—';
 
             var $row = $('<div class="livePanel__event" data-event-action="' + ev.action + '">');
             var $minute = $('<input type="text" class="form-control livePanel__eventMinute" inputmode="numeric" maxlength="3">').val(ev.minute);
             $row.append($minute);
             $row.append($('<span class="livePanel__eventAction">').text(actionLabel));
-            $row.append($('<span class="livePanel__eventPlayer">').text(playerText));
+
+            // zawodnik edytowalny — select z kadry drużyny zdarzenia
+            // (pomyłkowo wybrany zawodnik do poprawki bez kasowania wpisu)
+            var $player = $('<select class="form-control livePanel__eventPlayerSelect">');
+            $player.append($('<option value="0">').text('—'));
+            $.each(cfg.players[String(ev.team)] || [], function (j, player) {
+                $player.append(
+                    $('<option>').val(player.id)
+                        .text((player.number !== '' ? player.number + '. ' : '') + player.name)
+                );
+            });
+            $player.val(String(ev.player.id));
+            if ($player.val() === null) {
+                $player.val('0'); // zawodnik spoza aktualnej kadry (np. skasowany)
+            }
+            $row.append($player);
             $row.append($('<span class="livePanel__eventTeam">').text(teamName));
 
             var $save = $('<button type="button" class="button livePanel__eventBtn">').text(cfg.labels.save);
             $save.on('click', function () {
-                api('event_update', { id: ev.id, iPlayer: ev.player.id, sMinute: $minute.val() }, function () {
+                api('event_update', { id: ev.id, iPlayer: $player.val(), sMinute: $minute.val() }, function () {
                     loadEvents(true);
+                    refreshState();
                 });
             });
             var $remove = $('<button type="button" class="button livePanel__eventBtn livePanel__danger">').text(cfg.labels.delete);
@@ -291,17 +304,8 @@
     });
 
     // ------------------------------------------------------------
-    // KONFIGURACJA MECZU
+    // NOWY MECZ (wybór drużyn: panel admina → Transmisja → Konfiguracja)
     // ------------------------------------------------------------
-    $('#lp-save-teams').on('click', function () {
-        api('teams_set', {
-            iTeam1: $('#lp-team1').val(),
-            iTeam2: $('#lp-team2').val()
-        }, function () {
-            window.location.reload();
-        });
-    });
-
     $('#lp-new-match').on('click', function () {
         if (!window.confirm(cfg.labels.confirmNewMatch)) {
             return;

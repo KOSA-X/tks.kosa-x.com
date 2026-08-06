@@ -56,12 +56,15 @@ $config['live_overlay_page'] = "33";
 $config['telebim_page'] = "34";
 
 // Strony-źródła treści plansz (0 = plansza bez treści, nie renderuje się):
-// sędziowie = opis + zdjęcia zakładki „Sędziowie"; sponsorzy = zakładka
-// z logotypami (grid zdjęć); realizacja = zakładka promująca produkcję
-// transmisji (tytuł + zdjęcia). Zakładki typu menu „Plansze" w panelu.
-$config['live_referees_page']   = "38";
-$config['live_sponsors_page']   = "41";
-$config['live_production_page'] = "39";
+// sędziowie = opis + zdjęcia zakładki „Sędziowie"; sponsorzy/partnerzy =
+// zakładki z logotypami (grid zdjęć); sponsor meczu = 1 duże logo + opis
+// pełny; realizacja = zakładka promująca produkcję transmisji.
+// Zarządzanie: panel → Transmisja → Konfiguracja.
+$config['live_referees_page']      = "38";
+$config['live_sponsors_page']      = "41";
+$config['live_partners_page']      = "0";
+$config['live_match_sponsor_page'] = "43";
+$config['live_production_page']    = "39";
 
 // Strony TREŚCI używane w szablonach (dawniej magiczne ID w kodzie).
 // Zmień ID per projekt zamiast edytować szablony.

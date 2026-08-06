@@ -106,34 +106,7 @@ if (!$bLiveAdmin) {
 <div class="container">
 <div class="livePanel" id="livePanel">
 
-    <!-- KONFIGURACJA MECZU -->
-    <details class="livePanel__setup"<?php echo ($iTeam1 === 0 || $iTeam2 === 0) ? ' open' : ''; ?>>
-        <summary class="livePanel__setupSummary"><?php echo $lang['live_match_setup']; ?></summary>
-        <div class="livePanel__setupBody">
-            <div class="livePanel__setupRow">
-                <label class="livePanel__setupLabel" for="lp-team1"><?php echo $lang['live_team_home']; ?></label>
-                <select id="lp-team1" class="form-control">
-                    <option value="0">-</option>
-                    <?php foreach ($aTeamOptions as $iId => $sName): ?>
-                        <option value="<?php echo $iId; ?>"<?php echo $iId === $iTeam1 ? ' selected' : ''; ?>><?php echo html($sName); ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            <div class="livePanel__setupRow">
-                <label class="livePanel__setupLabel" for="lp-team2"><?php echo $lang['live_team_away']; ?></label>
-                <select id="lp-team2" class="form-control">
-                    <option value="0">-</option>
-                    <?php foreach ($aTeamOptions as $iId => $sName): ?>
-                        <option value="<?php echo $iId; ?>"<?php echo $iId === $iTeam2 ? ' selected' : ''; ?>><?php echo html($sName); ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            <div class="livePanel__setupButtons">
-                <button type="button" class="button" id="lp-save-teams"><?php echo $lang['live_save_teams']; ?></button>
-                <button type="button" class="button livePanel__danger" id="lp-new-match"><?php echo $lang['live_new_match']; ?></button>
-            </div>
-        </div>
-    </details>
+    <!-- wybór gospodarza i gościa: panel admina → Transmisja → Konfiguracja -->
 
     <!-- WYNIK + ZEGAR (sticky na górze) -->
     <div class="livePanel__scoreboard">
@@ -201,7 +174,10 @@ if (!$bLiveAdmin) {
     <div class="livePanel__section">
         <h2 class="livePanel__sectionTitle"><?php echo $lang['live_events']; ?></h2>
         <div class="livePanel__eventList" id="lp-events"></div>
-        <button type="button" class="button livePanel__danger mt-2" id="lp-clear-events"><?php echo $lang['live_clear_events']; ?></button>
+        <div class="livePanel__buttonRow mt-2">
+            <button type="button" class="button livePanel__danger" id="lp-clear-events"><?php echo $lang['live_clear_events']; ?></button>
+            <button type="button" class="button livePanel__danger" id="lp-new-match"><?php echo $lang['live_new_match']; ?></button>
+        </div>
     </div>
 
     <!-- ARKUSZ AKCJI ZAWODNIKA -->
@@ -228,6 +204,21 @@ if (!$bLiveAdmin) {
 </div>
 
 <script>
+<?php
+// zawodnicy obu drużyn — select zmiany zawodnika przy edycji zdarzenia
+$aPlayersConfig = Array();
+foreach (Array($iTeam1, $iTeam2) as $iTeamId) {
+    $aList = Array();
+    foreach ($fTeamPlayers($iTeamId) as $aPlayer) {
+        $aList[] = Array(
+            'id'     => (int) $aPlayer['iPage'],
+            'name'   => (string) $aPlayer['sName'],
+            'number' => (string) $aPlayer['sNumber'],
+        );
+    }
+    $aPlayersConfig[(string) $iTeamId] = $aList;
+}
+?>
 window.livePanelConfig = <?php echo json_encode(Array(
     // root-relative (nie BASE_URL) — działa na każdej domenie/środowisku
     'api'     => $config['base_path_with_slash'].'plugins/live/api.php',
@@ -235,6 +226,7 @@ window.livePanelConfig = <?php echo json_encode(Array(
     'actions' => $config['live_actions'],
     'badges'  => $config['live_action_badges'],
     'teams'   => Array('1' => $iTeam1, '2' => $iTeam2),
+    'players' => $aPlayersConfig,
     'teamNames' => Array(
         (string) $iTeam1 => (string) ($aTeamOptions[$iTeam1] ?? ''),
         (string) $iTeam2 => (string) ($aTeamOptions[$iTeam2] ?? ''),

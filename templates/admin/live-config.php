@@ -178,6 +178,8 @@ require_once 'templates/admin/_menu.php';
         echo liveCfgPageSelect( 'match_page', 'Plansza DZIEŃ MECZOWY (mecz dnia: opis, plakat)', $config, $oPage );
         echo liveCfgPageSelect( 'live_referees_page', 'Plansza SĘDZIOWIE (opis + zdjęcia)', $config, $oPage );
         echo liveCfgPageSelect( 'live_sponsors_page', 'Plansza SPONSORZY (grid logotypów)', $config, $oPage );
+        echo liveCfgPageSelect( 'live_partners_page', 'Plansza PARTNERZY GŁÓWNI (grid logotypów)', $config, $oPage );
+        echo liveCfgPageSelect( 'live_match_sponsor_page', 'Plansza SPONSOR MECZU (duże logo + opis pełny)', $config, $oPage );
         echo liveCfgPageSelect( 'live_production_page', 'Plansza REALIZACJA TRANSMISJI (tytuł + zdjęcia)', $config, $oPage );
         ?>
 

@@ -632,6 +632,31 @@ img {
     }
 }
 
+// --- sponsor meczu (duże logo + opis pełny) -----------------
+.tbMatchSponsor {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.4rem;
+    text-align: center;
+
+    &__logo {
+        max-width: 22rem;
+        max-height: 13rem;
+        object-fit: contain;
+    }
+
+    &__desc {
+        max-width: 40rem;
+        font-size: 1.5rem;
+        line-height: 1.6;
+        opacity: .9;
+
+        p { margin: 0 0 .7rem; }
+        strong { color: $brand-light; }
+    }
+}
+
 // --- plakat (pełnoekranowy) ---------------------------------
 .tbPoster {
     display: flex;

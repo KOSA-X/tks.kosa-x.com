@@ -177,8 +177,35 @@
         });
     }
 
+    // dolny pasek „aktualny wynik": strzelcy bramek per drużyna
+    function renderGoals(events) {
+        [cfg.team1, cfg.team2].forEach(function (teamId, index) {
+            var list = document.getElementById('obs-goals-' + (index + 1));
+            if (!list) {
+                return;
+            }
+            list.textContent = '';
+            var otherId = teamId === cfg.team1 ? cfg.team2 : cfg.team1;
+            events.forEach(function (ev) {
+                // gol drużyny albo samobój przeciwnika (bramka dla tej drużyny)
+                var scored = (ev.action === 'goal' && ev.team === teamId)
+                    || (ev.action === 'own_goal' && ev.team === otherId);
+                if (!scored) {
+                    return;
+                }
+                var item = el('li');
+                item.appendChild(iconFor('goal'));
+                item.appendChild(el('span', 'minute', ev.minute !== '' ? ev.minute + "'" : ''));
+                item.appendChild(el('span', '',
+                    (ev.player.id > 0 ? ev.player.name : (cfg.teams[String(ev.team)] || {}).name || '')
+                    + (ev.action === 'own_goal' ? ' (sam.)' : '')));
+                list.appendChild(item);
+            });
+        });
+    }
+
     function refreshSummary() {
-        // odświeżaj najwyżej co 10 s, tylko gdy plansza widoczna
+        // odświeżaj najwyżej co 10 s, tylko gdy któraś plansza zdarzeń widoczna
         if (performance.now() - summaryFetchedAt < 10000) {
             return;
         }
@@ -188,6 +215,7 @@
             .then(function (data) {
                 if (data.ok) {
                     renderSummary(data.events);
+                    renderGoals(data.events);
                 }
             })
             .catch(function () {});
@@ -248,7 +276,7 @@
             });
         });
 
-        if (data.boards.podsumowanie === 1) {
+        if (data.boards.podsumowanie === 1 || data.boards.aktualny_wynik === 1) {
             refreshSummary();
         }
 

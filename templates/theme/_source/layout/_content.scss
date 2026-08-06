@@ -877,6 +877,14 @@ body.scroll-lock {
         font-size: $font-size-sm;
     }
 
+    // select zmiany zawodnika w zdarzeniu (kadra drużyny zdarzenia)
+    &__eventPlayerSelect {
+        grid-column: 2 / -1;
+        grid-row: 2;
+        max-width: 100%;
+        font-size: $font-size-sm;
+    }
+
     &__eventTeam {
         font-size: $font-size-sm;
         color: var(--gray);
@@ -950,9 +958,14 @@ body.scroll-lock {
         &__event {
             grid-template-columns: 64px auto 1fr auto auto auto;
 
-            .livePanel__eventPlayer {
+            .livePanel__eventPlayer,
+            .livePanel__eventPlayerSelect {
                 grid-column: auto;
                 grid-row: auto;
+            }
+
+            .livePanel__eventPlayerSelect {
+                max-width: 280px;
             }
         }
     }

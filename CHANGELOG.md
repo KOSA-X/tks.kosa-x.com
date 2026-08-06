@@ -1,5 +1,28 @@
 # Changelog
 
+## 2026-08-06 — 3 nowe plansze + uproszczony panel meczowy + edycja zawodnika w zdarzeniu
+- **Nowe plansze** (wiersze w `live_boards` — są w bazie repo, przyciski w panelu
+  pojawiają się automatycznie):
+  - **Partnerzy główni** — grid logotypów jak sponsorzy (`live_partners_page`),
+  - **Sponsor meczu** — 1 duże logo (pierwszy obrazek zakładki) + opis pełny
+    (`live_match_sponsor_page`, ustawione na zakładkę „Sponsor meczu"),
+  - **Aktualny wynik** — dolny pasek na czas meczu: pełne nazwy drużyn, wynik
+    i strzelcy bramek per drużyna (gole + samobóje przeciwnika z „(sam.)";
+    zdarzenie bez zawodnika pokazuje nazwę drużyny); nakładka odświeża
+    strzelców razem z podsumowaniem
+  - nowe selecty w Transmisja → Konfiguracja; partnerzy/sponsor meczu także
+    na telebimie (pasek aktualnego wyniku tylko na nakładce)
+- **Panel meczowy uproszczony**: sekcja „Konfiguracja meczu" (wybór drużyn)
+  usunięta — drużyny ustawia się w Transmisja → Konfiguracja; przycisk
+  „Nowy mecz (wyzeruj)" przeniesiony na dół obok „Wyczyść historię zdarzeń"
+- **Edycja zawodnika w zdarzeniu**: w historii zdarzeń zamiast tekstu jest
+  select z kadrą drużyny zdarzenia (+ „—") — pomyłkowo wybranego zawodnika
+  poprawisz bez kasowania wpisu; API `event_update` waliduje przynależność
+  zawodnika do drużyny zdarzenia
+- E2E na realnej bazie: 12 przycisków plansz, pasek ze strzelcami, sponsor
+  meczu (logo+opis), zmiana zawodnika w zdarzeniu, walidacja złej drużyny —
+  zielone, zero błędów JS
+
 ## 2026-08-06 — Transmisja → Konfiguracja (nowy moduł) + szlif paska wyniku i podsumowania
 - **Nowy moduł panelu: Transmisja → Konfiguracja** (`?p=live-config`, pod
   Importem składu) — konfiguracja transmisji ODDZIELONA od konfiguracji CMS:

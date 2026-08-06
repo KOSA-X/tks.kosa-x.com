@@ -263,6 +263,17 @@ switch ($sAction) {
         $iId     = (int) ($_POST['id'] ?? 0);
         $iPlayer = (int) ($_POST['iPlayer'] ?? 0);
         $sMinute = trim((string) ($_POST['sMinute'] ?? ''));
+
+        // nowy zawodnik musi należeć do drużyny tego zdarzenia
+        if ($iPlayer > 0) {
+            $iEventTeam = (int) $oSql->getColumn('SELECT iTeam FROM live_events WHERE id = '.$iId);
+            $oCheck = $oSql->prepare('SELECT COUNT(*) FROM pages WHERE iPage = :p AND iPageParent = :t');
+            $oCheck->execute([':p' => $iPlayer, ':t' => $iEventTeam]);
+            if ((int) $oCheck->fetchColumn() === 0) {
+                liveApiError('Zawodnik nie należy do drużyny tego zdarzenia.');
+            }
+        }
+
         $oUpdate = $oSql->prepare('UPDATE live_events SET iPlayer = :player, sMinute = :minute WHERE id = :id');
         $oUpdate->execute([':player' => $iPlayer, ':minute' => $sMinute, ':id' => $iId]);
         liveApiOut(['ok' => true]);

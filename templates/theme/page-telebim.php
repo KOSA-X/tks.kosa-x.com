@@ -54,8 +54,14 @@ $sReferees      = $iRefereesPage > 0
 $aRefereeImages = $iRefereesPage > 0 ? livePageImages($iRefereesPage) : Array();
 
 $aSponsorImages    = livePageImages((int) ($config['live_sponsors_page'] ?? 0));
+$aPartnerImages    = livePageImages((int) ($config['live_partners_page'] ?? 0));
 $aProductionImages = livePageImages((int) ($config['live_production_page'] ?? 0));
 $sProductionTitle  = (string) (getData((int) ($config['live_production_page'] ?? 0), 'sName') ?? '');
+
+// sponsor meczu: 1 duże logo (pierwszy obrazek zakładki) + opis pełny
+$iMatchSponsor     = (int) ($config['live_match_sponsor_page'] ?? 0);
+$sMatchSponsorLogo = $iMatchSponsor > 0 ? livePageImage($iMatchSponsor) : '';
+$sMatchSponsorDesc = $iMatchSponsor > 0 ? (string) (getData($iMatchSponsor, 'sDescriptionFull') ?? '') : '';
 
 // cieszynki: mapa zawodnik → URL klipu (obie drużyny, preload w JS)
 $aClips = Array();
@@ -197,6 +203,33 @@ $fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($aBoardLabels, $lang, $sM
                 <?php foreach ($aSponsorImages as $sImage): ?>
                     <img src="<?php echo $sFiles.html($sImage); ?>" alt="" />
                 <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
+
+    <?php if (!empty($aPartnerImages)): ?>
+    <!-- PLANSZA: PARTNERZY GŁÓWNI (grid logotypów jak sponsorzy) -->
+    <div class="tbBoard tbShow" data-board="partnerzy_glowni">
+        <header class="tbBoard__header"><span class="title"><?php echo html($aBoardLabels['partnerzy_glowni'] ?? ''); ?></span></header>
+        <div class="tbBoard__content">
+            <div class="tbGallery">
+                <?php foreach ($aPartnerImages as $sImage): ?>
+                    <img src="<?php echo $sFiles.html($sImage); ?>" alt="" />
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
+
+    <?php if ($sMatchSponsorLogo !== '' || $sMatchSponsorDesc !== ''): ?>
+    <!-- PLANSZA: SPONSOR MECZU (duże logo + opis pełny) -->
+    <div class="tbBoard tbShow" data-board="sponsor_meczu">
+        <header class="tbBoard__header"><span class="title"><?php echo html($aBoardLabels['sponsor_meczu'] ?? ''); ?></span></header>
+        <div class="tbBoard__content">
+            <div class="tbMatchSponsor">
+                <?php if ($sMatchSponsorLogo !== ''): ?><img class="tbMatchSponsor__logo" src="<?php echo $sFiles.html($sMatchSponsorLogo); ?>" alt="" /><?php endif; ?>
+                <?php if ($sMatchSponsorDesc !== ''): ?><div class="tbMatchSponsor__desc"><?php echo parseShortcodes($sMatchSponsorDesc); ?></div><?php endif; ?>
             </div>
         </div>
     </div>

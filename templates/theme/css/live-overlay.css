@@ -560,6 +560,101 @@ img {
   padding: 0;
 }
 
+.obsMatchSponsor {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  text-align: center;
+}
+.obsMatchSponsor__logo {
+  max-width: 460px;
+  max-height: 300px;
+  object-fit: contain;
+}
+.obsMatchSponsor__desc {
+  max-width: 780px;
+  font-size: 21px;
+  line-height: 1.6;
+  opacity: 0.9;
+}
+.obsMatchSponsor__desc p {
+  margin: 0 0 10px;
+}
+.obsMatchSponsor__desc strong {
+  color: #fff4f5;
+}
+
+.obsCurrentScore {
+  position: absolute;
+  left: 50%;
+  bottom: 96px;
+  transform: translate3d(-50%, 24px, 0);
+  width: 1340px;
+  max-width: 92vw;
+}
+.obsCurrentScore.is-visible {
+  transform: translate3d(-50%, 0, 0);
+}
+.obsCurrentScore__header {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 30px;
+  padding: 18px 34px;
+  border-radius: 12px 12px 0 0;
+  background: #143582;
+  font-family: "Zalando Sans Expanded", sans-serif;
+  box-shadow: 0 16px 40px rgba(1, 1, 1, 0.5);
+}
+.obsCurrentScore__team {
+  font-size: 24px;
+  font-weight: 900;
+}
+.obsCurrentScore__team--away {
+  text-align: right;
+}
+.obsCurrentScore__score {
+  font-size: 32px;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+}
+.obsCurrentScore__goals {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 40px;
+  padding: 14px 34px 18px;
+  border-radius: 0 0 12px 12px;
+  background: rgba(10, 20, 36, 0.96);
+  box-shadow: 0 16px 40px rgba(1, 1, 1, 0.5);
+}
+.obsCurrentScore__list {
+  list-style: none;
+}
+.obsCurrentScore__list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 5px 0;
+  font-size: 19px;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.obsCurrentScore__list li:last-child {
+  border-bottom: 0;
+}
+.obsCurrentScore__list li .minute {
+  min-width: 40px;
+  text-align: right;
+  font-family: "Zalando Sans Expanded", sans-serif;
+  font-weight: 900;
+  color: #fff4f5;
+  font-variant-numeric: tabular-nums;
+}
+.obsCurrentScore__list .obsEvent__icon--goal::before {
+  font-size: 16px;
+}
+
 .obsPoster {
   position: absolute;
   inset: 0;
