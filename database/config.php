@@ -183,8 +183,8 @@ $config['product_card_filters'] = Array( 'brand', 'size' );
 * Client Secret nie jest wymagany dla One Tap/przycisku (weryfikacja tokenem ID),
 * pole zostaje na przyszłość (np. pełny OAuth code flow).
 */
-$config['google_client_id'] = "187682007905-tp2kq1utlgn3i1c31udgg6pur7sq6c1k.apps.googleusercontent.com";
-$config['google_client_secret'] = "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";
+$config['google_client_id'] = "";
+$config['google_client_secret'] = "";
 
 /*
 * LOGOWANIE DO PANELU ADMINA PRZEZ GOOGLE
@@ -216,8 +216,8 @@ $config['admin_google_emails'] = Array(
 // ============================================================
 // @claude-note: tokeny do widgetu paczkomatów (geowidget) i API ShipX
 $config['inpost_organization_id'] = "51946";
-$config['inpost_geowidget_token'] = "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJzQlpXVzFNZzVlQnpDYU1XU3JvTlBjRWFveFpXcW9Ua2FuZVB3X291LWxvIn0.eyJleHAiOjIwNzc0ODE4NzIsImlhdCI6MTc2MjEyMTg3MiwianRpIjoiYTg2ODc1YmYtNzRhMy00MzgwLWJjZTUtMWY0OTZhMWFmODE5IiwiaXNzIjoiaHR0cHM6Ly9sb2dpbi5pbnBvc3QucGwvYXV0aC9yZWFsbXMvZXh0ZXJuYWwiLCJzdWIiOiJmOjEyNDc1MDUxLTFjMDMtNGU1OS1iYTBjLTJiNDU2OTVlZjUzNTpqT29uZ0FtNWtTR2VQQ2FXNEFQVTZBIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoic2hpcHgiLCJzZXNzaW9uX3N0YXRlIjoiNzVmODM5YjktZGUxMy00NWQxLWE0YTAtMTgzOTJjYmE2MjI0Iiwic2NvcGUiOiJvcGVuaWQgYXBpOmFwaXBvaW50cyIsInNpZCI6Ijc1ZjgzOWI5LWRlMTMtNDVkMS1hNGEwLTE4MzkyY2JhNjIyNCIsImFsbG93ZWRfcmVmZXJyZXJzIjoia29zYS14LmNvbSxjbXMua29zYS14LmNvbSIsInV1aWQiOiI3ODAxZjk2Yy0wZmQyLTQ0MGUtOGM4NS04ODg5OWJmODY3YjkifQ.iUNFxIBjwA_4KeV0diCtdKd0sx-5a4UJ-lDLuPnyDLDtOtX6GJVxaRPmwuJrRIyEkIcUjH2HqYTlK6ZK6oLgBDoeLhUrYTEkdQpooFX-Gjgcid4gVmgDuZUaMf75B_01RRs5r8c_RZk-7aL_VWNfDde-Ex6A3CmvJtnJ6wYHR2UdOg-2c_lvmnOcWsfBcsMWFCwdKrycHQ3SaQBUBEVYXdDfhJMn0gueG7sAozj1JT0h-ERE_JBGnSOM4Kj6AY_yuE9O8GUwwla0-9FhU_q8g0NnpR8zNKD6i4c2WacdR-yM9i7-Xz0crOgwXLgR5shRV-UMnwRYC0qlxRocOx0MPw";
-$config['inpost_shipx_token'] = "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJzQlpXVzFNZzVlQnpDYU1XU3JvTlBjRWFveFpXcW9Ua2FuZVB3X291LWxvIn0.eyJleHAiOjE5NjU2NTk1NTksImlhdCI6MTY1MDI5OTU1OSwianRpIjoiYTA5ZmNjZTMtODdkMy00MzIyLTliYjMtMjQ4YTJkYjNhMTA2IiwiaXNzIjoiaHR0cHM6Ly9sb2dpbi5pbnBvc3QucGwvYXV0aC9yZWFsbXMvZXh0ZXJuYWwiLCJzdWIiOiJmOjEyNDc1MDUxLTFjMDMtNGU1OS1iYTBjLTJiNDU2OTVlZjUzNTpqT29uZ0FtNWtTR2VQQ2FXNEFQVTZBIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoic2hpcHgiLCJzZXNzaW9uX3N0YXRlIjoiOWYyYTVmY2MtMjczNi00YWE5LWIwYTQtZTBhNzUxZTNlNDgxIiwiYWNyIjoiMSIsInNjb3BlIjoib3BlbmlkIGFwaTphcGlwb2ludHMgYXBpOnNoaXB4IiwiYWxsb3dlZF9yZWZlcnJlcnMiOiIiLCJ1dWlkIjoiNzgwMWY5NmMtMGZkMi00NDBlLThjODUtODg4OTliZjg2N2I5IiwiZW1haWwiOiJrQGtvc2lvcnNraS5wbCJ9.B1znKYGWJ3ZrlAKibPscg8ew7bB_-ytg0U2IAvQOtOcsTHGaIkzpWLxfzNb1-DrHRlIj42Txjcpy1XyXhU4zAa4t2-njL0JuDd_debVbS6qSS86pe6nC_5A4oyHtTDVBQlleZELb-xfAxEoFMvDytPQWKOfpYt5Ortab6ZLqDANc3UcX9FjzzZFurW87ERV-eMeAJzOpV0n4HlELc9NNu_Nz-6xaFeOVcb_z0iAw93MAbATA5MFXhQYhRGfND9Zw6fReErKf_SVPxy3au19FKjW43Rxj4aPK-EXRPMPg_dNSBnTdc7AWYkdQesZoKpQg3aJswM6puxv2hif2JkM5eQ";
+$config['inpost_geowidget_token'] = "";
+$config['inpost_shipx_token'] = "";
 
 
 // ============================================================
@@ -225,10 +225,10 @@ $config['inpost_shipx_token'] = "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA
 // ============================================================
 // @claude-note: dane środowiska i klucze do płatności PayU
 $config['payu_env'] = 'sandbox';
-$config['payu_pos_id'] = '499307';
-$config['payu_client_id'] = '499307';
-$config['payu_client_secret'] = 'e37256e08322cabc5020357914a6c447';
-$config['payu_second_key'] = 'f1197ca121c6b8a600d65cb70ac83f55'; // dla autoryzacji notify
+$config['payu_pos_id'] = '';
+$config['payu_client_id'] = '';
+$config['payu_client_secret'] = '';
+$config['payu_second_key'] = ''; // dla autoryzacji notify
 $config['payu_currency'] = 'PLN';
 $config['payment_page'] = "0"; // strona powrotu w Quick.CMS
 $config['payu_debug'] = false;
@@ -250,7 +250,7 @@ $config['squad_types'] = Array(
 // Klucze API modułu live — tu tylko PLACEHOLDERY. Prawdziwe klucze wstawiaj
 // w database/config.secrets.php (poza repo — patrz config.secrets.dist.php),
 // który ładuje się na końcu tego pliku i nadpisuje te wartości.
-$config['anthropic_api_key']  = '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';   // Etap 1: import składu z protokołu (vision OCR)
+$config['anthropic_api_key']  = '';   // Etap 1: import składu z protokołu (vision OCR)
 $config['elevenlabs_api_key'] = '';   // Etap 2: komunikaty głosowe (TTS)
 
 // Model vision do OCR protokołu (plugins/live/ocr.php)

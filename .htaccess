@@ -1,0 +1,71 @@
+# ============================================================
+# HARDENING BEZPIECZEŃSTWA
+# ============================================================
+Options -Indexes
+
+# Nie serwuj wrażliwych plików bezpośrednio (baza, logi, kopie, konfigi *.dist/*.sample)
+<FilesMatch "(?i)\.(db|db-wal|db-shm|sqlite|sqlite3|sql|log|ini|dist|sample|bak|old|swp)$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>
+
+# PRZEKIEROWANIA HTTPS i BEZ WWW
+<IfModule mod_rewrite.c>
+RewriteEngine On
+
+# 🔒 Blokada dotfiles / katalogu .git (oprócz .well-known dla certyfikatów ACME)
+RewriteRule (?:^|/)\.(?!well-known)[^/]+ - [F,L]
+
+
+
+# 1) Usuwanie WWW (bez pętli)
+RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+RewriteRule ^ //%1%{REQUEST_URI} [R=301,L]
+
+# 2) Wymuszanie HTTPS (bez pętli przy proxy/Cloudflare)
+RewriteCond %{HTTPS} off
+RewriteCond %{HTTP:X-Forwarded-Proto} !https [NC]
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+# 🔒 BLOKADA BOTÓW NA PODSTAWIE USER-AGENT
+RewriteCond %{HTTP_USER_AGENT} (GPTBot|ClaudeBot|MJ12bot|SemrushBot|AhrefsBot|PetalBot|YandexBot|BLEXBot|DotBot|Sogou|Exabot|spbot) [NC]
+RewriteRule ^ - [F,L]
+
+# 🔄 PRZEKIEROWANIE STARYCH LINKÓW TYPU /?strona → /strona (host już bez www)
+RewriteCond %{THE_REQUEST} \s/+(\?|$) [NC]
+RewriteCond %{QUERY_STRING} ^([^=&]+)$
+RewriteRule ^$ /%1? [R=301,L,NE]
+
+# 👇 PRZEKIEROWANIE ADMINA
+RewriteRule ^admin/?$ adm.php [L,QSA]
+
+# MAPA STRONY
+RewriteRule ^sitemap\.xml$ sitemap.xml.php [L]
+
+# pomijaj istniejące pliki i katalogi
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# pomijaj adm.php
+RewriteRule ^adm\.php$ - [L]
+
+# reszta do index.php
+RewriteRule ^ index.php [L,QSA]
+</IfModule>
+
+# (Opcjonalnie) Blokada pliku xmlrpc.php
+<Files "xmlrpc.php">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order Deny,Allow
+    Deny from all
+  </IfModule>
+</Files>
