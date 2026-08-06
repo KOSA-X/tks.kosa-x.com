@@ -143,19 +143,7 @@ function renderHoursPair( string $labelOpen, string $nameOpen, string $labelClos
 
         <?php
         echo renderPageSelect( 'start_page', $lang['Start_page'], $config, $oPage, true );
-        ?>
-
-        <li>
-            <h5 class="form-separator">Transmisja live — treści plansz</h5>
-            <p class="form-text">Wskaż zakładki, z których plansze biorą treść (opisy + zdjęcia w gridzie). Zakładki tworzysz w Strony (typ menu „Plansze").</p>
-        </li>
-
-        <?php
-        // źródła treści plansz nakładki OBS / telebimu — klucze z config_pl.php
-        echo renderPageSelect( 'match_page', 'Plansza DZIEŃ MECZOWY (mecz dnia: opis, plakat, data)', $config, $oPage );
-        echo renderPageSelect( 'live_referees_page', 'Plansza SĘDZIOWIE (opis + zdjęcia)', $config, $oPage );
-        echo renderPageSelect( 'live_sponsors_page', 'Plansza SPONSORZY (grid logotypów)', $config, $oPage );
-        echo renderPageSelect( 'live_production_page', 'Plansza REALIZACJA TRANSMISJI (tytuł + zdjęcia)', $config, $oPage );
+        // konfiguracja transmisji (drużyny, mecz, plansze) → Transmisja → Konfiguracja (p=live-config)
         ?>
 
     </ul>

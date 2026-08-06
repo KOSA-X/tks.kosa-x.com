@@ -147,41 +147,9 @@
     }
 
     // ------------------------------------------------------------
-    // PODSUMOWANIE — statystyki + pełna lista zdarzeń per drużyna
+    // PODSUMOWANIE — pełna lista zdarzeń per drużyna
+    // (bez tabelki statystyk — wszystko widać na osi zdarzeń)
     // ------------------------------------------------------------
-    function renderStats(events) {
-        var container = document.getElementById('obs-stats');
-        if (!container) {
-            return;
-        }
-        var stats = {};
-        stats[cfg.team1] = { goals: 0, yellow: 0, red: 0, subs: 0 };
-        stats[cfg.team2] = { goals: 0, yellow: 0, red: 0, subs: 0 };
-
-        events.forEach(function (ev) {
-            var own = stats[ev.team];
-            var other = stats[ev.team === cfg.team1 ? cfg.team2 : cfg.team1];
-            if (!own) {
-                return;
-            }
-            if (ev.action === 'goal') { own.goals++; }
-            if (ev.action === 'own_goal') { other.goals++; } // samobój = gol dla przeciwnika
-            if (ev.action === 'yellow_card') { own.yellow++; }
-            if (ev.action === 'red_card') { own.red++; }
-            if (ev.action === 'in') { own.subs++; }
-        });
-
-        container.textContent = '';
-        [['goals', cfg.labels.stats.goals], ['yellow', cfg.labels.stats.yellow],
-         ['red', cfg.labels.stats.red], ['subs', cfg.labels.stats.subs]].forEach(function (pair) {
-            var row = el('div', 'obsStats__row');
-            row.appendChild(el('span', 'obsStats__value', String(stats[cfg.team1][pair[0]])));
-            row.appendChild(el('span', 'obsStats__label', pair[1]));
-            row.appendChild(el('span', 'obsStats__value', String(stats[cfg.team2][pair[0]])));
-            container.appendChild(row);
-        });
-    }
-
     function renderSummary(events) {
         // oś zdarzeń pokazuje tylko gole i kartki (zmiany ukryte — są w statystykach)
         var SUMMARY_ACTIONS = ['goal', 'own_goal', 'yellow_card', 'red_card'];
@@ -219,7 +187,6 @@
             .then(function (response) { return response.json(); })
             .then(function (data) {
                 if (data.ok) {
-                    renderStats(data.events);
                     renderSummary(data.events);
                 }
             })
@@ -268,11 +235,17 @@
             scorebar.classList.toggle('obsScorebar--right', data.scorebar === 1);
         }
 
+        // logo realizatora ucieka na przeciwny róg niż pasek wyniku
+        var producerLogo = document.getElementById('obs-producer-logo');
+        if (producerLogo) {
+            producerLogo.classList.toggle('obsProducerLogo--left', data.scorebar === 1);
+        }
+
+        // plansza może mieć kilka elementów (np. pasek wyniku + logo realizatora)
         Object.keys(data.boards).forEach(function (name) {
-            var board = document.querySelector('[data-board="' + name + '"]');
-            if (board) {
+            all('[data-board="' + name + '"]').forEach(function (board) {
                 board.classList.toggle('is-visible', data.boards[name] === 1);
-            }
+            });
         });
 
         if (data.boards.podsumowanie === 1) {

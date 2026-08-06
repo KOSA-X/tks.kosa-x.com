@@ -167,24 +167,41 @@ img {
         border-radius: 0 10px 10px 0;
         font-variant-numeric: tabular-nums;
         line-height: 1;
+        transition: background .3s ease, color .3s ease;
 
         .clock {
             font-size: 27px;
             font-weight: 900;
         }
 
-        .half {
-            margin-top: 4px;
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: .14em;
-            text-transform: uppercase;
-            color: rgba($brand2, .55);
+        // koniec regulaminowego czasu połowy (45:00 / 90:00) — doliczone
+        // minuty sygnalizuje CZERWONE tło zegara
+        &.is-extra {
+            background: $danger;
+            color: $white;
         }
+    }
+}
 
-        &.is-extra .clock {
-            color: $brand;
-        }
+// logo realizatora transmisji — prawy górny róg, włączane razem
+// z planszą „wynik i czas" (data-board="wynik"); gdy pasek wyniku
+// przełączony na prawy róg, logo przeskakuje na lewy
+.obsProducerLogo {
+    position: absolute;
+    top: 36px;
+    right: 44px;
+    height: 64px;
+    width: auto;
+    filter: drop-shadow(0 10px 24px rgba($black, .45));
+    transform: translate3d(0, -24px, 0);
+
+    &.is-visible {
+        transform: translate3d(0, 0, 0);
+    }
+
+    &--left {
+        right: auto;
+        left: 44px;
     }
 }
 
@@ -504,42 +521,6 @@ img {
             color: $brand;
             font-variant-numeric: tabular-nums;
         }
-    }
-}
-
-// --- statystyki meczu (plansza podsumowania) ----------------
-.obsStats {
-    max-width: 640px;
-    margin: 34px auto 0;
-
-    &__row {
-        display: grid;
-        grid-template-columns: 90px 1fr 90px;
-        align-items: center;
-        padding: 10px 0;
-        border-bottom: 1px solid rgba($white, .1);
-
-        &:last-child {
-            border-bottom: 0;
-        }
-    }
-
-    &__value {
-        font-family: $font-h;
-        font-size: 30px;
-        font-weight: 900;
-        text-align: center;
-        font-variant-numeric: tabular-nums;
-        color: $brand-light;
-    }
-
-    &__label {
-        text-align: center;
-        font-size: 16px;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: .14em;
-        opacity: .75;
     }
 }
 

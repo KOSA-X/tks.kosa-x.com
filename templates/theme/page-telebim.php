@@ -153,7 +153,7 @@ $fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($aBoardLabels, $lang, $sM
     <?php echo $fSquadBoard('sklad_gospodarza', $iTeam1, $aTeam1); ?>
     <?php echo $fSquadBoard('sklad_goscia', $iTeam2, $aTeam2); ?>
 
-    <!-- PLANSZA: PODSUMOWANIE -->
+    <!-- PLANSZA: PODSUMOWANIE (bez tabelki statystyk — wszystko na osi zdarzeń) -->
     <div class="tbBoard tbShow" data-board="podsumowanie">
         <header class="tbBoard__header">
             <span class="title"><?php echo html($aBoardLabels['podsumowanie'] ?? ''); ?></span>
@@ -161,7 +161,6 @@ $fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($aBoardLabels, $lang, $sM
         </header>
         <div class="tbBoard__content">
             <?php echo $fMatchHead(); ?>
-            <div class="tbStats" id="tb-stats"></div>
             <div class="tbSummary">
                 <ul class="tbSummary__list" id="tb-summary-1"></ul>
                 <ul class="tbSummary__list" id="tb-summary-2"></ul>
@@ -253,12 +252,6 @@ window.telebimConfig = <?php echo json_encode(Array(
         'halfShort' => $lang['live_half_short'],
         'noEvents'  => $lang['live_no_events'],
         'replay'    => $lang['live_replay'],
-        'stats'     => Array(
-            'goals'  => $lang['live_stat_goals'],
-            'yellow' => $lang['live_stat_yellow'],
-            'red'    => $lang['live_stat_red'],
-            'subs'   => $lang['live_stat_subs'],
-        ),
     ),
 ), JSON_UNESCAPED_UNICODE); ?>;
 </script>

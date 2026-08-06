@@ -128,8 +128,14 @@ img {
             color: rgba($brand2, .6);
         }
 
-        &.is-extra .clock {
-            color: $brand;
+        // doliczone minuty (45:00 / 90:00) — czerwone tło zegara
+        &.is-extra {
+            background: $danger;
+            color: $white;
+
+            .half {
+                color: rgba($white, .75);
+            }
         }
     }
 
@@ -463,9 +469,8 @@ img {
     p { margin: 0 0 .7rem; }
 }
 
-// podsumowanie: nagłówek meczowy mniejszy (wynik powtarza się w statystykach),
-// treść układana od góry — lista zdarzeń potrafi być długa i nie może
-// wypychać planszy pod belkę tytułu
+// podsumowanie: nagłówek meczowy kompaktowy, treść układana od góry —
+// lista zdarzeń potrafi być długa i nie może wypychać planszy pod belkę
 [data-board='podsumowanie'] {
     .tbBoard__content {
         justify-content: flex-start;
@@ -529,43 +534,6 @@ img {
             color: $brand;
             font-variant-numeric: tabular-nums;
         }
-    }
-}
-
-// --- statystyki meczu (plansza podsumowania) ----------------
-.tbStats {
-    width: 100%;
-    max-width: 40rem;
-    margin: 1rem auto 0;
-
-    &__row {
-        display: grid;
-        grid-template-columns: 6rem 1fr 6rem;
-        align-items: center;
-        padding: .3rem 0;
-        border-bottom: 1px solid rgba($white, .12);
-
-        &:last-child {
-            border-bottom: 0;
-        }
-    }
-
-    &__value {
-        font-family: $font-h;
-        font-size: 2.2rem;
-        font-weight: 900;
-        text-align: center;
-        font-variant-numeric: tabular-nums;
-        color: $brand-light;
-    }
-
-    &__label {
-        text-align: center;
-        font-size: 1.15rem;
-        font-weight: 800;
-        text-transform: uppercase;
-        letter-spacing: .12em;
-        opacity: .85;
     }
 }
 

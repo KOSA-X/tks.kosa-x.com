@@ -103,10 +103,17 @@ $fStaffBlock = function ($iTeam) use ($oSql) {
 $aTeam1 = $fTeamData($iTeam1);
 $aTeam2 = $fTeamData($iTeam2);
 
-$sMatchName = (string) (getData($iMatch, 'sName') ?? '');
-$sMatchDate = (string) (getData($iMatch, 'sDate') ?? '');
-$sMatchDesc = (string) (getData($iMatch, 'sDescriptionFull') ?? '');
-$sPoster    = $fPageImage($iMatch, 1);
+$sMatchName  = (string) (getData($iMatch, 'sName') ?? '');
+$sMatchDate  = (string) (getData($iMatch, 'sDate') ?? '');
+$sMatchRound = (string) (getData($iMatch, 'sPrice') ?? ''); // kolejka (Transmisja → Konfiguracja)
+$sMatchDesc  = (string) (getData($iMatch, 'sDescriptionFull') ?? '');
+$sPoster     = $fPageImage($iMatch, 1);
+
+// belka plansz meczowych: „kolejka — data" (albo to, co jest wypełnione)
+$sMatchMeta = trim($sMatchRound.($sMatchRound !== '' && $sMatchDate !== '' ? ' — ' : '').$sMatchDate);
+
+// logo realizatora transmisji (prawy górny róg, razem z paskiem wyniku)
+$sProducerLogo = is_file('images/kosax-live.png') ? $sRoot.'images/kosax-live.png' : '';
 
 // sędziowie: dedykowana zakładka (opis pełny + grid zdjęć strony);
 // fallback bez zakładki — opis SKRÓCONY strony meczu (stare zachowanie)
@@ -200,6 +207,12 @@ $fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($fSquad, $fStaffBlock, $a
         </div>
     </div>
 
+    <?php if ($sProducerLogo !== ''): ?>
+    <!-- LOGO REALIZATORA TRANSMISJI (włączane razem z paskiem wyniku) -->
+    <img class="obsProducerLogo obsShow" data-board="wynik" id="obs-producer-logo"
+         src="<?php echo html($sProducerLogo); ?>" alt="" />
+    <?php endif; ?>
+
     <!-- POPUPY ZDARZEŃ -->
     <div class="obsEvents" id="obs-events"></div>
 
@@ -207,7 +220,7 @@ $fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($fSquad, $fStaffBlock, $a
     <div class="obsBoard obsShow" data-board="dzien_meczowy">
         <header class="obsBoard__header">
             <span class="title"><?php echo html($sMatchName !== '' ? $sMatchName : ($aBoardLabels['dzien_meczowy'] ?? '')); ?></span>
-            <?php if ($sMatchDate !== ''): ?><span class="meta"><?php echo html($sMatchDate); ?></span><?php endif; ?>
+            <?php if ($sMatchMeta !== ''): ?><span class="meta"><?php echo html($sMatchMeta); ?></span><?php endif; ?>
         </header>
         <div class="obsBoard__content">
             <?php echo $fMatchHead(); ?>
@@ -220,15 +233,14 @@ $fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($fSquad, $fStaffBlock, $a
     <?php echo $fSquadBoard('sklad_gospodarza', $iTeam1, $aTeam1); ?>
     <?php echo $fSquadBoard('sklad_goscia', $iTeam2, $aTeam2); ?>
 
-    <!-- PLANSZA: PODSUMOWANIE -->
+    <!-- PLANSZA: PODSUMOWANIE (bez tabelki statystyk — wszystko na osi zdarzeń) -->
     <div class="obsBoard obsShow" data-board="podsumowanie">
         <header class="obsBoard__header">
             <span class="title"><?php echo html($aBoardLabels['podsumowanie'] ?? ''); ?></span>
-            <?php if ($sMatchName !== ''): ?><span class="meta"><?php echo html($sMatchName); ?></span><?php endif; ?>
+            <?php if ($sMatchMeta !== '' || $sMatchName !== ''): ?><span class="meta"><?php echo html($sMatchMeta !== '' ? $sMatchMeta : $sMatchName); ?></span><?php endif; ?>
         </header>
         <div class="obsBoard__content">
             <?php echo $fMatchHead(); ?>
-            <div class="obsStats" id="obs-stats"></div>
             <div class="obsSummary">
                 <ul class="obsSummary__list" id="obs-summary-1"></ul>
                 <ul class="obsSummary__list" id="obs-summary-2"></ul>
@@ -311,12 +323,6 @@ window.liveOverlayConfig = <?php echo json_encode(Array(
     'labels' => Array(
         'halfShort' => $lang['live_half_short'],
         'noEvents'  => $lang['live_no_events'],
-        'stats'     => Array(
-            'goals'  => $lang['live_stat_goals'],
-            'yellow' => $lang['live_stat_yellow'],
-            'red'    => $lang['live_stat_red'],
-            'subs'   => $lang['live_stat_subs'],
-        ),
     ),
 ), JSON_UNESCAPED_UNICODE); ?>;
 </script>

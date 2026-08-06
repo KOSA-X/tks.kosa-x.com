@@ -79,6 +79,7 @@ $menu = [
         'icon'  => 'play.svg',
         'submenu' => [
             ['id' => 'squad-import', 'label' => 'Import składu'],
+            ['id' => 'live-config',  'label' => 'Konfiguracja'],
         ],
     ],
     [

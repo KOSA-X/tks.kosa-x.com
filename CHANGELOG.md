@@ -1,5 +1,29 @@
 # Changelog
 
+## 2026-08-06 — Transmisja → Konfiguracja (nowy moduł) + szlif paska wyniku i podsumowania
+- **Nowy moduł panelu: Transmisja → Konfiguracja** (`?p=live-config`, pod
+  Importem składu) — konfiguracja transmisji ODDZIELONA od konfiguracji CMS:
+  gospodarz + gość (zapis do `live_state`, walidacja jak `teams_set`),
+  **data meczu** i **kolejka** (pola `sDate`/`sPrice` strony `match_page` —
+  celowany UPDATE nie rusza opisów) oraz dopasowanie zakładek-źródeł plansz
+  (Dzień meczowy / Sędziowie / Sponsorzy / Realizacja) przeniesione
+  z modułu Konfiguracja (saveVariables → config_pl.php)
+- **Kolejka + data w belkach plansz**: Dzień meczowy i Podsumowanie pokazują
+  w belce „kolejka — data" (np. „30. kolejka 2025/26 — 31.08.2026 18:00")
+- **Doliczony czas na CZERWONO**: po przekroczeniu 45:00 / 90:00 zegar paska
+  wyniku (nakładka i telebim) dostaje tło `$danger` — licznik stoi na
+  45:00/90:00 i świeci na czerwono
+- **Logo realizatora transmisji**: `images/kosax-live.png` w prawym górnym
+  rogu nakładki, włączane razem z planszą „wynik i czas"; gdy pasek wyniku
+  przełączony na prawy róg, logo przeskakuje na lewy; brak pliku = brak
+  elementu (guard `is_file`) — **wgraj plik do images/**
+- **Podsumowanie bez tabelki statystyk** (nakładka + telebim) — wszystko
+  widać na osi zdarzeń; JS toggluje wiele elementów jednej planszy
+  (querySelectorAll — pasek + logo współdzielą `data-board="wynik"`)
+- E2E: zapis modułu (drużyny/data/kolejka/plansze), czerwony zegar 45:00,
+  logo z paskiem i po przeciwnej stronie, podsumowanie bez statystyk —
+  zielone, zero błędów JS
+
 ## 2026-08-06 — Panel admina: pola zawodnika + plansze w Konfiguracji; kropki kartek na pasku
 - **Formularz strony (Opcje)**: sekcja „Transmisja live — zawodnik" — numer
   zawodnika (`sNumber`) i skład meczowy (`sSquad`: Wyjściowa 11 / Rezerwa /

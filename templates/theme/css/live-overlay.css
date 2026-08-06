@@ -177,21 +177,32 @@ img {
   border-radius: 0 10px 10px 0;
   font-variant-numeric: tabular-nums;
   line-height: 1;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 .obsScorebar__clock .clock {
   font-size: 27px;
   font-weight: 900;
 }
-.obsScorebar__clock .half {
-  margin-top: 4px;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: rgba(20, 35, 63, 0.55);
+.obsScorebar__clock.is-extra {
+  background: #c1121f;
+  color: #fff;
 }
-.obsScorebar__clock.is-extra .clock {
-  color: #143582;
+
+.obsProducerLogo {
+  position: absolute;
+  top: 36px;
+  right: 44px;
+  height: 64px;
+  width: auto;
+  filter: drop-shadow(0 10px 24px rgba(1, 1, 1, 0.45));
+  transform: translate3d(0, -24px, 0);
+}
+.obsProducerLogo.is-visible {
+  transform: translate3d(0, 0, 0);
+}
+.obsProducerLogo--left {
+  right: auto;
+  left: 44px;
 }
 
 .obsEvents {
@@ -477,37 +488,6 @@ img {
   font-weight: 900;
   color: #143582;
   font-variant-numeric: tabular-nums;
-}
-
-.obsStats {
-  max-width: 640px;
-  margin: 34px auto 0;
-}
-.obsStats__row {
-  display: grid;
-  grid-template-columns: 90px 1fr 90px;
-  align-items: center;
-  padding: 10px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-.obsStats__row:last-child {
-  border-bottom: 0;
-}
-.obsStats__value {
-  font-family: "Zalando Sans Expanded", sans-serif;
-  font-size: 30px;
-  font-weight: 900;
-  text-align: center;
-  font-variant-numeric: tabular-nums;
-  color: #fff4f5;
-}
-.obsStats__label {
-  text-align: center;
-  font-size: 16px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  opacity: 0.75;
 }
 
 .obsReferees {
