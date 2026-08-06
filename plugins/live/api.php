@@ -76,6 +76,28 @@ function liveApiState(Sql $oSql, int $iSince): array
         $aBoards[$aRow['sName']] = (int) $aRow['iVisible'];
     }
 
+    // kartki per drużyna — kropki pod nazwami na pasku wyniku (kolejność
+    // jak w 'score': [gospodarz, gość]); liczone z całej historii zdarzeń,
+    // więc odświeżenie nakładki niczego nie gubi
+    $aCards = [
+        ['yellow' => 0, 'red' => 0],
+        ['yellow' => 0, 'red' => 0],
+    ];
+    $aTeamIndex = [
+        (int) ($aState['iTeam1'] ?? 0) => 0,
+        (int) ($aState['iTeam2'] ?? 0) => 1,
+    ];
+    $oCardQuery = $oSql->getQuery(
+        'SELECT iTeam, sAction, COUNT(*) AS iCount FROM live_events
+         WHERE sAction IN ("yellow_card", "red_card") GROUP BY iTeam, sAction'
+    );
+    foreach ($oCardQuery as $aRow) {
+        $iIndex = $aTeamIndex[(int) $aRow['iTeam']] ?? null;
+        if ($iIndex !== null) {
+            $aCards[$iIndex][$aRow['sAction'] === 'red_card' ? 'red' : 'yellow'] = (int) $aRow['iCount'];
+        }
+    }
+
     // Statusy wyświetlania popupów na nakładce — symulacja czasowa po stronie
     // serwera (nakładka nie ma prawa zapisu). Model: nakładka podnosi event
     // ~1 s po INSERT (poll), pokazuje 8 s + 0,6 s animacji, jeden naraz.
@@ -134,6 +156,7 @@ function liveApiState(Sql $oSql, int $iSince): array
         'teams'  => [(int) ($aState['iTeam1'] ?? 0), (int) ($aState['iTeam2'] ?? 0)],
         'scorebar' => (int) ($aState['iScorebarPos'] ?? 0),
         'replay'   => (int) ($aState['iReplayCount'] ?? 0),
+        'cards'    => $aCards,
         'boards' => $aBoards,
         'events' => $aEvents,
         'last_event_id' => $iLastId,

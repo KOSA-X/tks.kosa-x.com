@@ -347,13 +347,17 @@
     }
 
     function renderSummary(events) {
+        // oś zdarzeń pokazuje tylko gole i kartki (zmiany ukryte — są w statystykach)
+        var SUMMARY_ACTIONS = ['goal', 'own_goal', 'yellow_card', 'red_card'];
         [cfg.team1, cfg.team2].forEach(function (teamId, index) {
             var list = document.getElementById('tb-summary-' + (index + 1));
             if (!list) {
                 return;
             }
             list.textContent = '';
-            var teamEvents = events.filter(function (ev) { return ev.team === teamId; });
+            var teamEvents = events.filter(function (ev) {
+                return ev.team === teamId && SUMMARY_ACTIONS.indexOf(ev.action) !== -1;
+            });
             if (!teamEvents.length) {
                 list.appendChild(el('li', 'tbSummary__empty', cfg.labels.noEvents));
                 return;

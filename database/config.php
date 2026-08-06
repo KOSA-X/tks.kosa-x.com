@@ -242,9 +242,10 @@ $config['orderKey'] = 'rX8dP2bQeF9mL4zK7yW1aT6uH3sN0vC5';
 // ============================================================
 // @claude-note: słownik składu meczowego zawodnika — klucz zapisywany
 // w pages.sSquad ('' = poza kadrą meczową). Używaj przez getElement().
+// Etykiety spójne z frontem (lang: live_first_squad / live_reserve).
 $config['squad_types'] = Array(
-  1 => 'Podstawowy',
-  2 => 'Rezerwowy',
+  1 => 'Wyjściowa 11',
+  2 => 'Rezerwa',
 );
 
 // Drużyna = zakładka NAJWYŻSZEGO poziomu z typem menu „Drużyny"

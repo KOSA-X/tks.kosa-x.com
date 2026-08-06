@@ -109,6 +109,41 @@ img {
         object-fit: contain;
     }
 
+    // nazwa drużyny + kropki kartek w kolumnie
+    &__label {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+
+        &--away {
+            align-items: flex-end;
+        }
+    }
+
+    &__dots {
+        display: flex;
+        gap: 5px;
+
+        &:empty {
+            display: none;
+        }
+    }
+
+    &__dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+
+        &--yellow {
+            background: $warning;
+        }
+
+        &--red {
+            background: $danger;
+        }
+    }
+
     &__score {
         display: flex;
         align-items: center;

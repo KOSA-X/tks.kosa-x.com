@@ -178,20 +178,25 @@ $fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($fSquad, $fStaffBlock, $a
 <body>
 <div class="obsStage">
 
-    <!-- PASEK WYNIKU + ZEGAR -->
+    <!-- PASEK WYNIKU + ZEGAR (kropki pod nazwą = kartki drużyny; bez nr połowy) -->
     <div class="obsScorebar obsShow" data-board="wynik">
         <div class="obsScorebar__team obsScorebar__team--home">
             <?php if ($aTeam1['logo'] !== ''): ?><img class="obsScorebar__logo" src="<?php echo $sFiles.html($aTeam1['logo']); ?>" alt="" /><?php endif; ?>
-            <span><?php echo html($aTeam1['short']); ?></span>
+            <span class="obsScorebar__label">
+                <span><?php echo html($aTeam1['short']); ?></span>
+                <span class="obsScorebar__dots js-cards1"></span>
+            </span>
         </div>
         <div class="obsScorebar__score"><span class="js-score1">0</span><span>:</span><span class="js-score2">0</span></div>
         <div class="obsScorebar__team obsScorebar__team--away">
-            <span><?php echo html($aTeam2['short']); ?></span>
+            <span class="obsScorebar__label obsScorebar__label--away">
+                <span><?php echo html($aTeam2['short']); ?></span>
+                <span class="obsScorebar__dots js-cards2"></span>
+            </span>
             <?php if ($aTeam2['logo'] !== ''): ?><img class="obsScorebar__logo" src="<?php echo $sFiles.html($aTeam2['logo']); ?>" alt="" /><?php endif; ?>
         </div>
         <div class="obsScorebar__clock js-clock-box">
             <span class="clock js-clock">00:00</span>
-            <span class="half js-half"></span>
         </div>
     </div>
 

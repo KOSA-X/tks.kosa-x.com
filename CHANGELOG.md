@@ -1,5 +1,22 @@
 # Changelog
 
+## 2026-08-06 — Panel admina: pola zawodnika + plansze w Konfiguracji; kropki kartek na pasku
+- **Formularz strony (Opcje)**: sekcja „Transmisja live — zawodnik" — numer
+  zawodnika (`sNumber`) i skład meczowy (`sSquad`: Wyjściowa 11 / Rezerwa /
+  Poza kadrą); etykiety `$config['squad_types']` ujednolicone z frontem
+- **Konfiguracja → Dopasowanie stron**: wycięte nieużywane selecty
+  (sklep/blog/oferta/FAQ…), w ich miejsce sekcja „Transmisja live — treści
+  plansz": Dzień meczowy (`match_page`), Sędziowie (`live_referees_page`),
+  Sponsorzy (`live_sponsors_page`), Realizacja (`live_production_page`) —
+  wybór zakładki z listy, zapis standardowo przez saveVariables
+- **Pasek wyniku (nakładka)**: żółte/czerwone kropki pod nazwą drużyny =
+  kartki (liczniki `cards` w API state — liczone z całej historii, odporne
+  na odświeżenie); usunięty wskaźnik połowy („1 poł./2 poł.") z zegara
+- **Podsumowanie (nakładka + telebim)**: oś zdarzeń pokazuje tylko gole
+  i kartki — zmiany ukryte (nadal widoczne w wierszu statystyk)
+- E2E na realnej bazie: kropki YY/R, pasek bez połowy, lista bez zmian,
+  zapis numeru+składu z formularza strony, selecty plansz w Konfiguracji
+
 ## 2026-08-06 — Drużyny wg typu menu + plansze z zakładek (nowa struktura właściciela)
 - **Nowa konwencja drużyn**: drużyna = zakładka NAJWYŻSZEGO poziomu z typem menu
   „Drużyny" (`$config['teams_menu']`, domyślnie 4 z `pages_menus`); zawodnicy =

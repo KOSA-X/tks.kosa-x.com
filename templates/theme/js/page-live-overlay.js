@@ -183,13 +183,17 @@
     }
 
     function renderSummary(events) {
+        // oś zdarzeń pokazuje tylko gole i kartki (zmiany ukryte — są w statystykach)
+        var SUMMARY_ACTIONS = ['goal', 'own_goal', 'yellow_card', 'red_card'];
         [cfg.team1, cfg.team2].forEach(function (teamId, index) {
             var list = document.getElementById('obs-summary-' + (index + 1));
             if (!list) {
                 return;
             }
             list.textContent = '';
-            var teamEvents = events.filter(function (ev) { return ev.team === teamId; });
+            var teamEvents = events.filter(function (ev) {
+                return ev.team === teamId && SUMMARY_ACTIONS.indexOf(ev.action) !== -1;
+            });
             if (!teamEvents.length) {
                 var empty = el('li', 'obsSummary__empty', cfg.labels.noEvents);
                 list.appendChild(empty);
@@ -240,6 +244,24 @@
 
         all('.js-score1').forEach(function (node) { node.textContent = data.score[0]; });
         all('.js-score2').forEach(function (node) { node.textContent = data.score[1]; });
+
+        // kropki kartek pod nazwami drużyn (cards: [gospodarz, gość])
+        if (data.cards) {
+            [1, 2].forEach(function (side) {
+                var box = document.querySelector('.js-cards' + side);
+                if (!box) {
+                    return;
+                }
+                var counts = data.cards[side - 1] || { yellow: 0, red: 0 };
+                box.textContent = '';
+                for (var y = 0; y < counts.yellow; y++) {
+                    box.appendChild(el('span', 'obsScorebar__dot obsScorebar__dot--yellow'));
+                }
+                for (var r = 0; r < counts.red; r++) {
+                    box.appendChild(el('span', 'obsScorebar__dot obsScorebar__dot--red'));
+                }
+            });
+        }
 
         var scorebar = document.querySelector('.obsScorebar');
         if (scorebar) {

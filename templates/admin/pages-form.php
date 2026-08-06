@@ -306,6 +306,28 @@ require_once 'templates/admin/_menu.php';
             </div>
         </li>
 
+        <li><h5 class="form-separator">Transmisja live — zawodnik</h5></li>
+
+        <li>
+            <div class="form-item">
+                <label for="sNumber">Numer zawodnika</label>
+                <input type="text" name="sNumber" id="sNumber" value="<?php echo html($aData['sNumber'] ?? ''); ?>" class="numeric" size="3" maxlength="4" />
+            </div>
+        </li>
+
+        <li>
+            <div class="form-item">
+                <label for="sSquad">Skład meczowy</label>
+                <?php $sSquad = (string) ($aData['sSquad'] ?? ''); ?>
+                <select name="sSquad" id="sSquad">
+                    <option value=""<?php echo $sSquad === '' ? ' selected="selected"' : ''; ?>>Poza kadrą</option>
+                    <?php foreach ($config['squad_types'] as $iKey => $sLabel): ?>
+                        <option value="<?php echo (int) $iKey; ?>"<?php echo $sSquad === (string) $iKey ? ' selected="selected"' : ''; ?>><?php echo html($sLabel); ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </li>
+
         <?php if (!empty($filters) && is_array($filters)): ?>
             <li>
                 <?php foreach ($filters as $filterId => $filterConf): ?>

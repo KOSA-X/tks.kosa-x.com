@@ -128,6 +128,33 @@ img {
   height: 42px;
   object-fit: contain;
 }
+.obsScorebar__label {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+.obsScorebar__label--away {
+  align-items: flex-end;
+}
+.obsScorebar__dots {
+  display: flex;
+  gap: 5px;
+}
+.obsScorebar__dots:empty {
+  display: none;
+}
+.obsScorebar__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+.obsScorebar__dot--yellow {
+  background: #fb8500;
+}
+.obsScorebar__dot--red {
+  background: #c1121f;
+}
 .obsScorebar__score {
   display: flex;
   align-items: center;

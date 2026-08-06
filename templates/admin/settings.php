@@ -143,23 +143,19 @@ function renderHoursPair( string $labelOpen, string $nameOpen, string $labelClos
 
         <?php
         echo renderPageSelect( 'start_page', $lang['Start_page'], $config, $oPage, true );
-        echo renderPageSelect( 'shop_page', 'Strona ze sklepem', $config, $oPage );
-        echo renderPageSelect( 'contact_page', 'Strona KONTAKT', $config, $oPage );
-        echo renderPageSelect( 'offer_page', 'Strona OFERTA', $config, $oPage );
-        echo renderPageSelect( 'faq_page', 'Strona FAQ', $config, $oPage );
-        echo renderPageSelect( 'form_page', 'Strona REZERWACJA', $config, $oPage );
-        echo renderPageSelect( 'search_page', 'Strona SZUKAJ', $config, $oPage );
-        echo renderPageSelect( 'projects_page', 'Strona PROJEKTY', $config, $oPage );
-        echo renderPageSelect( 'sitemap_page', 'Mapa Strony', $config, $oPage );
-        echo renderPageSelect( 'user_page', 'Panel użytkownika', $config, $oPage );
-        echo renderPageSelect( 'order_page', 'Strona zamówienia', $config, $oPage );
-        echo renderPageSelect( 'payment_page', 'Strona płatności', $config, $oPage );
-        echo renderPageSelect( 'blog_page', 'Strona BLOG', $config, $oPage );
-        echo renderPageSelect( 'about_page', 'Strona O NAS', $config, $oPage );
-        echo renderPageSelect( 'private_policy', 'Strona Polityka Prywatności', $config, $oPage );
-        echo renderPageSelect( 'terms_page', 'Strona Regulamin', $config, $oPage );
-        echo renderPageSelect( 'slider_page', 'Strona ze sliderem', $config, $oPage );
-        echo renderPageSelect( 'video_page', 'Strona z video', $config, $oPage );
+        ?>
+
+        <li>
+            <h5 class="form-separator">Transmisja live — treści plansz</h5>
+            <p class="form-text">Wskaż zakładki, z których plansze biorą treść (opisy + zdjęcia w gridzie). Zakładki tworzysz w Strony (typ menu „Plansze").</p>
+        </li>
+
+        <?php
+        // źródła treści plansz nakładki OBS / telebimu — klucze z config_pl.php
+        echo renderPageSelect( 'match_page', 'Plansza DZIEŃ MECZOWY (mecz dnia: opis, plakat, data)', $config, $oPage );
+        echo renderPageSelect( 'live_referees_page', 'Plansza SĘDZIOWIE (opis + zdjęcia)', $config, $oPage );
+        echo renderPageSelect( 'live_sponsors_page', 'Plansza SPONSORZY (grid logotypów)', $config, $oPage );
+        echo renderPageSelect( 'live_production_page', 'Plansza REALIZACJA TRANSMISJI (tytuł + zdjęcia)', $config, $oPage );
         ?>
 
     </ul>
