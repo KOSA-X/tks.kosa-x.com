@@ -1,12 +1,12 @@
 @charset "UTF-8";
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Zalando+Sans+Expanded:ital,wght@0,200..900;1,200..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Zalando+Sans+Expanded:ital,wght@0,200..900;1,200..900&display=swap");
 :root {
   --brand: #143582;
   --brand-light: #fff4f5;
   --brand-dark: #000f1b;
-  --brand2: #14233f;
-  --brand2-light: #e9eef7;
-  --brand2-dark: #0a1424;
+  --brand2: #143582;
+  --brand2-light: #fff4f5;
+  --brand2-dark: #000f1b;
   --font-color: #111;
   --bg-color: #fbfbfb;
   --border-color: #e8e8e8;
@@ -69,7 +69,7 @@ body {
 body {
   font-family: "Zalando Sans Expanded", sans-serif;
   color: #fff;
-  background: #0a1424;
+  background: #000f1b;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -81,7 +81,7 @@ img {
 .tbStage {
   position: fixed;
   inset: 0;
-  background: radial-gradient(120% 90% at 50% -20%, rgba(20, 53, 130, 0.18) 0%, rgba(20, 53, 130, 0) 55%), linear-gradient(165deg, #14233f 0%, #0a1424 62%, #010101 130%);
+  background: radial-gradient(120% 90% at 50% -20%, rgba(20, 53, 130, 0.18) 0%, rgba(20, 53, 130, 0) 55%), linear-gradient(165deg, #143582 0%, #000f1b 62%, #010101 130%);
 }
 
 .tbShow {
@@ -111,7 +111,7 @@ img {
       -ms-flex-align: center;
           align-items: center;
   padding: 0 1rem 2.4rem;
-  font-family: "Zalando Sans Expanded", sans-serif;
+  font-family: "Oswald", sans-serif;
   -webkit-transform: translate3d(0, 0, 0) scale(0.98);
           transform: translate3d(0, 0, 0) scale(0.98);
 }
@@ -135,7 +135,7 @@ img {
   gap: 1rem;
   padding: 1.1rem 2.6rem 1.3rem;
   background: #fff;
-  color: #0a1424;
+  color: #000f1b;
   border-radius: 0 0 1.4rem 1.4rem;
   font-variant-numeric: tabular-nums;
   line-height: 1;
@@ -151,7 +151,7 @@ img {
   font-weight: 800;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(20, 35, 63, 0.6);
+  color: rgba(20, 53, 130, 0.6);
 }
 .tbScorebar__clock.is-extra {
   background: #c1121f;
@@ -241,7 +241,7 @@ img {
           justify-content: center;
   gap: 1.6rem;
   text-align: center;
-  background: #0a1424;
+  background: #000f1b;
   border: 1.1rem solid #143582;
   opacity: 0;
   -webkit-transform: scale(1.05);
@@ -277,7 +277,7 @@ img {
   border-radius: 50%;
   overflow: hidden;
   border: 0.45rem solid #143582;
-  background: #14233f;
+  background: #143582;
   -webkit-box-shadow: 0 1.2rem 3.2rem rgba(1, 1, 1, 0.55);
           box-shadow: 0 1.2rem 3.2rem rgba(1, 1, 1, 0.55);
 }
@@ -309,7 +309,7 @@ img {
       -ms-flex-pack: center;
           justify-content: center;
   gap: 1.4rem;
-  font-family: "Zalando Sans Expanded", sans-serif;
+  font-family: "Oswald", sans-serif;
   font-size: 3.6rem;
   font-weight: 900;
   text-transform: uppercase;
@@ -328,7 +328,7 @@ img {
   -webkit-box-ordinal-group: 4;
       -ms-flex-order: 3;
           order: 3;
-  font-family: "Zalando Sans Expanded", sans-serif;
+  font-family: "Oswald", sans-serif;
   font-size: 4rem;
   font-weight: 900;
   line-height: 1.1;
@@ -470,7 +470,7 @@ img {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  background: linear-gradient(160deg, #14233f 0%, #0a1424 70%);
+  background: linear-gradient(160deg, #143582 0%, #000f1b 70%);
 }
 .tbBoard.is-visible {
   -webkit-transform: translate3d(0, 0, 0) scale(1);
@@ -486,7 +486,7 @@ img {
   gap: 1.2rem;
   padding: 1.2rem 2rem;
   background: #143582;
-  font-family: "Zalando Sans Expanded", sans-serif;
+  font-family: "Oswald", sans-serif;
   -webkit-box-flex: 0;
       -ms-flex: 0 0 auto;
           flex: 0 0 auto;
@@ -552,7 +552,7 @@ img {
      object-fit: contain;
 }
 .tbMatchHead__team .name {
-  font-family: "Zalando Sans Expanded", sans-serif;
+  font-family: "Oswald", sans-serif;
   font-size: 2.2rem;
   font-weight: 900;
   text-transform: uppercase;
@@ -560,7 +560,7 @@ img {
   line-height: 1.15;
 }
 .tbMatchHead__score {
-  font-family: "Zalando Sans Expanded", sans-serif;
+  font-family: "Oswald", sans-serif;
   font-size: 8rem;
   font-weight: 900;
   font-variant-numeric: tabular-nums;
@@ -607,7 +607,7 @@ img {
   gap: 2.4rem;
 }
 .tbSquad__heading {
-  font-family: "Zalando Sans Expanded", sans-serif;
+  font-family: "Oswald", sans-serif;
   font-size: 1.5rem;
   font-weight: 900;
   text-transform: uppercase;
@@ -639,7 +639,7 @@ img {
           flex: 0 0 auto;
   min-width: 3rem;
   text-align: center;
-  font-family: "Zalando Sans Expanded", sans-serif;
+  font-family: "Oswald", sans-serif;
   font-weight: 900;
   color: #143582;
   font-variant-numeric: tabular-nums;
@@ -690,7 +690,7 @@ img {
 .tbSummary__list li .minute {
   min-width: 3rem;
   text-align: right;
-  font-family: "Zalando Sans Expanded", sans-serif;
+  font-family: "Oswald", sans-serif;
   font-weight: 900;
   color: #fff4f5;
   font-variant-numeric: tabular-nums;
@@ -826,9 +826,9 @@ img {
   gap: 1.2rem;
   padding: 0.9rem 2rem;
   border-radius: 0.8rem;
-  background: rgba(10, 20, 36, 0.88);
+  background: rgba(0, 15, 27, 0.88);
   border-left: 0.5rem solid #143582;
-  font-family: "Zalando Sans Expanded", sans-serif;
+  font-family: "Oswald", sans-serif;
   white-space: nowrap;
 }
 .tbVideo__caption[hidden] {

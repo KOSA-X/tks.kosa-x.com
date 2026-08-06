@@ -15,16 +15,16 @@ $breakpoints: (
   xxxl: 2000px
 );
 
-$font-size: 15px;
+$font-size: 16px;
 
-$font-size-xs: 0.7em;
-$font-size-sm: 0.9em;
+$font-size-xs: 12px;
+$font-size-sm: 14px;
 
-$font-size-md: 1.2em;
-$font-size-l: 1.4em;
-$font-size-xl: 1.8em;
-$font-size-xxl: 2.3em;
-$font-size-xxxl: 2.8em;
+$font-size-md: 20px;
+$font-size-l: 26px;
+$font-size-xl: 34px;
+$font-size-xxl: 40px;
+$font-size-xxxl: 60px;
 
 $font-xbold: 700;
 $font-bold: 600;
@@ -119,6 +119,11 @@ $footer: 45px;
     content: "";
     @include opacity(.05);
 
+}
+
+@mixin brand-bg{
+    background: var(--brand);
+    background: linear-gradient(0deg, rgba(20, 53, 130, 1) 0%, rgba(31, 77, 184, 1) 50%, rgba(20, 53, 130, 1) 100%);
 }
 
 @mixin brand-light{

@@ -94,7 +94,7 @@ $fStaffBlock = function ($iTeam) use ($oSql) {
     if ($iTeam <= 0) {
         return '';
     }
-    $oQuery = $oSql->prepare('SELECT sDescriptionShort FROM pages WHERE iPage = :page');
+    $oQuery = $oSql->prepare('SELECT sDescriptionFull FROM pages WHERE iPage = :page');
     $oQuery->execute(Array(':page' => $iTeam));
     $sDesc = (string) ($oQuery->fetchColumn() ?: '');
     return preg_match('#<div class="teamStaff">.*?</div>#s', $sDesc, $aMatch) ? $aMatch[0] : '';
@@ -157,18 +157,18 @@ $fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($fSquad, $fStaffBlock, $a
     $sStaff  = $fStaffBlock($iTeam);
 
     $content  = '<div class="obsBoard obsShow" data-board="'.html($sBoard).'">';
-    $content .= '<header class="obsBoard__header"><span class="title">'.html($aTeam['name']).'</span>'
-        .($sMatchDate !== '' ? '<span class="meta">'.html($sMatchDate).'</span>' : '').'</header>';
+    $content .= '<header class="obsBoard__header"><span class="title">' .($aTeam['logo'] !== '' ? '<img src="'.$sFiles.html($aTeam['logo']).'" alt="" />' : '').html($aTeam['name']).'</span>'
+        .'</header>';
     $content .= '<div class="obsBoard__content"><div class="obsSquad">';
 
     $content .= '<div class="obsSquad__head">'
-        .($aTeam['logo'] !== '' ? '<img src="'.$sFiles.html($aTeam['logo']).'" alt="" />' : '')
+       
         .($sStaff !== '' ? '<div class="obsSquad__staff">'.$sStaff.'</div>' : '')
         .'</div>';
 
     $content .= '<div class="obsSquad__columns">';
     foreach (Array('1' => $lang['live_first_squad'], '2' => $lang['live_reserve']) as $sSquad => $sHeading) {
-        $content .= '<div><h3 class="obsSquad__heading">'.$sHeading.'</h3><ul class="obsSquad__list">';
+        $content .= '<div class="obsSquad-'.$sSquad.'"><h3 class="obsSquad__heading">'.$sHeading.'</h3><ul class="obsSquad__list">';
         foreach ($aGroups[$sSquad] as $aPlayer) {
             $content .= '<li><span class="number">'.html((string) $aPlayer['sNumber']).'</span>'
                 .'<span>'.html((string) $aPlayer['sName']).'</span></li>';
@@ -225,14 +225,21 @@ $fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($fSquad, $fStaffBlock, $a
     <!-- PLANSZA: DZIEŃ MECZOWY -->
     <div class="obsBoard obsShow" data-board="dzien_meczowy">
         <header class="obsBoard__header">
+            <span class="meta">IV liga lubelska</span>
             <span class="title"><?php echo html($sMatchName !== '' ? $sMatchName : ($aBoardLabels['dzien_meczowy'] ?? '')); ?></span>
-            <?php if ($sMatchMeta !== ''): ?><span class="meta"><?php echo html($sMatchMeta); ?></span><?php endif; ?>
+            <?php if ($sMatchMeta !== ''): ?><span class="meta"><?php echo html($sMatchRound); ?></span><?php endif; ?>
         </header>
         <div class="obsBoard__content">
             <?php echo $fMatchHead(); ?>
             <?php if ($sMatchDesc !== ''): ?><div class="obsMatchDesc"><?php echo parseShortcodes($sMatchDesc); ?></div><?php endif; ?>
         </div>
-        <footer class="obsBoard__footer"><?php echo html($config['logo']); ?> • <?php echo $lang['live_broadcast_footer']; ?></footer>
+        <footer class="obsBoard__footer">
+            <ul>
+                <li><img src="https://tks.kosa-x.com/images/icons/instagram.svg" alt="">@tomasovia</li>
+                <li><img src="https://tks.kosa-x.com/images/icons/facebook.svg" alt="">TomasoviaTKS</li>
+                <li><img src="https://tks.kosa-x.com/images/icons/youtube.svg" alt="">TKSTomasovia</li>
+            </ul>
+        </footer>
     </div>
 
     <!-- PLANSZE: SKŁADY -->
@@ -243,7 +250,7 @@ $fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($fSquad, $fStaffBlock, $a
     <div class="obsBoard obsShow" data-board="podsumowanie">
         <header class="obsBoard__header">
             <span class="title"><?php echo html($aBoardLabels['podsumowanie'] ?? ''); ?></span>
-            <?php if ($sMatchMeta !== '' || $sMatchName !== ''): ?><span class="meta"><?php echo html($sMatchMeta !== '' ? $sMatchMeta : $sMatchName); ?></span><?php endif; ?>
+<!--            <?php if ($sMatchMeta !== '' || $sMatchName !== ''): ?><span class="meta"><?php echo html($sMatchMeta !== '' ? $sMatchMeta : $sMatchName); ?></span><?php endif; ?>-->
         </header>
         <div class="obsBoard__content">
             <?php echo $fMatchHead(); ?>
@@ -252,7 +259,13 @@ $fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($fSquad, $fStaffBlock, $a
                 <ul class="obsSummary__list" id="obs-summary-2"></ul>
             </div>
         </div>
-        <footer class="obsBoard__footer"><?php echo html($config['logo']); ?> • <?php echo $lang['live_broadcast_footer']; ?></footer>
+        <footer class="obsBoard__footer">
+            <ul>
+                <li><img src="https://tks.kosa-x.com/images/icons/instagram.svg" alt="">@tomasovia</li>
+                <li><img src="https://tks.kosa-x.com/images/icons/facebook.svg" alt="">TomasoviaTKS</li>
+                <li><img src="https://tks.kosa-x.com/images/icons/youtube.svg" alt="">TKSTomasovia</li>
+            </ul>
+        </footer>
     </div>
 
     <?php if ($sReferees !== '' || !empty($aRefereeImages)): ?>
@@ -260,7 +273,6 @@ $fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($fSquad, $fStaffBlock, $a
     <div class="obsBoard obsShow" data-board="sedziowie">
         <header class="obsBoard__header">
             <span class="title"><?php echo html($aBoardLabels['sedziowie'] ?? ''); ?></span>
-            <?php if ($sMatchName !== ''): ?><span class="meta"><?php echo html($sMatchName); ?></span><?php endif; ?>
         </header>
         <div class="obsBoard__content">
             <?php if ($sReferees !== ''): ?><div class="obsReferees"><?php echo parseShortcodes($sReferees); ?></div><?php endif; ?>
@@ -272,22 +284,28 @@ $fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($fSquad, $fStaffBlock, $a
             </div>
             <?php endif; ?>
         </div>
-        <footer class="obsBoard__footer"><?php echo html($config['logo']); ?> • <?php echo $lang['live_broadcast_footer']; ?></footer>
+        <footer class="obsBoard__footer">
+            <ul>
+                <li><img src="https://tks.kosa-x.com/images/icons/instagram.svg" alt="">@tomasovia</li>
+                <li><img src="https://tks.kosa-x.com/images/icons/facebook.svg" alt="">TomasoviaTKS</li>
+                <li><img src="https://tks.kosa-x.com/images/icons/youtube.svg" alt="">TKSTomasovia</li>
+            </ul>
+        </footer>
     </div>
     <?php endif; ?>
 
     <?php if (!empty($aSponsorImages)): ?>
     <!-- PLANSZA: SPONSORZY -->
-    <div class="obsBoard obsShow" data-board="sponsorzy">
+    <div class="obsBoard obsBoardBig obsShow" data-board="sponsorzy">
         <header class="obsBoard__header"><span class="title"><?php echo html($aBoardLabels['sponsorzy'] ?? ''); ?></span></header>
         <div class="obsBoard__content">
-            <div class="obsGallery">
+            <ul class="obsGallery">
                 <?php foreach ($aSponsorImages as $sImage): ?>
-                    <img src="<?php echo $sFiles.html($sImage); ?>" alt="" />
+                    <li><img src="<?php echo $sFiles.html($sImage); ?>" alt="" /></li>
                 <?php endforeach; ?>
-            </div>
+            </ul>
         </div>
-        <footer class="obsBoard__footer"><?php echo html($config['logo']); ?> • <?php echo $lang['live_broadcast_footer']; ?></footer>
+        
     </div>
     <?php endif; ?>
 
@@ -311,13 +329,19 @@ $fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($fSquad, $fStaffBlock, $a
     <div class="obsBoard obsShow" data-board="partnerzy_glowni">
         <header class="obsBoard__header"><span class="title"><?php echo html($aBoardLabels['partnerzy_glowni'] ?? ''); ?></span></header>
         <div class="obsBoard__content">
-            <div class="obsGallery">
+            <ul class="obsGallery obsGallery3">
                 <?php foreach ($aPartnerImages as $sImage): ?>
-                    <img src="<?php echo $sFiles.html($sImage); ?>" alt="" />
+                    <li><img src="<?php echo $sFiles.html($sImage); ?>" alt="" /></li>
                 <?php endforeach; ?>
-            </div>
+            </ul>
         </div>
-        <footer class="obsBoard__footer"><?php echo html($config['logo']); ?> • <?php echo $lang['live_broadcast_footer']; ?></footer>
+        <footer class="obsBoard__footer">
+            <ul>
+                <li><img src="https://tks.kosa-x.com/images/icons/instagram.svg" alt="">@tomasovia</li>
+                <li><img src="https://tks.kosa-x.com/images/icons/facebook.svg" alt="">TomasoviaTKS</li>
+                <li><img src="https://tks.kosa-x.com/images/icons/youtube.svg" alt="">TKSTomasovia</li>
+            </ul>
+        </footer>
     </div>
     <?php endif; ?>
 
@@ -327,11 +351,17 @@ $fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($fSquad, $fStaffBlock, $a
         <header class="obsBoard__header"><span class="title"><?php echo html($aBoardLabels['sponsor_meczu'] ?? ''); ?></span></header>
         <div class="obsBoard__content">
             <div class="obsMatchSponsor">
-                <?php if ($sMatchSponsorLogo !== ''): ?><img class="obsMatchSponsor__logo" src="<?php echo $sFiles.html($sMatchSponsorLogo); ?>" alt="" /><?php endif; ?>
+                <?php if ($sMatchSponsorLogo !== ''): ?><div class="obsMatchSponsor__logo"><img class="" src="<?php echo $sFiles.html($sMatchSponsorLogo); ?>" alt="" /></div><?php endif; ?>
                 <?php if ($sMatchSponsorDesc !== ''): ?><div class="obsMatchSponsor__desc"><?php echo parseShortcodes($sMatchSponsorDesc); ?></div><?php endif; ?>
             </div>
         </div>
-        <footer class="obsBoard__footer"><?php echo html($config['logo']); ?> • <?php echo $lang['live_broadcast_footer']; ?></footer>
+        <footer class="obsBoard__footer">
+            <ul>
+                <li><img src="https://tks.kosa-x.com/images/icons/instagram.svg" alt="">@tomasovia</li>
+                <li><img src="https://tks.kosa-x.com/images/icons/facebook.svg" alt="">TomasoviaTKS</li>
+                <li><img src="https://tks.kosa-x.com/images/icons/youtube.svg" alt="">TKSTomasovia</li>
+            </ul>
+        </footer>
     </div>
     <?php endif; ?>
 
@@ -353,13 +383,19 @@ $fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($fSquad, $fStaffBlock, $a
     <div class="obsBoard obsShow" data-board="realizacja_transmisji">
         <header class="obsBoard__header"><span class="title"><?php echo html($sProductionTitle !== '' ? $sProductionTitle : ($aBoardLabels['realizacja_transmisji'] ?? '')); ?></span></header>
         <div class="obsBoard__content">
-            <div class="obsGallery obsGallery--big">
+            <ul class="obsGallery obsGallery3">
                 <?php foreach (array_slice($aProductionImages, 0, 4) as $sImage): ?>
-                    <img src="<?php echo $sFiles.html($sImage); ?>" alt="" />
+                    <li><img src="<?php echo $sFiles.html($sImage); ?>" alt="" /></li>
                 <?php endforeach; ?>
-            </div>
+            </ul>
         </div>
-        <footer class="obsBoard__footer"><?php echo html($config['logo']); ?> • <?php echo $lang['live_broadcast_footer']; ?></footer>
+        <footer class="obsBoard__footer">
+            <ul>
+                <li><img src="https://tks.kosa-x.com/images/icons/instagram.svg" alt="">@tomasovia</li>
+                <li><img src="https://tks.kosa-x.com/images/icons/facebook.svg" alt="">TomasoviaTKS</li>
+                <li><img src="https://tks.kosa-x.com/images/icons/youtube.svg" alt="">TKSTomasovia</li>
+            </ul>
+        </footer>
     </div>
     <?php endif; ?>
 

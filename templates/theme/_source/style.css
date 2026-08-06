@@ -1,12 +1,12 @@
 @charset "UTF-8";
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Zalando+Sans+Expanded:ital,wght@0,200..900;1,200..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Zalando+Sans+Expanded:ital,wght@0,200..900;1,200..900&display=swap");
 :root {
   --brand: #143582;
   --brand-light: #fff4f5;
   --brand-dark: #000f1b;
-  --brand2: #14233f;
-  --brand2-light: #e9eef7;
-  --brand2-dark: #0a1424;
+  --brand2: #143582;
+  --brand2-light: #fff4f5;
+  --brand2-dark: #000f1b;
   --font-color: #111;
   --bg-color: #fbfbfb;
   --border-color: #e8e8e8;
@@ -549,15 +549,15 @@
 }
 
 .font-sm {
-  font-size: 0.9em;
+  font-size: 14px;
 }
 
 .font-md {
-  font-size: 1.2em;
+  font-size: 20px;
 }
 
 .font-l {
-  font-size: 1.4em;
+  font-size: 26px;
 }
 
 .muted {
@@ -1105,7 +1105,7 @@ body {
   color: var(--font-color);
   font-family: "Zalando Sans Expanded", sans-serif;
   font-weight: 400;
-  font-size: 15px;
+  font-size: 16px;
   font-optical-sizing: auto;
   line-height: 1.5;
   top: 0 !important;
@@ -1134,7 +1134,7 @@ b, strong, .text-strong {
 }
 
 h1, h2, h3 {
-  font-family: "Zalando Sans Expanded", sans-serif;
+  font-family: "Oswald", sans-serif;
   font-weight: 700;
 }
 h1 small, h2 small, h3 small {
@@ -1142,29 +1142,29 @@ h1 small, h2 small, h3 small {
 }
 
 h1 {
-  font-size: 2.8em;
+  font-size: 60px;
   font-weight: 600;
   line-height: 1.2;
 }
 
 h2 {
-  font-size: 2.3em;
+  font-size: 40px;
   line-height: 1.2;
 }
 
 h3 {
-  font-size: 1.8em;
+  font-size: 34px;
   line-height: 1.2;
 }
 
 h4 {
-  font-size: 1.4em;
+  font-size: 26px;
   font-weight: 600;
   line-height: 1.1;
 }
 
 h5 {
-  font-size: 1.2em;
+  font-size: 20px;
   font-weight: 600;
   line-height: 1.2;
 }
@@ -1369,7 +1369,7 @@ body,
 }
 .form-switch .label {
   margin-left: 10px;
-  font-size: 0.9em;
+  font-size: 14px;
   font-weight: 400;
   display: none;
 }
@@ -1484,7 +1484,7 @@ body,
   background: var(--gray-light);
   border-radius: 8px;
   border: 1px solid var(--border-color);
-  font-size: 0.9em;
+  font-size: 14px;
 }
 .form-file label {
   display: block;
@@ -1494,7 +1494,7 @@ body,
 .form-text {
   display: block;
   margin-top: 5px;
-  font-size: 0.9em;
+  font-size: 14px;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=$opacity)";
   filter: alpha(opacity=0.7);
   -moz-opacity: 0.7;
@@ -1513,7 +1513,7 @@ body,
   border: 1px solid var(--border-color);
   border-radius: 8px;
   font-weight: 600;
-  font-size: 0.9em;
+  font-size: 14px;
   transition: all 0.3s ease;
 }
 .form-control:hover {
@@ -1610,7 +1610,7 @@ body,
 }
 .formCheckBox .form-check .form-check-label .value {
   font-weight: 600;
-  font-size: 1.2em;
+  font-size: 20px;
 }
 .formCheckBox .form-check:hover .form-check-label {
   border-color: var(--border-hover);
@@ -1651,7 +1651,7 @@ body,
   -o-transition: all 0.2s ease-in-out;
   transition: all 0.2s ease-in-out;
   font-weight: 500;
-  font-size: 0.9em;
+  font-size: 14px;
 }
 
 .form-floating > .form-control-plaintext::placeholder,
@@ -1671,7 +1671,7 @@ form .form-select.selected {
 .form-floating > .form-control:focus ~ label,
 .form-floating > .form-control:not(:placeholder-shown) ~ label,
 .form-floating > .form-select ~ label {
-  font-size: 0.7em;
+  font-size: 12px;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=$opacity)";
   filter: alpha(opacity=0.6);
   -moz-opacity: 0.6;
@@ -1849,8 +1849,8 @@ input[type=range]:focus::-moz-range-thumb {
   -moz-opacity: 0.7;
   -khtml-opacity: 0.7;
   opacity: 0.7;
-  font-size: 1.2em;
-  font-family: "Zalando Sans Expanded", sans-serif;
+  font-size: 20px;
+  font-family: "Oswald", sans-serif;
   padding: 0 20px;
 }
 .mainSlider__button {
@@ -2220,7 +2220,7 @@ input[type=range]:focus::-moz-range-thumb {
   display: -webkit-flex;
   display: flex;
   align-items: center;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
 }
 .card__title > img {
@@ -2286,7 +2286,7 @@ input[type=range]:focus::-moz-range-thumb {
   margin-bottom: 20px;
 }
 .card__content .menuCart__header h2 {
-  font-size: 1.4em;
+  font-size: 26px;
 }
 .card__footer {
   position: relative;
@@ -2365,7 +2365,7 @@ input[type=range]:focus::-moz-range-thumb {
   margin-left: 10px;
 }
 .card__list > li.font-l {
-  font-size: 1.4em;
+  font-size: 26px;
   color: var(--brand-dark);
 }
 .card__list > li:last-child {
@@ -2396,7 +2396,7 @@ input[type=range]:focus::-moz-range-thumb {
     padding: 25px;
   }
   .card__title {
-    font-size: 1.2em;
+    font-size: 20px;
   }
   .card__content {
     padding: 25px;
@@ -2513,7 +2513,7 @@ input[type=range]:focus::-moz-range-thumb {
   -o-transition: all 0.2s ease-in-out;
   transition: all 0.2s ease-in-out;
   font-weight: 500;
-  font-size: 0.9em;
+  font-size: 14px;
 }
 .button.disabled {
   cursor: not-allowed;
@@ -2548,15 +2548,15 @@ input[type=range]:focus::-moz-range-thumb {
 }
 .button-lg {
   padding: 20px 40px;
-  font-size: 15px;
+  font-size: 16px;
 }
 .button-sm {
   padding: 12px 15px;
-  font-size: 0.9em;
+  font-size: 14px;
 }
 .button-xs {
   padding: 7px 12px;
-  font-size: 0.7em;
+  font-size: 12px;
 }
 .button-xs .icon,
 .button-xs img {
@@ -2694,7 +2694,7 @@ input[type=range]:focus::-moz-range-thumb {
   -moz-opacity: 1;
   -khtml-opacity: 1;
   opacity: 1;
-  font-size: 0.7em;
+  font-size: 12px;
   align-items: center;
   justify-content: center;
   flex-direction: column;
@@ -2810,7 +2810,7 @@ input[type=range]:focus::-moz-range-thumb {
 .contactsList .label {
   width: 100%;
   flex-basis: 100%;
-  font-size: 0.9em;
+  font-size: 14px;
   text-transform: uppercase;
   margin-bottom: 10px;
   line-height: 1;
@@ -3024,7 +3024,7 @@ input[type=range]:focus::-moz-range-thumb {
 }
 .contactItem .label {
   font-weight: 300;
-  font-size: 0.9em;
+  font-size: 14px;
   text-transform: uppercase;
   display: block;
   margin-bottom: 5px;
@@ -3082,7 +3082,7 @@ input[type=range]:focus::-moz-range-thumb {
   -khtml-opacity: 0.7;
   opacity: 0.7;
   font-weight: 600;
-  font-size: 1.2em;
+  font-size: 20px;
   align-items: center;
   flex: 0 0 auto;
   position: relative;
@@ -3191,7 +3191,7 @@ input[type=range]:focus::-moz-range-thumb {
   background: var(--white);
   border: 1px solid var(--border-color);
   border-radius: 8px;
-  font-size: 15px;
+  font-size: 16px;
 }
 .table thead {
   font-weight: 600;
@@ -3203,7 +3203,7 @@ input[type=range]:focus::-moz-range-thumb {
   border-bottom: 1px solid var(--border-color);
 }
 .table-sm {
-  font-size: 0.9em;
+  font-size: 14px;
 }
 .table-sm td,
 .table-sm th {
@@ -3291,7 +3291,7 @@ input[type=range]:focus::-moz-range-thumb {
   align-items: flex-start;
   justify-content: space-between;
   font-weight: 600;
-  font-size: 1.2em;
+  font-size: 20px;
   -webkit-transition: all 0.2s ease-in-out;
   -moz-transition: all 0.2s ease-in-out;
   -o-transition: all 0.2s ease-in-out;
@@ -3467,8 +3467,8 @@ input[type=range]:focus::-moz-range-thumb {
   display: none;
   margin-left: 20px;
   font-weight: 600;
-  font-size: 1.2em;
-  font-family: "Zalando Sans Expanded", sans-serif;
+  font-size: 20px;
+  font-family: "Oswald", sans-serif;
   -webkit-transition: all 0.2s ease-in-out;
   -moz-transition: all 0.2s ease-in-out;
   -o-transition: all 0.2s ease-in-out;
@@ -3508,8 +3508,8 @@ input[type=range]:focus::-moz-range-thumb {
 }
 .mainHeader__menu_head .logo_text {
   display: none;
-  font-family: "Zalando Sans Expanded", sans-serif;
-  font-size: 1.4em;
+  font-family: "Oswald", sans-serif;
+  font-size: 26px;
 }
 
 .mainHeaderOpen .mainHeader__menu {
@@ -3685,7 +3685,7 @@ input[type=range]:focus::-moz-range-thumb {
   color: var(--font-color);
   white-space: normal;
   font-weight: 500;
-  font-size: 0.9em;
+  font-size: 14px;
 }
 .headerMenu .submenu_link:hover {
   color: var(--brand);
@@ -3774,7 +3774,7 @@ input[type=range]:focus::-moz-range-thumb {
 .bigIcon .label {
   margin-left: 10px;
   font-weight: 500;
-  font-size: 0.9em;
+  font-size: 14px;
 }
 .bigIcon .count {
   position: absolute;
@@ -3878,7 +3878,7 @@ input[type=range]:focus::-moz-range-thumb {
   border-left: 1px solid var(--border-color);
   border-right: 1px solid var(--border-color);
   font-weight: 500;
-  font-size: 0.7em;
+  font-size: 12px;
   display: -webkit-box;
   display: -moz-box;
   display: -ms-flexbox;
@@ -3963,7 +3963,7 @@ input[type=range]:focus::-moz-range-thumb {
     height: 80px;
   }
   .mainHeader__logo .logo_text {
-    font-size: 1.4em;
+    font-size: 26px;
     font-weight: 500;
   }
   .mainHeader__icons {
@@ -4117,7 +4117,7 @@ input[type=range]:focus::-moz-range-thumb {
   }
 }
 .mainFooter {
-  font-size: 0.9em;
+  font-size: 14px;
   -webkit-transition: all 0.2s ease-in-out;
   -moz-transition: all 0.2s ease-in-out;
   -o-transition: all 0.2s ease-in-out;
@@ -4134,7 +4134,7 @@ input[type=range]:focus::-moz-range-thumb {
   text-decoration: underline;
 }
 .mainFooter__bottom {
-  font-size: 0.9em;
+  font-size: 14px;
   font-weight: 500;
   text-align: center;
   padding: 40px 0;
@@ -4278,7 +4278,7 @@ input[type=range]:focus::-moz-range-thumb {
   text-transform: uppercase;
   letter-spacing: 0.18em;
   font-weight: 500;
-  font-size: 0.9em;
+  font-size: 14px;
 }
 .section__subtitle small {
   display: block;
@@ -4319,7 +4319,7 @@ input[type=range]:focus::-moz-range-thumb {
 .section__desc {
   margin: 20px 0 0 0;
   color: var(--font-muted);
-  font-size: 1.2em;
+  font-size: 20px;
 }
 .section__desc p {
   margin: 0;
@@ -4457,8 +4457,8 @@ body.scroll-lock {
   margin-top: 40px;
 }
 .livePanel__sectionTitle {
-  font-family: "Zalando Sans Expanded", sans-serif;
-  font-size: 1.2em;
+  font-family: "Oswald", sans-serif;
+  font-size: 20px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -4491,7 +4491,7 @@ body.scroll-lock {
 }
 .livePanel__setupLabel {
   display: block;
-  font-size: 0.9em;
+  font-size: 14px;
   margin-bottom: 4px;
   color: var(--gray);
 }
@@ -4510,7 +4510,7 @@ body.scroll-lock {
   gap: 10px;
   padding: 12px;
   border-radius: 8px;
-  background: #0a1424;
+  background: #000f1b;
   color: #fff;
   box-shadow: 0 10px 30px var(--glow-brand);
 }
@@ -4521,7 +4521,7 @@ body.scroll-lock {
   min-width: 0;
 }
 .livePanel__scoreTeamName {
-  font-size: 0.9em;
+  font-size: 14px;
   font-weight: 500;
   max-width: 100%;
   overflow: hidden;
@@ -4535,7 +4535,7 @@ body.scroll-lock {
 .livePanel__scoreBtn {
   min-width: 52px;
   min-height: 48px;
-  font-size: 1.4em;
+  font-size: 26px;
   font-weight: 600;
   padding: 0;
   line-height: 1;
@@ -4544,14 +4544,14 @@ body.scroll-lock {
   text-align: center;
 }
 .livePanel__scoreValue {
-  font-family: "Zalando Sans Expanded", sans-serif;
-  font-size: 2.3em;
+  font-family: "Oswald", sans-serif;
+  font-size: 40px;
   font-weight: 700;
   line-height: 1;
 }
 .livePanel__clockValue {
   font-variant-numeric: tabular-nums;
-  font-size: 1.4em;
+  font-size: 26px;
   font-weight: 600;
   margin-top: 4px;
 }
@@ -4559,7 +4559,7 @@ body.scroll-lock {
   color: #ffdd00;
 }
 .livePanel__clockHalf {
-  font-size: 0.9em;
+  font-size: 14px;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=$opacity)";
   filter: alpha(opacity=0.7);
   -moz-opacity: 0.7;
@@ -4608,14 +4608,14 @@ body.scroll-lock {
   gap: 40px;
 }
 .livePanel__teamName {
-  font-family: "Zalando Sans Expanded", sans-serif;
-  font-size: 1.2em;
+  font-family: "Oswald", sans-serif;
+  font-size: 20px;
   font-weight: 600;
   margin-bottom: 6px;
 }
 .livePanel__groupLabel {
   margin: 14px 0 8px;
-  font-size: 0.9em;
+  font-size: 14px;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -4677,7 +4677,7 @@ body.scroll-lock {
   flex: 0 0 auto;
   min-width: 34px;
   text-align: center;
-  font-family: "Zalando Sans Expanded", sans-serif;
+  font-family: "Oswald", sans-serif;
   font-weight: 700;
   color: #143582;
 }
@@ -4770,8 +4770,8 @@ body.scroll-lock {
   }
 }
 .livePanel__sheetHeader {
-  font-family: "Zalando Sans Expanded", sans-serif;
-  font-size: 1.2em;
+  font-family: "Oswald", sans-serif;
+  font-size: 20px;
   font-weight: 600;
 }
 .livePanel__sheetMinute {
@@ -4783,7 +4783,7 @@ body.scroll-lock {
 .livePanel__sheetMinute input {
   width: 90px;
   text-align: center;
-  font-size: 1.2em;
+  font-size: 20px;
 }
 .livePanel__sheetActions {
   display: grid;
@@ -4815,7 +4815,7 @@ body.scroll-lock {
   flex: 0 0 auto;
   min-height: 40px;
   padding: 4px 14px;
-  font-size: 0.9em;
+  font-size: 14px;
 }
 .livePanel__eventList {
   display: grid;
@@ -4851,16 +4851,16 @@ body.scroll-lock {
   grid-column: 2/-1;
   grid-row: 2;
   color: var(--gray);
-  font-size: 0.9em;
+  font-size: 14px;
 }
 .livePanel__eventPlayerSelect {
   grid-column: 2/-1;
   grid-row: 2;
   max-width: 100%;
-  font-size: 0.9em;
+  font-size: 14px;
 }
 .livePanel__eventTeam {
-  font-size: 0.9em;
+  font-size: 14px;
   color: var(--gray);
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=$opacity)";
   filter: alpha(opacity=0.7);
@@ -4871,7 +4871,7 @@ body.scroll-lock {
 .livePanel__eventBtn {
   min-height: 40px;
   padding: 4px 12px;
-  font-size: 0.9em;
+  font-size: 14px;
 }
 .livePanel__toast {
   position: fixed;
@@ -4881,7 +4881,7 @@ body.scroll-lock {
   z-index: 100;
   padding: 12px 20px;
   border-radius: 8px;
-  background: #0a1424;
+  background: #000f1b;
   color: #fff;
   font-weight: 500;
   pointer-events: none;
@@ -4995,7 +4995,7 @@ a:hover {
   margin-bottom: 40px;
 }
 .pageContact .contactsList .value {
-  font-size: 16px;
+  font-size: 17px;
 }
 .pageContact .contactsList > li img {
   display: none;
@@ -5089,7 +5089,7 @@ a:hover {
   color: #fff;
 }
 .mainPage__tree {
-  font-size: 0.9em;
+  font-size: 14px;
   max-width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
@@ -5175,7 +5175,7 @@ a:hover {
   filter: invert(1);
 }
 .mainPage__title {
-  font-size: 1.8em;
+  font-size: 34px;
   font-weight: 700;
   margin: 0;
   position: relative;
@@ -5183,7 +5183,7 @@ a:hover {
   white-space: normal !important;
 }
 .mainPage__subtitle {
-  font-size: 1.2em;
+  font-size: 20px;
   font-weight: 400;
   margin: 10px 0 0 0;
   line-height: 1.2;
@@ -5213,7 +5213,7 @@ a:hover {
   margin-top: 20px;
 }
 .mainPage__article h2 {
-  font-size: 1.8em;
+  font-size: 34px;
   margin-bottom: 20px;
   line-height: 1.2;
 }
@@ -5229,7 +5229,7 @@ a:hover {
   padding: 70px 30px 30px 30px;
   margin: 30px -25px;
   position: relative;
-  font-size: 15px;
+  font-size: 16px;
 }
 .mainPage__article blockquote h5 {
   margin-bottom: 20px;
@@ -5273,7 +5273,7 @@ a:hover {
   margin-bottom: 60px;
 }
 .mainPage__date {
-  font-size: 0.9em;
+  font-size: 14px;
   border-top: 1px solid var(--border-color);
   padding-top: 15px;
   margin-top: 30px;
@@ -5322,7 +5322,7 @@ a:hover {
   background: var(--white);
   color: var(--font-color);
   font-weight: 500;
-  font-size: 0.9em;
+  font-size: 14px;
   border-left: 1px solid var(--border-color);
   border-top: 1px solid var(--border-color);
   border-bottom: 1px solid var(--border-color);
@@ -5384,7 +5384,7 @@ a:hover {
 .pageForm .card__header .card__title {
   width: 100%;
   flex-basis: 100%;
-  font-size: 15px;
+  font-size: 16px;
 }
 
 .pageFormCalendar__nav {
@@ -5450,7 +5450,7 @@ a:hover {
   display: inline-flex;
   align-items: center;
   margin-right: 10px;
-  font-size: 0.9em;
+  font-size: 14px;
 }
 .pageFormCalendar__legend .legend-yours::before,
 .pageFormCalendar__legend .legend-busy::before {
@@ -5474,7 +5474,7 @@ a:hover {
   display: -webkit-flex;
   display: flex;
   font-weight: 400;
-  font-size: 0.9em;
+  font-size: 14px;
   -webkit-transition: all 0.2s ease-in-out;
   -moz-transition: all 0.2s ease-in-out;
   -o-transition: all 0.2s ease-in-out;
@@ -5644,7 +5644,7 @@ a:hover {
   -moz-opacity: 0.7;
   -khtml-opacity: 0.7;
   opacity: 0.7;
-  font-size: 0.9em;
+  font-size: 14px;
   text-transform: uppercase;
   border-bottom: 1px solid var(--border-color);
 }
@@ -5654,7 +5654,7 @@ a:hover {
 }
 .pageItem .title {
   margin: 0;
-  font-size: 1.4em;
+  font-size: 26px;
   font-weight: 600;
 }
 .pageItem .title a {
@@ -5670,7 +5670,7 @@ a:hover {
 }
 .pageItem .desc {
   margin: 10px 0 0 0;
-  font-size: 0.9em;
+  font-size: 14px;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=$opacity)";
   filter: alpha(opacity=0.7);
   -moz-opacity: 0.7;
@@ -5693,7 +5693,7 @@ a:hover {
   padding: 0;
   list-style: none;
   margin: 5px 0 0 0;
-  font-size: 0.9em;
+  font-size: 14px;
 }
 .pageItem .parametrs .label {
   margin-right: 10px;
@@ -5702,7 +5702,7 @@ a:hover {
   font-weight: 500;
 }
 .pageItem .productPrice {
-  font-size: 0.9em;
+  font-size: 14px;
 }
 .pageItem .productPrice-currency {
   display: none;
@@ -5711,7 +5711,7 @@ a:hover {
   display: none;
 }
 .pageItem .date {
-  font-size: 0.9em;
+  font-size: 14px;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=$opacity)";
   filter: alpha(opacity=0.7);
   -moz-opacity: 0.7;
@@ -5784,7 +5784,7 @@ a:hover {
 }
 @media (min-width: 992px) {
   .blogList:not(.owl-carousel) .pageItem .desc {
-    font-size: 15px;
+    font-size: 16px;
     -webkit-line-clamp: 5;
   }
 }
@@ -5806,7 +5806,7 @@ a:hover {
   display: none;
 }
 .quotesList .pageItem .title {
-  font-size: 15px;
+  font-size: 16px;
 }
 .quotesList .pageItem .content {
   padding: 30px;
@@ -5824,7 +5824,7 @@ a:hover {
   flex-basis: 100%;
 }
 .searchList .pageItem .title {
-  font-size: 1.2em;
+  font-size: 20px;
 }
 .searchList .pageItem:not(:last-child) {
   margin: 0 0 20px 0;
@@ -5850,7 +5850,7 @@ a:hover {
   order: 1;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  font-size: 1.2em;
+  font-size: 20px;
 }
 .projectsList .pageItem .title a {
   color: #fff;
@@ -5902,7 +5902,7 @@ a:hover {
   -o-transition: all 0.2s ease-in-out;
   transition: all 0.2s ease-in-out;
   font-weight: 500;
-  font-size: 0.9em;
+  font-size: 14px;
   background: var(--white);
   color: var(--font-color);
 }
@@ -5963,7 +5963,7 @@ a:hover {
   overflow: hidden;
   z-index: 2;
   color: #fff;
-  font-size: 0.9em;
+  font-size: 14px;
   font-weight: 400;
 }
 .galleryItem__desc::before {
@@ -6223,7 +6223,7 @@ a:hover {
   -moz-opacity: 0.7;
   -khtml-opacity: 0.7;
   opacity: 0.7;
-  font-size: 0.7em;
+  font-size: 12px;
   color: var(--card-light-text);
 }
 .galleryLogo .galleryItem__desc::before {
@@ -6336,7 +6336,7 @@ a:hover {
   padding: 20px 20px 0 20px;
 }
 .productsList .pageItem .title {
-  font-size: 0.9em;
+  font-size: 14px;
   text-overflow: ellipsis;
   overflow: hidden;
   display: -webkit-box;
@@ -6345,11 +6345,11 @@ a:hover {
 }
 .productsList .pageItem .category {
   margin-bottom: 5px;
-  font-size: 0.9em;
+  font-size: 14px;
 }
 .productsList .pageItem .desc {
   display: none;
-  font-size: 0.7em;
+  font-size: 12px;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=$opacity)";
   filter: alpha(opacity=0.7);
   -moz-opacity: 0.7;
@@ -6367,7 +6367,7 @@ a:hover {
   display: flex;
   align-items: baseline;
   gap: 5px;
-  font-size: 0.9em;
+  font-size: 14px;
 }
 .productsList .pageItem .priceFrom .productPrice {
   font-weight: 600;
@@ -6388,7 +6388,7 @@ a:hover {
   -moz-transition: all 0.2s ease-in-out;
   -o-transition: all 0.2s ease-in-out;
   transition: all 0.2s ease-in-out;
-  font-size: 0.9em;
+  font-size: 14px;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=$opacity)";
   filter: alpha(opacity=0);
   -moz-opacity: 0;
@@ -6446,7 +6446,7 @@ a:hover {
 .cartList__price {
   text-align: right;
   line-height: 1;
-  font-size: 1.2em;
+  font-size: 20px;
   font-weight: 600;
 }
 .cartList__price small {
@@ -6496,7 +6496,7 @@ a:hover {
   width: calc(100% - 100px - 20px);
 }
 .cartItem__content h5 {
-  font-size: 15px;
+  font-size: 16px;
 }
 .cartItem__content p {
   margin: 0;
@@ -6505,11 +6505,11 @@ a:hover {
   -moz-opacity: 0.7;
   -khtml-opacity: 0.7;
   opacity: 0.7;
-  font-size: 0.9em;
+  font-size: 14px;
 }
 .cartItem__content .cartItem__price {
   font-weight: 400;
-  font-size: 0.9em;
+  font-size: 14px;
 }
 .cartItem__content .cartItem__price .productPrice {
   margin-left: 5px;
@@ -6590,7 +6590,7 @@ a:hover {
   align-items: center;
   justify-content: center;
   text-align: center;
-  font-size: 1.2em;
+  font-size: 20px;
   font-weight: 500;
 }
 .cartItem__quantity button:hover {
@@ -6677,7 +6677,7 @@ a:hover {
   line-height: 1;
 }
 .productMore__price > .value {
-  font-size: 1.4em;
+  font-size: 26px;
 }
 .productMore__galleryGrid {
   margin-top: 60px !important;
@@ -6709,7 +6709,7 @@ a:hover {
   padding: 14px 20px;
   background: var(--gray-light);
   border-radius: 8px;
-  font-size: 0.9em;
+  font-size: 14px;
 }
 .productAvailability__status {
   display: flex;
@@ -6762,7 +6762,7 @@ a:hover {
   margin: 0;
   padding: 10px 0;
   border-bottom: 1px dashed var(--border-color);
-  font-size: 0.9em;
+  font-size: 14px;
 }
 .productConfig__item .label {
   color: var(--font-muted);
@@ -6789,7 +6789,7 @@ a:hover {
 }
 .productConfig .formCheckBox .form-check .form-check-label {
   padding: 8px 14px;
-  font-size: 0.9em;
+  font-size: 14px;
   font-weight: 400;
 }
 .productConfig .formCheckBox.is-invalid .form-check-label {
@@ -6829,7 +6829,7 @@ a:hover {
   background: rgba(193, 18, 31, 0.08);
   color: var(--font-color);
   border-radius: 8px;
-  font-size: 0.9em;
+  font-size: 14px;
 }
 .productConfig__message img {
   width: 16px;
@@ -6878,7 +6878,7 @@ a:hover {
   color: var(--font-muted);
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  font-size: 0.7em;
+  font-size: 12px;
 }
 .googleSignIn__separator::before {
   content: "";
@@ -6904,7 +6904,7 @@ a:hover {
   color: var(--font-muted);
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  font-size: 0.9em;
+  font-size: 14px;
   font-weight: 600;
 }
 .filtersForm .filter-group {
@@ -6923,7 +6923,7 @@ a:hover {
 }
 .filtersForm__values .form-check .form-check-label {
   padding: 6px 10px;
-  font-size: 0.9em;
+  font-size: 14px;
   font-weight: 400;
   line-height: 1;
   white-space: nowrap;
@@ -6963,7 +6963,7 @@ a:hover {
 .orderDiscount__feedback {
   display: none;
   margin-top: 10px;
-  font-size: 0.9em;
+  font-size: 14px;
 }
 .orderDiscount__feedback.is-success, .orderDiscount__feedback.is-error {
   display: block;
@@ -6990,7 +6990,7 @@ a:hover {
   display: -webkit-flex;
   display: flex;
   font-weight: 600;
-  font-size: 1.2em;
+  font-size: 20px;
   justify-content: space-between;
 }
 .pageOrder__summary #order-total {
@@ -7081,7 +7081,7 @@ a:hover {
   border-radius: 4px;
   line-height: 1;
   border: 1px solid var(--border-color);
-  font-size: 0.9em;
+  font-size: 14px;
 }
 .filters_label {
   display: block;
