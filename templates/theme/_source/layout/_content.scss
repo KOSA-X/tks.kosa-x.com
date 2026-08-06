@@ -831,6 +831,24 @@ body.scroll-lock {
         }
     }
 
+    // --- filtr zawodników (nad listą kafelków drużyny) ----------
+    &__search {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 12px;
+
+        .lp-player-search {
+            flex: 1 1 auto;
+        }
+
+        .lp-player-search-clear {
+            flex: 0 0 auto;
+            min-height: 40px;
+            padding: 4px 14px;
+            font-size: $font-size-sm;
+        }
+    }
+
     // --- lista zdarzeń ------------------------------------------
     &__eventList {
         display: grid;

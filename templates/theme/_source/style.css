@@ -4803,6 +4803,20 @@ body.scroll-lock {
   border-color: #143582;
   color: #143582;
 }
+.livePanel__search {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.livePanel__search .lp-player-search {
+  flex: 1 1 auto;
+}
+.livePanel__search .lp-player-search-clear {
+  flex: 0 0 auto;
+  min-height: 40px;
+  padding: 4px 14px;
+  font-size: 0.9em;
+}
 .livePanel__eventList {
   display: grid;
   gap: 8px;

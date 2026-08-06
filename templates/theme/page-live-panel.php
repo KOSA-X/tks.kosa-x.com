@@ -77,6 +77,13 @@ if (!$bLiveAdmin) {
             return $content;
         }
 
+        // szybkie filtrowanie kafelków zawodników (na żywo, per drużyna)
+        $content .= '<div class="livePanel__search">'
+            .'<input type="text" class="form-control lp-player-search" data-team="'.$iTeam.'"'
+            .' placeholder="'.html($lang['live_search_player']).'" autocomplete="off" />'
+            .'<button type="button" class="button lp-player-search-clear">'.html($lang['clear']).'</button>'
+            .'</div>';
+
         $aGroupLabels = Array('1' => $lang['live_first_squad'], '2' => $lang['live_reserve'], '' => $lang['live_off_squad']);
         foreach ($aGroups as $sSquad => $aPlayers) {
             if (empty($aPlayers)) {

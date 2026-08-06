@@ -316,6 +316,40 @@
     });
 
     // ------------------------------------------------------------
+    // FILTR ZAWODNIKÓW (per drużyna) — wpisujesz frazę, lista się zawęża
+    // ------------------------------------------------------------
+    function normalizeName(text) {
+        // bez wielkości liter i polskich znaków (ł nie rozkłada się w NFD)
+        return String(text).toLowerCase()
+            .replace(/ł/g, 'l')
+            .normalize('NFD').replace(/[̀-ͯ]/g, '');
+    }
+
+    function filterPlayers($team, phrase) {
+        var query = normalizeName($.trim(phrase));
+        $team.find('.livePanel__player').each(function () {
+            var $player = $(this);
+            var haystack = normalizeName($player.data('name') + ' ' + $player.data('number'));
+            $player.toggle(query === '' || haystack.indexOf(query) !== -1);
+        });
+        // nagłówki grup bez widocznych zawodników chowamy razem z nimi
+        $team.find('.livePanel__groupLabel').each(function () {
+            var $label = $(this);
+            $label.toggle($label.next('.livePanel__players').find('.livePanel__player:visible').length > 0);
+        });
+    }
+
+    $('.lp-player-search').on('input', function () {
+        filterPlayers($(this).closest('.livePanel__team'), $(this).val());
+    });
+
+    $('.lp-player-search-clear').on('click', function () {
+        var $team = $(this).closest('.livePanel__team');
+        $team.find('.lp-player-search').val('');
+        filterPlayers($team, '');
+    });
+
+    // ------------------------------------------------------------
     // KAFELEK ZAWODNIKA → ARKUSZ AKCJI
     // ------------------------------------------------------------
     $('.livePanel__player').on('click', function () {

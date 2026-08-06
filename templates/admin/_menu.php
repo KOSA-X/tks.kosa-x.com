@@ -44,14 +44,12 @@ $menu = [
         ],
     ],
     [
-        'id'    => 'shop',
-        'label' => $lang['Shop'],
-        'icon'  => 'cart.svg',
+        'id'    => 'teams',
+        'label' => 'Drużyny',
+        'icon'  => 'users.svg',
         'submenu' => [
-            ['id' => 'shop',            'label' => 'Lista produktów'],
-            ['id' => 'pages-form&shop=1','label' => 'Nowy produkt'], // wyjątek: dodatkowy parametr
-            ['id' => 'orders',          'label' => 'Zamówienia'],
-            ['id' => 'shop-settings',   'label' => 'Ustawienia'],
+            ['id' => 'teams',             'label' => 'Lista drużyn'],
+            ['id' => 'teams&sOption=new', 'label' => 'Nowa drużyna'], // wyjątek: dodatkowy parametr
         ],
     ],
     [

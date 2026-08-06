@@ -1,5 +1,24 @@
 # Changelog
 
+## 2026-08-06 — Moduł „Drużyny" w panelu admina + filtr zawodników w panelu meczowym
+- **Nowy moduł panelu: Drużyny** (`?p=teams`, w menu w miejscu Sklepu; submenu
+  Lista drużyn / Nowa drużyna):
+  - lista drużyn (zakładki typu menu „Drużyny") z licznikami kadry meczowej
+    i wszystkich zawodników + skróty Kadra / Edytuj stronę,
+  - **widok kadry**: tabela zawodników z polem numeru na koszulce (szybka
+    zmiana przy wymianie koszulek) i przełącznikiem składu JEDNYM kliknięciem
+    (11 / Rezerwa / Poza kadrą — stan od razu widoczny w tabeli), zapis
+    ZBIORCZY jak pozycje w Liście stron; celowany UPDATE (sNumber/sSquad/
+    iPosition) nie rusza opisów zawodnika; walidacja przynależności do drużyny,
+  - szybki formularz „Nowa drużyna" (top-level + typ menu „Drużyny")
+- **Panel meczowy: filtr zawodników** — pole szukania nad listą każdej
+  z dwóch drużyn: wpisywanie zawęża kafelki na żywo (bez wielkości liter
+  i polskich znaków — „swi" znajdzie Świątka), przycisk WYCZYŚĆ / skasowanie
+  frazy przywraca wszystkich; nagłówki pustych grup chowają się razem
+  z zawodnikami
+- E2E na realnej bazie: lista drużyn, zapis kadry (numer+skład+pozycja),
+  filtr „kon"→1 / „xyz"→0 / wyczyść→wszyscy — zielone, zero błędów JS
+
 ## 2026-08-06 — Fix zapisu Konfiguracji transmisji + plakat + plansza „Sponsorzy — slider"
 - **Naprawiony zapis w Transmisja → Konfiguracja**: `saveVariables()` z rdzenia
   dopasowuje linię wzorcem `] = ` (dokładnie jedna spacja) — klucze plansz

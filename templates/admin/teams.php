@@ -1,0 +1,307 @@
+<?php
+if( !defined( 'ADMIN_PAGE' ) ){
+    exit( 'Script by OpenSolution.org' );
+}
+
+/*
+ * TRANSMISJA LIVE — Drużyny i kadry (panel admina).
+ *
+ * ?p=teams               — lista drużyn (zakładki typu menu „Drużyny")
+ * ?p=teams&sOption=new   — szybkie dodanie drużyny
+ * ?p=teams&iTeam=X       — kadra drużyny: numer na koszulce (input) +
+ *                          skład jednym kliknięciem (11 / Rezerwa / Poza)
+ *                          i ZBIORCZY zapis — jak pozycje w Liście stron.
+ *
+ * Zapis kadry celowanym UPDATE (sNumber/sSquad/iPosition) — nie rusza
+ * opisów ani innych pól zawodnika. CSRF sprawdza globalnie adm.php.
+ */
+
+$iTeamsMenu = (int) ( $config['teams_menu'] ?? 0 );
+$iTeam      = (int) ( $_GET['iTeam'] ?? 0 );
+
+// ============================================================
+// ZAPIS KADRY (zbiorczy: numery + składy)
+// ============================================================
+if( ( $_SERVER['REQUEST_METHOD'] ?? 'GET' ) === 'POST' && ( $_POST['sAction'] ?? '' ) === 'squad_save' ){
+
+    $iTeam    = (int) ( $_POST['iTeam'] ?? 0 );
+    $aNumbers = (array) ( $_POST['aNumbers'] ?? Array( ) );
+    $aSquads  = (array) ( $_POST['aSquads'] ?? Array( ) );
+
+    // tylko realni zawodnicy tej drużyny (obrona przed podmianą iPage w POST)
+    $aAllowed = Array( );
+    $oQuery = $oSql->prepare( 'SELECT iPage FROM pages WHERE iPageParent = :team' );
+    $oQuery->execute( Array( ':team' => $iTeam ) );
+    while( $iPage = $oQuery->fetchColumn( ) ){
+        $aAllowed[(int) $iPage] = true;
+    }
+
+    $oUpdate = $oSql->prepare(
+        'UPDATE pages SET sNumber = :number, sSquad = :squad, iPosition = :position WHERE iPage = :id'
+    );
+    foreach( $aNumbers as $iPage => $sNumber ){
+        $iPage = (int) $iPage;
+        if( !isset( $aAllowed[$iPage] ) ){
+            continue;
+        }
+        $sNumber = trim( (string) $sNumber );
+        $iSquad  = (int) ( $aSquads[$iPage] ?? 0 );
+        $oUpdate->execute( Array(
+            ':number'   => $sNumber,
+            ':squad'    => isset( $config['squad_types'][$iSquad] ) ? (string) $iSquad : '',
+            ':position' => (int) $sNumber, // sortowanie list wg numeru (jak importer)
+            ':id'       => $iPage,
+        ) );
+    }
+    clearCache( );
+
+    header( 'Location: '.$config['admin_file'].'?p=teams&iTeam='.$iTeam.'&sOption=save' );
+    exit;
+}
+
+// ============================================================
+// NOWA DRUŻYNA (szybki formularz)
+// ============================================================
+$sNewTeamError = '';
+if( ( $_SERVER['REQUEST_METHOD'] ?? 'GET' ) === 'POST' && ( $_POST['sAction'] ?? '' ) === 'team_add' ){
+    $sNewTeam = trim( (string) ( $_POST['sNewTeam'] ?? '' ) );
+    if( $sNewTeam === '' ){
+        $sNewTeamError = 'Podaj nazwę drużyny.';
+    }
+    else{
+        $iTeam = (int) $oPage->savePage( Array(
+            'sName'       => $sNewTeam,
+            'iPageParent' => 0,
+            'iMenu'       => $iTeamsMenu,
+            'iStatus'     => 1,
+            'iPosition'   => 0,
+            'sDate'       => date( 'Y-m-d H:i' ),
+        ) );
+        header( 'Location: '.$config['admin_file'].'?p=teams&iTeam='.$iTeam.'&sOption=save' );
+        exit;
+    }
+}
+
+$sSelectedMenu = 'teams';
+require_once 'templates/admin/_header.php';
+require_once 'templates/admin/_menu.php';
+
+// ============================================================
+// WIDOK: KADRA DRUŻYNY
+// ============================================================
+if( $iTeam > 0 ){
+
+    $oCheck = $oSql->prepare( 'SELECT sName FROM pages WHERE iPage = :id AND iMenu = :menu AND iPageParent = 0' );
+    $oCheck->execute( Array( ':id' => $iTeam, ':menu' => $iTeamsMenu ) );
+    $sTeamName = (string) $oCheck->fetchColumn( );
+
+    if( $sTeamName === '' ){
+        echo '<div class="alert alert-danger">Nie ma takiej drużyny.</div>';
+        require_once 'templates/admin/_footer.php';
+        exit;
+    }
+
+    $oPlayers = $oSql->prepare(
+        'SELECT iPage, sName, sNumber, sSquad, iStatus FROM pages WHERE iPageParent = :team
+         ORDER BY CASE WHEN sSquad = "1" THEN 0 WHEN sSquad = "2" THEN 1 ELSE 2 END,
+                  iPosition ASC, sName COLLATE NOCASE ASC'
+    );
+    $oPlayers->execute( Array( ':team' => $iTeam ) );
+    $aPlayers = $oPlayers->fetchAll( PDO::FETCH_ASSOC );
+
+    $aSquadButtons = Array( '1' => '11', '2' => 'Rezerwa', '' => 'Poza kadrą' );
+    ?>
+
+    <style>
+        /* przełącznik składu — jedno kliknięcie ustawia stan, zapis zbiorczy */
+        .teamSquadToggle { display: inline-flex; gap: 6px; }
+        .teamSquadToggle .button { min-height: 34px; padding: 4px 14px; opacity: .55; }
+        .teamSquadToggle .button.is-active { opacity: 1; background: var(--brand, #105585); border-color: var(--brand, #105585); color: #fff; }
+        .teamNumberInput { width: 70px; text-align: center; }
+        tr.squad-off .name a { opacity: .55; }
+    </style>
+
+    <form action="?p=teams&amp;iTeam=<?php echo $iTeam; ?>" name="form" method="post" class="main-form">
+
+        <header class="mainPage__header mainPage__header_row">
+            <h1 class="mainPage__title">Kadra — <?php echo html( $sTeamName ); ?></h1>
+            <div class="mainPage__buttons d-flex justify-content-between">
+                <a href="?p=teams" class="button button-light mr-2">Wróć do drużyn</a>
+                <input type="submit" name="sOption" class="button" value="<?php echo html( $lang['save'] ); ?>" />
+            </div>
+        </header>
+
+        <?php if( isset( $_GET['sOption'] ) ): ?>
+            <div class="alert alert-success mb-3"><?php echo $lang['Operation_completed']; ?></div>
+        <?php endif; ?>
+
+        <?php if( empty( $aPlayers ) ): ?>
+            <div class="alert alert-info mb-3">Brak zawodników — dodaj ich przez Import składu (Transmisja) albo jako podstrony drużyny.</div>
+        <?php else: ?>
+
+        <div class="card mb-4">
+            <div class="table-responsive">
+                <table class="list pages table" cellpadding="0" cellspacing="0" border="0">
+                    <thead>
+                        <tr>
+                            <th style="width:100px">Numer</th>
+                            <th>Imię i nazwisko</th>
+                            <th style="width:320px">Skład meczowy</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach( $aPlayers as $aPlayer ):
+                            $sSquad = in_array( (string) $aPlayer['sSquad'], Array( '1', '2' ), true ) ? (string) $aPlayer['sSquad'] : '';
+                        ?>
+                        <tr<?php echo $sSquad === '' ? ' class="squad-off"' : ''; ?>>
+                            <td>
+                                <input type="text" name="aNumbers[<?php echo (int) $aPlayer['iPage']; ?>]"
+                                       value="<?php echo html( (string) $aPlayer['sNumber'] ); ?>"
+                                       class="form-control teamNumberInput" inputmode="numeric" maxlength="4" />
+                            </td>
+                            <th class="name">
+                                <a href="?p=pages-form&amp;iPage=<?php echo (int) $aPlayer['iPage']; ?>"><?php echo html( (string) $aPlayer['sName'] ); ?></a>
+                            </th>
+                            <td>
+                                <span class="teamSquadToggle" data-player="<?php echo (int) $aPlayer['iPage']; ?>">
+                                    <?php foreach( $aSquadButtons as $sValue => $sLabel ): ?>
+                                        <button type="button" class="button button-sm<?php echo $sSquad === (string) $sValue ? ' is-active' : ''; ?>"
+                                                data-squad="<?php echo html( (string) $sValue ); ?>"><?php echo html( $sLabel ); ?></button>
+                                    <?php endforeach; ?>
+                                    <input type="hidden" name="aSquads[<?php echo (int) $aPlayer['iPage']; ?>]" value="<?php echo html( $sSquad ); ?>" />
+                                </span>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+            <div class="card__wrapper"><div class="card__content flex align-center">
+                <input type="submit" name="sOption" class="button mr-2" value="<?php echo html( $lang['save'] ); ?>" />
+                <a href="?p=squad-import">Importuj skład z protokołu</a>
+            </div></div>
+        </div>
+
+        <?php endif; ?>
+
+        <input type="hidden" name="sAction" value="squad_save" />
+        <input type="hidden" name="iTeam" value="<?php echo $iTeam; ?>" />
+        <input type="hidden" name="sTokenCsrf" value="<?php echo html( getCsrfToken( ) ); ?>" />
+
+    </form>
+
+    <script>
+        $( function( ){
+            // klik = ustawienie składu zawodnika (zapis dopiero przyciskiem Zapisz)
+            $( '.teamSquadToggle .button' ).on( 'click', function( ){
+                var $toggle = $( this ).closest( '.teamSquadToggle' );
+                $toggle.find( '.button' ).removeClass( 'is-active' );
+                $( this ).addClass( 'is-active' );
+                $toggle.find( 'input[type=hidden]' ).val( $( this ).data( 'squad' ) );
+                $toggle.closest( 'tr' ).toggleClass( 'squad-off', $( this ).data( 'squad' ) === '' );
+            } );
+        } );
+    </script>
+
+    <?php
+}
+// ============================================================
+// WIDOK: NOWA DRUŻYNA
+// ============================================================
+elseif( ( $_GET['sOption'] ?? '' ) === 'new' ){
+    ?>
+
+    <header class="mainPage__header">
+        <h1 class="mainPage__title">Nowa drużyna</h1>
+    </header>
+
+    <?php if( $sNewTeamError !== '' ): ?>
+        <div class="alert alert-danger mb-3"><?php echo html( $sNewTeamError ); ?></div>
+    <?php endif; ?>
+
+    <div class="card mb-4">
+        <div class="card__wrapper"><div class="card__content">
+            <form action="?p=teams&amp;sOption=new" method="post" class="main-form">
+                <div class="form-item">
+                    <label for="sNewTeam">Nazwa drużyny</label>
+                    <input type="text" name="sNewTeam" id="sNewTeam" class="form-control" maxlength="120" placeholder="np. Avia Świdnik" />
+                </div>
+                <input type="hidden" name="sAction" value="team_add" />
+                <input type="hidden" name="sTokenCsrf" value="<?php echo html( getCsrfToken( ) ); ?>" />
+                <div class="form-button mt-2">
+                    <input type="submit" class="button" value="<?php echo html( $lang['save'] ); ?>" />
+                </div>
+            </form>
+        </div></div>
+    </div>
+
+    <?php
+}
+// ============================================================
+// WIDOK: LISTA DRUŻYN
+// ============================================================
+else{
+
+    $oTeams = $oSql->prepare(
+        'SELECT t.iPage, t.sName, t.iStatus,
+                ( SELECT COUNT(*) FROM pages p WHERE p.iPageParent = t.iPage ) AS iPlayers,
+                ( SELECT COUNT(*) FROM pages p WHERE p.iPageParent = t.iPage AND p.sSquad IN ("1","2") ) AS iInSquad
+         FROM pages t WHERE t.iMenu = :menu AND t.iPageParent = 0
+         ORDER BY t.iPosition ASC, t.sName COLLATE NOCASE ASC'
+    );
+    $oTeams->execute( Array( ':menu' => $iTeamsMenu ) );
+    $aTeams = $oTeams->fetchAll( PDO::FETCH_ASSOC );
+    ?>
+
+    <header class="mainPage__header mainPage__header_row">
+        <h1 class="mainPage__title">Drużyny</h1>
+        <div class="mainPage__buttons">
+            <a href="?p=teams&amp;sOption=new" class="button">Nowa drużyna</a>
+        </div>
+    </header>
+
+    <?php if( isset( $_GET['sOption'] ) && $_GET['sOption'] === 'save' ): ?>
+        <div class="alert alert-success mb-3"><?php echo $lang['Operation_completed']; ?></div>
+    <?php endif; ?>
+
+    <?php if( empty( $aTeams ) ): ?>
+        <div class="alert alert-info">Brak drużyn — dodaj pierwszą przyciskiem „Nowa drużyna".</div>
+    <?php else: ?>
+
+    <div class="card mb-4">
+        <div class="table-responsive">
+            <table class="list pages table" cellpadding="0" cellspacing="0" border="0">
+                <thead>
+                    <tr>
+                        <th>Drużyna</th>
+                        <th style="width:160px">Kadra meczowa</th>
+                        <th style="width:140px">Zawodników</th>
+                        <th style="width:220px"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach( $aTeams as $aTeam ): ?>
+                    <tr<?php echo (int) $aTeam['iStatus'] === 0 ? ' class="muted"' : ''; ?>>
+                        <th class="name">
+                            <a href="?p=teams&amp;iTeam=<?php echo (int) $aTeam['iPage']; ?>"><?php echo html( (string) $aTeam['sName'] ); ?></a>
+                        </th>
+                        <td><?php echo (int) $aTeam['iInSquad']; ?></td>
+                        <td><?php echo (int) $aTeam['iPlayers']; ?></td>
+                        <td>
+                            <a href="?p=teams&amp;iTeam=<?php echo (int) $aTeam['iPage']; ?>" class="button button-sm mr-2">Kadra</a>
+                            <a href="?p=pages-form&amp;iPage=<?php echo (int) $aTeam['iPage']; ?>" class="button button-sm button-border">Edytuj stronę</a>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <?php endif; ?>
+
+    <?php
+}
+
+require_once 'templates/admin/_footer.php';
+?>
