@@ -43,8 +43,15 @@ $aTeam2 = liveTeamData($iTeam2);
 $sMatchName = (string) (getData($iMatch, 'sName') ?? '');
 $sMatchDate = (string) (getData($iMatch, 'sDate') ?? '');
 $sMatchDesc = (string) (getData($iMatch, 'sDescriptionFull') ?? '');
-$sReferees  = (string) (getData($iMatch, 'sDescriptionShort') ?? ''); // sędziowie — opis SKRÓCONY strony „Mecz"
 $sPoster    = livePageImage($iMatch, 1);
+
+// sędziowie: dedykowana zakładka (opis pełny + grid zdjęć strony);
+// fallback bez zakładki — opis SKRÓCONY strony meczu (stare zachowanie)
+$iRefereesPage  = (int) ($config['live_referees_page'] ?? 0);
+$sReferees      = $iRefereesPage > 0
+    ? (string) (getData($iRefereesPage, 'sDescriptionFull') ?? '')
+    : (string) (getData($iMatch, 'sDescriptionShort') ?? '');
+$aRefereeImages = $iRefereesPage > 0 ? livePageImages($iRefereesPage) : Array();
 
 $aSponsorImages    = livePageImages((int) ($config['live_sponsors_page'] ?? 0));
 $aProductionImages = livePageImages((int) ($config['live_production_page'] ?? 0));
@@ -162,15 +169,22 @@ $fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($aBoardLabels, $lang, $sM
         </div>
     </div>
 
-    <?php if ($sReferees !== ''): ?>
-    <!-- PLANSZA: SĘDZIOWIE -->
+    <?php if ($sReferees !== '' || !empty($aRefereeImages)): ?>
+    <!-- PLANSZA: SĘDZIOWIE (zakładka live_referees_page: opis + grid zdjęć) -->
     <div class="tbBoard tbShow" data-board="sedziowie">
         <header class="tbBoard__header">
             <span class="title"><?php echo html($aBoardLabels['sedziowie'] ?? ''); ?></span>
             <?php if ($sMatchName !== ''): ?><span class="meta"><?php echo html($sMatchName); ?></span><?php endif; ?>
         </header>
         <div class="tbBoard__content">
-            <div class="tbReferees"><?php echo parseShortcodes($sReferees); ?></div>
+            <?php if ($sReferees !== ''): ?><div class="tbReferees"><?php echo parseShortcodes($sReferees); ?></div><?php endif; ?>
+            <?php if (!empty($aRefereeImages)): ?>
+            <div class="tbGallery">
+                <?php foreach ($aRefereeImages as $sImage): ?>
+                    <img src="<?php echo $sFiles.html($sImage); ?>" alt="" />
+                <?php endforeach; ?>
+            </div>
+            <?php endif; ?>
         </div>
     </div>
     <?php endif; ?>

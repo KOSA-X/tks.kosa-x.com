@@ -106,8 +106,15 @@ $aTeam2 = $fTeamData($iTeam2);
 $sMatchName = (string) (getData($iMatch, 'sName') ?? '');
 $sMatchDate = (string) (getData($iMatch, 'sDate') ?? '');
 $sMatchDesc = (string) (getData($iMatch, 'sDescriptionFull') ?? '');
-$sReferees  = (string) (getData($iMatch, 'sDescriptionShort') ?? ''); // sędziowie — opis SKRÓCONY strony „Mecz"
 $sPoster    = $fPageImage($iMatch, 1);
+
+// sędziowie: dedykowana zakładka (opis pełny + grid zdjęć strony);
+// fallback bez zakładki — opis SKRÓCONY strony meczu (stare zachowanie)
+$iRefereesPage  = (int) ($config['live_referees_page'] ?? 0);
+$sReferees      = $iRefereesPage > 0
+    ? (string) (getData($iRefereesPage, 'sDescriptionFull') ?? '')
+    : (string) (getData($iMatch, 'sDescriptionShort') ?? '');
+$aRefereeImages = $iRefereesPage > 0 ? $fPageImages($iRefereesPage) : Array();
 
 $aSponsorImages    = $fPageImages((int) ($config['live_sponsors_page'] ?? 0));
 $aProductionImages = $fPageImages((int) ($config['live_production_page'] ?? 0));
@@ -225,15 +232,22 @@ $fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($fSquad, $fStaffBlock, $a
         <footer class="obsBoard__footer"><?php echo html($config['logo']); ?> • <?php echo $lang['live_broadcast_footer']; ?></footer>
     </div>
 
-    <?php if ($sReferees !== ''): ?>
-    <!-- PLANSZA: SĘDZIOWIE -->
+    <?php if ($sReferees !== '' || !empty($aRefereeImages)): ?>
+    <!-- PLANSZA: SĘDZIOWIE (zakładka live_referees_page: opis + grid zdjęć) -->
     <div class="obsBoard obsShow" data-board="sedziowie">
         <header class="obsBoard__header">
             <span class="title"><?php echo html($aBoardLabels['sedziowie'] ?? ''); ?></span>
             <?php if ($sMatchName !== ''): ?><span class="meta"><?php echo html($sMatchName); ?></span><?php endif; ?>
         </header>
         <div class="obsBoard__content">
-            <div class="obsReferees"><?php echo parseShortcodes($sReferees); ?></div>
+            <?php if ($sReferees !== ''): ?><div class="obsReferees"><?php echo parseShortcodes($sReferees); ?></div><?php endif; ?>
+            <?php if (!empty($aRefereeImages)): ?>
+            <div class="obsGallery">
+                <?php foreach ($aRefereeImages as $sImage): ?>
+                    <img src="<?php echo $sFiles.html($sImage); ?>" alt="" />
+                <?php endforeach; ?>
+            </div>
+            <?php endif; ?>
         </div>
         <footer class="obsBoard__footer"><?php echo html($config['logo']); ?> • <?php echo $lang['live_broadcast_footer']; ?></footer>
     </div>

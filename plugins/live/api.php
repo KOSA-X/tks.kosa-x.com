@@ -360,16 +360,18 @@ switch ($sAction) {
     case 'teams_set': {
         $iTeam1 = (int) ($_POST['iTeam1'] ?? 0);
         $iTeam2 = (int) ($_POST['iTeam2'] ?? 0);
-        $iTeamsPage = (int) ($config['teams_page'] ?? 0);
+        $iTeamsMenu = (int) ($config['teams_menu'] ?? 0);
 
         if ($iTeam1 === $iTeam2) {
             liveApiError('Wybierz dwie różne drużyny.');
         }
-        $oCheck = $oSql->prepare('SELECT COUNT(*) FROM pages WHERE iPage = :id AND iPageParent = :parent');
+        // drużyna = zakładka najwyższego poziomu z typem menu „Drużyny"
+        // (iPageParent = 0 odsiewa zawodników, którzy dziedziczą iMenu)
+        $oCheck = $oSql->prepare('SELECT COUNT(*) FROM pages WHERE iPage = :id AND iMenu = :menu AND iPageParent = 0');
         foreach ([$iTeam1, $iTeam2] as $iTeam) {
-            $oCheck->execute([':id' => $iTeam, ':parent' => $iTeamsPage]);
+            $oCheck->execute([':id' => $iTeam, ':menu' => $iTeamsMenu]);
             if ((int) $oCheck->fetchColumn() === 0) {
-                liveApiError('Drużyna (ID '.$iTeam.') nie istnieje w zakładce „Drużyny".');
+                liveApiError('Drużyna (ID '.$iTeam.') nie jest zakładką typu „Drużyny".');
             }
         }
         $oTeams = $oSql->prepare('UPDATE live_state SET iTeam1 = :t1, iTeam2 = :t2 WHERE id = 1');

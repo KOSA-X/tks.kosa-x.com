@@ -33,9 +33,11 @@ if (!$bLiveAdmin) {
     $iTeam1 = (int) ($aLive['iTeam1'] ?? 0);
     $iTeam2 = (int) ($aLive['iTeam2'] ?? 0);
 
+    // drużyny = zakładki najwyższego poziomu z typem menu „Drużyny";
+    // iPageParent = 0 konieczne, bo zawodnicy dziedziczą iMenu po drużynie
     $aTeamOptions = Array();
-    $oTeams = $oSql->prepare('SELECT iPage, sName FROM pages WHERE iPageParent = :parent AND iStatus = 1 ORDER BY iPosition ASC, sName COLLATE NOCASE ASC');
-    $oTeams->execute(Array(':parent' => (int) ($config['teams_page'] ?? 0)));
+    $oTeams = $oSql->prepare('SELECT iPage, sName FROM pages WHERE iMenu = :menu AND iPageParent = 0 AND iStatus = 1 ORDER BY iPosition ASC, sName COLLATE NOCASE ASC');
+    $oTeams->execute(Array(':menu' => (int) ($config['teams_menu'] ?? 0)));
     while ($aRow = $oTeams->fetch(PDO::FETCH_ASSOC)) {
         $aTeamOptions[(int) $aRow['iPage']] = (string) $aRow['sName'];
     }

@@ -1,5 +1,25 @@
 # Changelog
 
+## 2026-08-06 — Drużyny wg typu menu + plansze z zakładek (nowa struktura właściciela)
+- **Nowa konwencja drużyn**: drużyna = zakładka NAJWYŻSZEGO poziomu z typem menu
+  „Drużyny" (`$config['teams_menu']`, domyślnie 4 z `pages_menus`); zawodnicy =
+  jej podstrony. Klucz `teams_page` usunięty. Filtry wszędzie łączą
+  `iMenu = teams_menu` z `iPageParent = 0`, bo `savePage()` dziedziczy iMenu
+  dziecka po rodzicu (zawodnicy po imporcie też mają iMenu drużyny)
+- Naprawione pod nową strukturę: wybór i zapis drużyn w panelu meczowym,
+  walidacja `teams_set` w API, lista drużyn + nowa drużyna w imporcie składu
+  (tworzona jako top-level z iMenu drużyn)
+- **Plansze z zakładek panelu** (typ menu „Plansze"): sędziowie =
+  `live_referees_page` (opis pełny + GRID zdjęć strony; fallback: opis skrócony
+  strony meczu), sponsorzy = `live_sponsors_page`, realizacja =
+  `live_production_page` — ustawione na zakładki 38/41/39; grid logotypów
+  przełączony na `auto-fill` (24 sponsorów mieści się tak samo jak 4)
+- Usunięte ponownie stare skrypty `database/migrations/*` (wróciły z nieaktualnej
+  kopii roboczej; z nową strukturą tworzyłyby zdublowane zakładki)
+- Testy E2E na realnej bazie właściciela: 16 drużyn w selekcie (bez zawodników),
+  zapis drużyn, plansze sędziów/sponsorów (24 loga)/realizacji na nakładce
+  i telebimie — zielone, zero błędów JS
+
 ## 2026-08-03 — Baza danych KOMPLETNA w repo — koniec migracji
 - `database/database.db` zawiera już CAŁY schemat i dane systemowe modułu live:
   kolumny `pages.sNumber`/`pages.sSquad`, tabele `live_state` (z `iScorebarPos`

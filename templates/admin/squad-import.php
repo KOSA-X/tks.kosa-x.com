@@ -8,16 +8,17 @@ if( !defined( 'ADMIN_PAGE' ) ){
  * Przepływ: upload zdjęcia + wybór drużyny → OCR (Anthropic vision,
  * plugins/live/ocr.php) → ekran korekty → zapis zawodników (następny krok).
  *
- * Drużyny = podstrony zakładki $config['teams_page'] (database/config_pl.php).
- * Wgrane protokoły i wyniki OCR ({token}.json) lądują w
- * plugins/live/cache/protocols/ (poza gitem, katalog zablokowany po HTTP) —
- * podgląd tylko przez ten moduł (admin).
+ * Drużyny = zakładki najwyższego poziomu z typem menu „Drużyny"
+ * ($config['teams_menu']); zawodnicy = ich podstrony. Wgrane protokoły
+ * i wyniki OCR ({token}.json) lądują w plugins/live/cache/protocols/
+ * (poza gitem, katalog zablokowany po HTTP) — podgląd tylko przez ten
+ * moduł (admin).
  */
 
 require_once 'plugins/live/ocr.php';
 
 $sProtocolsDir = 'plugins/live/cache/protocols/';
-$iTeamsPage    = (int) ( $config['teams_page'] ?? 0 );
+$iTeamsMenu    = (int) ( $config['teams_menu'] ?? 0 );
 $sFilePattern  = '/^[a-f0-9]{32}\.(jpg|jpeg|png|webp)$/';
 
 // ============================================================
@@ -95,11 +96,11 @@ if( ( $_SERVER['REQUEST_METHOD'] ?? 'GET' ) === 'POST' && ( $_POST['sAction'] ??
         return mb_strtolower( trim( preg_replace( '/\s+/u', ' ', html_entity_decode( (string) $sName, ENT_QUOTES, 'UTF-8' ) ) ) );
     };
 
-    // drużyna musi być podstroną zakładki „Drużyny"
+    // drużyna musi być zakładką najwyższego poziomu z typem menu „Drużyny"
     $bTeamOk = false;
-    if( $iTeamsPage > 0 && $iTeam > 0 ){
-        $oCheck = $oSql->prepare( 'SELECT COUNT(*) FROM pages WHERE iPage = :id AND iPageParent = :parent' );
-        $oCheck->execute( Array( ':id' => $iTeam, ':parent' => $iTeamsPage ) );
+    if( $iTeamsMenu > 0 && $iTeam > 0 ){
+        $oCheck = $oSql->prepare( 'SELECT COUNT(*) FROM pages WHERE iPage = :id AND iMenu = :menu AND iPageParent = 0' );
+        $oCheck->execute( Array( ':id' => $iTeam, ':menu' => $iTeamsMenu ) );
         $bTeamOk = ( (int) $oCheck->fetchColumn( ) > 0 );
     }
 
@@ -241,9 +242,9 @@ if( ( $_SERVER['REQUEST_METHOD'] ?? 'GET' ) === 'POST' && ( $_POST['sAction'] ??
     $iOldTeam = $iTeam;
     $sOldNew  = $sNewTeam;
 
-    // --- drużyna: istniejąca podstrona „Drużyn" albo nowa ---
-    if( $iTeamsPage === 0 ){
-        $aErrors[] = 'Brak zakładki „Drużyny" — utwórz zakładkę (menu: Systemowe) i ustaw jej ID w $config[\'teams_page\'] w database/config_pl.php (w bazie z repozytorium to ID 28).';
+    // --- drużyna: istniejąca zakładka typu „Drużyny" albo nowa ---
+    if( $iTeamsMenu === 0 ){
+        $aErrors[] = 'Brak typu menu „Drużyny" — sprawdź $config[\'pages_menus\'] i $config[\'teams_menu\'] w database/config.php.';
     }
     elseif( $iTeam === -1 ){
         if( $sNewTeam === '' ){
@@ -251,8 +252,8 @@ if( ( $_SERVER['REQUEST_METHOD'] ?? 'GET' ) === 'POST' && ( $_POST['sAction'] ??
         }
     }
     else{
-        $oCheck = $oSql->prepare( 'SELECT COUNT(*) FROM pages WHERE iPage = :id AND iPageParent = :parent' );
-        $oCheck->execute( Array( ':id' => $iTeam, ':parent' => $iTeamsPage ) );
+        $oCheck = $oSql->prepare( 'SELECT COUNT(*) FROM pages WHERE iPage = :id AND iMenu = :menu AND iPageParent = 0' );
+        $oCheck->execute( Array( ':id' => $iTeam, ':menu' => $iTeamsMenu ) );
         if( (int) $oCheck->fetchColumn( ) === 0 ){
             $aErrors[] = 'Wybierz drużynę z listy.';
         }
@@ -280,11 +281,13 @@ if( ( $_SERVER['REQUEST_METHOD'] ?? 'GET' ) === 'POST' && ( $_POST['sAction'] ??
 
     if( empty( $aErrors ) ){
 
-        // nowa drużyna → zwykła podstrona „Drużyn" (dziedziczy iMenu=3 po rodzicu)
+        // nowa drużyna → zakładka najwyższego poziomu z typem menu „Drużyny"
+        // (iMenu przekazane wprost — przy iPageParent=0 savePage go nie nadpisuje)
         if( $iTeam === -1 ){
             $iTeam = (int) $oPage->savePage( Array(
                 'sName'       => $sNewTeam,
-                'iPageParent' => $iTeamsPage,
+                'iPageParent' => 0,
+                'iMenu'       => $iTeamsMenu,
                 'iStatus'     => 1,
                 'iPosition'   => 0,
                 'sDate'       => date( 'Y-m-d H:i' ),
@@ -590,11 +593,11 @@ elseif( ( $_GET['sOption'] ?? '' ) === 'uploaded' && preg_match( $sFilePattern, 
 // ============================================================
 else{
 
-    // lista drużyn — podstrony zakładki „Drużyny"
+    // lista drużyn — zakładki najwyższego poziomu z typem menu „Drużyny"
     $sTeamsOptions = '';
-    if( $iTeamsPage > 0 ){
-        $oTeams = $oSql->prepare( 'SELECT iPage, sName FROM pages WHERE iPageParent = :parent AND sLang = :lang ORDER BY iPosition ASC, sName COLLATE NOCASE ASC' );
-        $oTeams->execute( Array( ':parent' => $iTeamsPage, ':lang' => $config['language'] ) );
+    if( $iTeamsMenu > 0 ){
+        $oTeams = $oSql->prepare( 'SELECT iPage, sName FROM pages WHERE iMenu = :menu AND iPageParent = 0 AND sLang = :lang ORDER BY iPosition ASC, sName COLLATE NOCASE ASC' );
+        $oTeams->execute( Array( ':menu' => $iTeamsMenu, ':lang' => $config['language'] ) );
         while( $aTeam = $oTeams->fetch( PDO::FETCH_ASSOC ) ){
             $sTeamsOptions .= '<option value="'.(int) $aTeam['iPage'].'"'.( $iOldTeam === (int) $aTeam['iPage'] ? ' selected="selected"' : '' ).'>'.html( $aTeam['sName'] ).'</option>';
         }

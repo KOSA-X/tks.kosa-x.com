@@ -508,7 +508,7 @@ img {
     }
 }
 
-// --- sędziowie (opis skrócony strony „Mecz") ----------------
+// --- sędziowie (zakładka live_referees_page: opis + zdjęcia) --
 .obsReferees {
     max-width: 760px;
     margin: 0 auto;
@@ -518,6 +518,10 @@ img {
 
     p { margin: 0 0 12px; }
     strong { color: $brand-light; }
+
+    + .obsGallery {
+        margin-top: 30px;
+    }
 }
 
 // --- podsumowanie (oś zdarzeń per drużyna) ------------------
@@ -555,20 +559,22 @@ img {
     }
 }
 
-// --- galerie (sponsorzy / realizacja) -----------------------
+// --- galerie (sponsorzy / realizacja / sędziowie) -----------
+// auto-fill: liczba kolumn dopasowuje się do liczby logotypów
+// (24 sponsorów zmieści się tak samo dobrze jak 4)
 .obsGallery {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 26px;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 20px;
     align-items: center;
 
     img {
         width: 100%;
-        max-height: 150px;
+        max-height: 110px;
         object-fit: contain;
         border-radius: 10px;
         background: rgba($white, .06);
-        padding: 18px;
+        padding: 14px;
     }
 
     &--big {

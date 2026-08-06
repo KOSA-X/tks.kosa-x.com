@@ -40,16 +40,14 @@ $config['form_page'] = "0";
 $config['sitemap_page'] = "0";
 $config['payment_page'] = "0";
 
-// Moduł transmisji live (TKS): rodzic drużyn — podstrony to drużyny,
-// a ich podstrony to zawodnicy (pages.sNumber, pages.sSquad).
-// Zakładki 28-34 i cały schemat live SĄ JUŻ w database/database.db —
-// świeże wdrożenie repo działa bez żadnych migracji.
-$config['teams_page'] = "28";
+// Moduł transmisji live (TKS): drużyny = zakładki najwyższego poziomu
+// z typem menu „Drużyny" ($config['teams_menu'] w config.php); zawodnicy =
+// ich podstrony (pages.sNumber, pages.sSquad). Cały schemat live siedzi
+// w database/database.db — świeże wdrożenie repo działa bez migracji.
 
 // Transmisja live — strony meczowe:
-// „Mecz" = treść meczu dnia (opis, plakat, data w sDate, sędziowie w opisie
-// skróconym); panel operatora i nakładka OBS mają dedykowane szablony
-// (themes 11 i 12).
+// „Dzień meczowy" = treść meczu dnia (opis, plakat, data w sDate);
+// panel operatora i nakładka OBS mają dedykowane szablony (themes 11 i 12).
 $config['match_page']        = "31";
 $config['live_panel_page']   = "32";
 $config['live_overlay_page'] = "33";
@@ -57,11 +55,13 @@ $config['live_overlay_page'] = "33";
 // Telebim — ekran LED przy boisku (theme 13, cieszynki wideo + powtórki OBS).
 $config['telebim_page'] = "34";
 
-// Strony-źródła treści plansz nakładki OBS (0 = plansza bez treści, nie renderuje się):
-// sponsorzy = zakładka z logotypami (obrazki strony), realizacja = zakładka
-// promująca produkcję transmisji (tytuł + zdjęcia).
-$config['live_sponsors_page']   = "0";
-$config['live_production_page'] = "0";
+// Strony-źródła treści plansz (0 = plansza bez treści, nie renderuje się):
+// sędziowie = opis + zdjęcia zakładki „Sędziowie"; sponsorzy = zakładka
+// z logotypami (grid zdjęć); realizacja = zakładka promująca produkcję
+// transmisji (tytuł + zdjęcia). Zakładki typu menu „Plansze" w panelu.
+$config['live_referees_page']   = "38";
+$config['live_sponsors_page']   = "41";
+$config['live_production_page'] = "39";
 
 // Strony TREŚCI używane w szablonach (dawniej magiczne ID w kodzie).
 // Zmień ID per projekt zamiast edytować szablony.

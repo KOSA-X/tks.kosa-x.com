@@ -247,6 +247,13 @@ $config['squad_types'] = Array(
   2 => 'Rezerwowy',
 );
 
+// Drużyna = zakładka NAJWYŻSZEGO poziomu z typem menu „Drużyny"
+// (klucz z $config['pages_menus'] powyżej). Zawodnicy = jej podstrony
+// (savePage dziedziczy iMenu po rodzicu, dlatego filtry drużyn zawsze
+// łączą iMenu z iPageParent = 0). Używane w: panelu meczowym,
+// plugins/live/api.php (teams_set) i imporcie składu.
+$config['teams_menu'] = 4;
+
 // Klucze API modułu live — tu tylko PLACEHOLDERY. Prawdziwe klucze wstawiaj
 // w database/config.secrets.php (poza repo — patrz config.secrets.dist.php),
 // który ładuje się na końcu tego pliku i nadpisuje te wartości.
