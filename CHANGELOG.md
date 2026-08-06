@@ -1,5 +1,23 @@
 # Changelog
 
+## 2026-08-06 — Fix zapisu Konfiguracji transmisji + plakat + plansza „Sponsorzy — slider"
+- **Naprawiony zapis w Transmisja → Konfiguracja**: `saveVariables()` z rdzenia
+  dopasowuje linię wzorcem `] = ` (dokładnie jedna spacja) — klucze plansz
+  w `config_pl.php` miały WYRÓWNANE `=` wieloma spacjami, więc zapis po cichu
+  je pomijał i formularz „resetował się" do starych wartości; przypisania
+  znormalizowane do pojedynczej spacji (+ komentarz ostrzegawczy w pliku)
+- **Naprawiona plansza „Plakat meczowy"**: `.obsPoster` neutralizuje teraz CAŁE
+  pozycjonowanie bazowej `.obsBoard` (left/top 50%, width 1180px i transform
+  translate -50% nakładany przez `.is-visible`) — plakat uciekał w lewy górny
+  róg, teraz jest pełnoekranowy i wyśrodkowany
+- **Nowa plansza „Sponsorzy — slider"** (`sponsorzy_slider`, wiersz w bazie):
+  biała banda reklamowa przyklejona do dolnej krawędzi — jeden wiersz logotypów
+  z zakładki SPONSORZY (te same zdjęcia co grid) płynie powoli w lewo w pętli
+  bez szwu (track = 2× ta sama grupa, animacja tylko `transform` na GPU, czas
+  = liczba log × 4 s, wyłączana przy `prefers-reduced-motion`)
+- E2E: roundtrip zapisu konfiguracji (41→43→41 w pliku), plakat [0,0,1920,1080]
+  wyśrodkowany, slider płynie w lewo ~18 px/s — zielone, zero błędów JS
+
 ## 2026-08-06 — 3 nowe plansze + uproszczony panel meczowy + edycja zawodnika w zdarzeniu
 - **Nowe plansze** (wiersze w `live_boards` — są w bazie repo, przyciski w panelu
   pojawiają się automatycznie):

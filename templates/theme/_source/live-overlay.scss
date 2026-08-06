@@ -713,15 +713,65 @@ img {
     }
 }
 
+// --- sponsorzy: slider (dolna banda reklamowa) ---------------
+// pasek przyklejony do dolnej krawędzi; loga płyną powoli w lewo jak
+// banda LED przy płycie boiska — pętla bez szwu (track = 2x ta sama
+// grupa, animacja translateX(-50%); tylko transform = płynnie na GPU)
+.obsSponsorTicker {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    padding: 14px 0;
+    background: $white;
+    box-shadow: 0 -10px 30px rgba($black, .35);
+
+    &__track {
+        display: flex;
+        width: max-content;
+        animation: obsTickerScroll 60s linear infinite; // czas nadpisany inline (liczba log × 4 s)
+        will-change: transform;
+    }
+
+    &__group {
+        display: flex;
+        align-items: center;
+        gap: 72px;
+        padding-right: 72px; // odstęp między końcem a początkiem pętli
+    }
+
+    img {
+        height: 72px;
+        width: auto;
+        max-width: 260px;
+        object-fit: contain;
+    }
+}
+
+@keyframes obsTickerScroll {
+    to {
+        transform: translate3d(-50%, 0, 0);
+    }
+}
+
 // --- plakat (pełnoekranowy) ---------------------------------
+// neutralizuje CAŁE pozycjonowanie bazowej .obsBoard (left/top 50%,
+// width 1180px, translate -50%) — bez tego plakat ucieka w lewy górny róg
 .obsPoster {
     position: absolute;
     inset: 0;
+    width: auto;
+    max-height: none;
     display: flex;
     align-items: center;
     justify-content: center;
     background: rgba($black, .82);
     transform: none;
+
+    &.is-visible {
+        transform: none;
+    }
 
     img {
         max-width: 82vw;
@@ -738,5 +788,9 @@ img {
     .obsShow,
     .obsEvent {
         transition-duration: .01s;
+    }
+
+    .obsSponsorTicker__track {
+        animation: none;
     }
 }

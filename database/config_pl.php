@@ -48,8 +48,11 @@ $config['payment_page'] = "0";
 // Transmisja live — strony meczowe:
 // „Dzień meczowy" = treść meczu dnia (opis, plakat, data w sDate);
 // panel operatora i nakładka OBS mają dedykowane szablony (themes 11 i 12).
-$config['match_page']        = "31";
-$config['live_panel_page']   = "32";
+// ⚠️ Przypisania POJEDYNCZĄ spacją wokół „=" — saveVariables() (zapis
+// z panelu Transmisja → Konfiguracja) dopasowuje wzorzec „] = " i pomija
+// linie z wyrównanym wieloma spacjami znakiem równości.
+$config['match_page'] = "31";
+$config['live_panel_page'] = "32";
 $config['live_overlay_page'] = "33";
 
 // Telebim — ekran LED przy boisku (theme 13, cieszynki wideo + powtórki OBS).
@@ -57,14 +60,14 @@ $config['telebim_page'] = "34";
 
 // Strony-źródła treści plansz (0 = plansza bez treści, nie renderuje się):
 // sędziowie = opis + zdjęcia zakładki „Sędziowie"; sponsorzy/partnerzy =
-// zakładki z logotypami (grid zdjęć); sponsor meczu = 1 duże logo + opis
-// pełny; realizacja = zakładka promująca produkcję transmisji.
+// zakładki z logotypami (grid zdjęć + dolny slider); sponsor meczu = 1 duże
+// logo + opis pełny; realizacja = zakładka promująca produkcję transmisji.
 // Zarządzanie: panel → Transmisja → Konfiguracja.
-$config['live_referees_page']      = "38";
-$config['live_sponsors_page']      = "41";
-$config['live_partners_page']      = "0";
+$config['live_referees_page'] = "38";
+$config['live_sponsors_page'] = "41";
+$config['live_partners_page'] = "0";
 $config['live_match_sponsor_page'] = "43";
-$config['live_production_page']    = "39";
+$config['live_production_page'] = "39";
 
 // Strony TREŚCI używane w szablonach (dawniej magiczne ID w kodzie).
 // Zmień ID per projekt zamiast edytować szablony.

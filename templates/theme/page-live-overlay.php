@@ -291,6 +291,21 @@ $fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($fSquad, $fStaffBlock, $a
     </div>
     <?php endif; ?>
 
+    <?php if (!empty($aSponsorImages)): ?>
+    <!-- PLANSZA: SPONSORZY — SLIDER (dolna banda reklamowa; te same loga co grid) -->
+    <div class="obsSponsorTicker obsShow" data-board="sponsorzy_slider">
+        <div class="obsSponsorTicker__track" style="animation-duration: <?php echo max(24, count($aSponsorImages) * 4); ?>s">
+            <?php for ($i = 0; $i < 2; $i++): // 2x ta sama grupa = pętla bez szwu ?>
+            <div class="obsSponsorTicker__group">
+                <?php foreach ($aSponsorImages as $sImage): ?>
+                    <img src="<?php echo $sFiles.html($sImage); ?>" alt="" />
+                <?php endforeach; ?>
+            </div>
+            <?php endfor; ?>
+        </div>
+    </div>
+    <?php endif; ?>
+
     <?php if (!empty($aPartnerImages)): ?>
     <!-- PLANSZA: PARTNERZY GŁÓWNI (grid logotypów jak sponsorzy) -->
     <div class="obsBoard obsShow" data-board="partnerzy_glowni">
