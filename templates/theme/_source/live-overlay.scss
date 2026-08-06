@@ -582,61 +582,76 @@ img {
 //        border-bottom: 2px solid $brand;
     }
 
-    &__list {
-        list-style: none;
-
-        li {
-            gap: 10px;
-            padding: 2px 0;
-            line-height: 1;
-            @include flexbox;
-            @include font-bold;
-            @include font-md;
-            align-items: center;
-        }
-
-        .number {
-            flex: 0 0 auto;
-            width: 40px;
-            height: 35px;
-            text-align: center;
-            font-family: $font-h;
-            font-weight: 900;
-            background: $white;
-            color: $brand-dark;
-            @include flexbox;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            font-variant-numeric: tabular-nums;
-        }
-        &-2{
-            li{
-                
-            }
-            .number{
-                background: $brand-dark;
-                color: $white;
-            }
-        }
-    }
-    
-    &-1{
-//        &_
-    }
-    
     &-2{
         .obsSquad__heading{
             background: $brand-dark;
             color: $white;
         }
-        .obsSquad__list li{
-//            @include font-medium;
-        }
-        .obsSquad__list .number{
+    }
+}
+
+// ----------------------------------------------------------
+// ----- WSPÓLNA LISTA: ul.teamList
+// ----------------------------------------------------------
+// JEDNA klasa dla wszystkich list „kwadracik + nazwisko" na planszach:
+// składy drużyn (kwadracik = numer) i oś zdarzeń w podsumowaniu
+// (kwadracik = minuta, obok ikona akcji). Zmiana stylu tutaj wchodzi
+// wszędzie. Wariant --dark = ciemne kwadraciki (rezerwa / kolumna gościa).
+.teamList {
+    list-style: none;
+
+    li {
+        gap: 10px;
+        padding: 2px 0;
+        line-height: 1;
+        @include flexbox;
+        @include font-bold;
+        @include font-md;
+        align-items: center;
+    }
+
+    .number,
+    .minute {
+        flex: 0 0 auto;
+        width: 40px;
+        height: 35px;
+        font-family: $font-h;
+        font-weight: 900;
+        background: $white;
+        color: $brand-dark;
+        @include flexbox;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        font-variant-numeric: tabular-nums;
+    }
+
+    &--dark {
+        .number,
+        .minute {
             background: $brand-dark;
             color: $white;
         }
+    }
+}
+
+// kaskadowy wjazd wierszy po pokazaniu planszy: każdy wiersz wsuwa się
+// z lewej z opóźnieniem wg --i (ustawiane w PHP/JS). Tylko transform
+// i opacity — płynne w OBS; ukrycie planszy resetuje animację.
+.obsBoard .teamList li {
+    opacity: 0;
+    transform: translate3d(-28px, 0, 0);
+}
+
+.obsBoard.is-visible .teamList li {
+    animation: obsRowIn .45s cubic-bezier(.22, 1, .36, 1) forwards;
+    animation-delay: calc(.25s + var(--i, 0) * .07s);
+}
+
+@keyframes obsRowIn {
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
     }
 }
 
@@ -657,33 +672,12 @@ img {
 }
 
 // --- podsumowanie (oś zdarzeń per drużyna) ------------------
+// listy zdarzeń renderuje JS w ul.teamList (wspólne style wyżej)
 .obsSummary {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 40px;
     margin-top: 34px;
-
-    &__list {
-        list-style: none;
-
-        li {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 8px 0;
-            font-size: 20px;
-            font-weight: 600;
-
-            .minute {
-                min-width: 46px;
-                text-align: right;
-                font-family: $font-h;
-                font-weight: 900;
-                color: $brand-light;
-                font-variant-numeric: tabular-nums;
-            }
-        }
-    }
 
     &__empty {
         opacity: .5;
@@ -923,6 +917,12 @@ img {
     }
 
     .obsSponsorTicker__track {
+        animation: none;
+    }
+
+    .obsBoard .teamList li {
+        opacity: 1;
+        transform: none;
         animation: none;
     }
 }

@@ -136,6 +136,30 @@ $sMatchSponsorDesc = $iMatchSponsor > 0 ? (string) (getData($iMatchSponsor, 'sDe
 $sCssVer = @filemtime('templates/'.$config['skin'].'/css/live-overlay.css') ?: 1;
 $sJsVer  = @filemtime('templates/'.$config['skin'].'/js/page-live-overlay.js') ?: 1;
 
+// ------------------------------------------------------------
+// STOPKA PLANSZ — JEDNO źródło dla wszystkich plansz.
+// Uchwyty social wyciągane z Konfiguracji (zakładka Social media) —
+// zmieniasz linki w panelu i stopka aktualizuje się wszędzie.
+// ------------------------------------------------------------
+$fSocialHandle = function ($sUrl) {
+    $sHandle = trim(basename(rtrim((string) $sUrl, '/')));
+    return $sHandle !== '' ? $sHandle : '';
+};
+$aFooterSocial = Array(
+    'instagram' => ($sH = $fSocialHandle($config['instagram'] ?? '')) !== '' ? '@'.ltrim($sH, '@') : '',
+    'facebook'  => $fSocialHandle($config['facebook'] ?? ''),
+    'youtube'   => $fSocialHandle($config['youtube'] ?? ''),
+);
+$sBoardFooter = '';
+foreach ($aFooterSocial as $sIcon => $sHandle) {
+    if ($sHandle !== '') {
+        $sBoardFooter .= '<li><img src="'.$sRoot.'images/icons/'.$sIcon.'.svg" alt="" />'.html($sHandle).'</li>';
+    }
+}
+$sBoardFooter = $sBoardFooter !== ''
+    ? '<footer class="obsBoard__footer"><ul>'.$sBoardFooter.'</ul></footer>'
+    : '';
+
 // nagłówek meczowy (herby + wynik) — używany na 2 planszach
 $fMatchHead = function () use ($aTeam1, $aTeam2, $sFiles) {
     $fTeamCell = function ($aTeam) use ($sFiles) {
@@ -151,8 +175,10 @@ $fMatchHead = function () use ($aTeam1, $aTeam2, $sFiles) {
         .'</div>';
 };
 
-// plansza składu jednej drużyny
-$fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($fSquad, $fStaffBlock, $aBoardLabels, $sFiles, $lang, $sMatchDate) {
+// plansza składu jednej drużyny — lista w WSPÓLNEJ klasie ul.teamList
+// (te same style co oś zdarzeń w podsumowaniu); --i = kolejność wiersza
+// dla kaskadowej animacji wjazdu po pokazaniu planszy
+$fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($fSquad, $fStaffBlock, $aBoardLabels, $sFiles, $lang, $sMatchDate, $sBoardFooter) {
     $aGroups = $fSquad($iTeam);
     $sStaff  = $fStaffBlock($iTeam);
 
@@ -162,22 +188,25 @@ $fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($fSquad, $fStaffBlock, $a
     $content .= '<div class="obsBoard__content"><div class="obsSquad">';
 
     $content .= '<div class="obsSquad__head">'
-       
+
         .($sStaff !== '' ? '<div class="obsSquad__staff">'.$sStaff.'</div>' : '')
         .'</div>';
 
     $content .= '<div class="obsSquad__columns">';
     foreach (Array('1' => $lang['live_first_squad'], '2' => $lang['live_reserve']) as $sSquad => $sHeading) {
-        $content .= '<div class="obsSquad-'.$sSquad.'"><h3 class="obsSquad__heading">'.$sHeading.'</h3><ul class="obsSquad__list">';
-        foreach ($aGroups[$sSquad] as $aPlayer) {
-            $content .= '<li><span class="number">'.html((string) $aPlayer['sNumber']).'</span>'
+        $content .= '<div class="obsSquad-'.$sSquad.'"><h3 class="obsSquad__heading">'.$sHeading.'</h3><ul class="teamList'.($sSquad === '2' ? ' teamList--dark' : '').'">';
+        foreach (array_values($aGroups[$sSquad]) as $iRow => $aPlayer) {
+            $content .= '<li style="--i:'.$iRow.'"><span class="number">'.html((string) $aPlayer['sNumber']).'</span>'
                 .'<span>'.html((string) $aPlayer['sName']).'</span></li>';
         }
         $content .= '</ul></div>';
     }
     $content .= '</div>';
 
-    return $content.'</div></div></div>';
+    // domyka: .obsSquad__columns zamknięte wyżej → .obsSquad, .obsBoard__content,
+    // stopka, .obsBoard (licz diva przy każdej zmianie — brak jednego zamknięcia
+    // wciąga kolejne plansze DO WNĘTRZA niewidocznej planszy składu)
+    return $content.'</div></div>'.$sBoardFooter.'</div>';
 };
 ?><!doctype html>
 <html lang="pl">
@@ -233,13 +262,7 @@ $fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($fSquad, $fStaffBlock, $a
             <?php echo $fMatchHead(); ?>
             <?php if ($sMatchDesc !== ''): ?><div class="obsMatchDesc"><?php echo parseShortcodes($sMatchDesc); ?></div><?php endif; ?>
         </div>
-        <footer class="obsBoard__footer">
-            <ul>
-                <li><img src="https://tks.kosa-x.com/images/icons/instagram.svg" alt="">@tomasovia</li>
-                <li><img src="https://tks.kosa-x.com/images/icons/facebook.svg" alt="">TomasoviaTKS</li>
-                <li><img src="https://tks.kosa-x.com/images/icons/youtube.svg" alt="">TKSTomasovia</li>
-            </ul>
-        </footer>
+        <?php echo $sBoardFooter; ?>
     </div>
 
     <!-- PLANSZE: SKŁADY -->
@@ -255,17 +278,11 @@ $fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($fSquad, $fStaffBlock, $a
         <div class="obsBoard__content">
             <?php echo $fMatchHead(); ?>
             <div class="obsSummary">
-                <ul class="obsSummary__list" id="obs-summary-1"></ul>
-                <ul class="obsSummary__list" id="obs-summary-2"></ul>
+                <ul class="teamList" id="obs-summary-1"></ul>
+                <ul class="teamList teamList--dark" id="obs-summary-2"></ul>
             </div>
         </div>
-        <footer class="obsBoard__footer">
-            <ul>
-                <li><img src="https://tks.kosa-x.com/images/icons/instagram.svg" alt="">@tomasovia</li>
-                <li><img src="https://tks.kosa-x.com/images/icons/facebook.svg" alt="">TomasoviaTKS</li>
-                <li><img src="https://tks.kosa-x.com/images/icons/youtube.svg" alt="">TKSTomasovia</li>
-            </ul>
-        </footer>
+        <?php echo $sBoardFooter; ?>
     </div>
 
     <?php if ($sReferees !== '' || !empty($aRefereeImages)): ?>
@@ -284,13 +301,7 @@ $fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($fSquad, $fStaffBlock, $a
             </div>
             <?php endif; ?>
         </div>
-        <footer class="obsBoard__footer">
-            <ul>
-                <li><img src="https://tks.kosa-x.com/images/icons/instagram.svg" alt="">@tomasovia</li>
-                <li><img src="https://tks.kosa-x.com/images/icons/facebook.svg" alt="">TomasoviaTKS</li>
-                <li><img src="https://tks.kosa-x.com/images/icons/youtube.svg" alt="">TKSTomasovia</li>
-            </ul>
-        </footer>
+        <?php echo $sBoardFooter; ?>
     </div>
     <?php endif; ?>
 
@@ -305,7 +316,7 @@ $fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($fSquad, $fStaffBlock, $a
                 <?php endforeach; ?>
             </ul>
         </div>
-        
+        <?php echo $sBoardFooter; ?>
     </div>
     <?php endif; ?>
 
@@ -335,13 +346,7 @@ $fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($fSquad, $fStaffBlock, $a
                 <?php endforeach; ?>
             </ul>
         </div>
-        <footer class="obsBoard__footer">
-            <ul>
-                <li><img src="https://tks.kosa-x.com/images/icons/instagram.svg" alt="">@tomasovia</li>
-                <li><img src="https://tks.kosa-x.com/images/icons/facebook.svg" alt="">TomasoviaTKS</li>
-                <li><img src="https://tks.kosa-x.com/images/icons/youtube.svg" alt="">TKSTomasovia</li>
-            </ul>
-        </footer>
+        <?php echo $sBoardFooter; ?>
     </div>
     <?php endif; ?>
 
@@ -355,13 +360,7 @@ $fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($fSquad, $fStaffBlock, $a
                 <?php if ($sMatchSponsorDesc !== ''): ?><div class="obsMatchSponsor__desc"><?php echo parseShortcodes($sMatchSponsorDesc); ?></div><?php endif; ?>
             </div>
         </div>
-        <footer class="obsBoard__footer">
-            <ul>
-                <li><img src="https://tks.kosa-x.com/images/icons/instagram.svg" alt="">@tomasovia</li>
-                <li><img src="https://tks.kosa-x.com/images/icons/facebook.svg" alt="">TomasoviaTKS</li>
-                <li><img src="https://tks.kosa-x.com/images/icons/youtube.svg" alt="">TKSTomasovia</li>
-            </ul>
-        </footer>
+        <?php echo $sBoardFooter; ?>
     </div>
     <?php endif; ?>
 
@@ -389,13 +388,7 @@ $fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($fSquad, $fStaffBlock, $a
                 <?php endforeach; ?>
             </ul>
         </div>
-        <footer class="obsBoard__footer">
-            <ul>
-                <li><img src="https://tks.kosa-x.com/images/icons/instagram.svg" alt="">@tomasovia</li>
-                <li><img src="https://tks.kosa-x.com/images/icons/facebook.svg" alt="">TomasoviaTKS</li>
-                <li><img src="https://tks.kosa-x.com/images/icons/youtube.svg" alt="">TKSTomasovia</li>
-            </ul>
-        </footer>
+        <?php echo $sBoardFooter; ?>
     </div>
     <?php endif; ?>
 

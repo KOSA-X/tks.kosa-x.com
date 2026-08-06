@@ -1,5 +1,29 @@
 # Changelog
 
+## 2026-08-06 — Nakładka OBS: wspólna ul.teamList, kaskadowy wjazd wierszy, jedna stopka
+- **Wspólna lista `ul.teamList`** — jedna klasa i style dla wszystkich list
+  „kwadracik + nazwisko" na planszach: składy drużyn (kwadracik = numer)
+  i oś zdarzeń w podsumowaniu (kwadracik = minuta + ikona akcji); formatowanie
+  przeniesione 1:1 z ostylowanych składów właściciela; wariant `--dark`
+  (rezerwa / kolumna gościa); stare `.obsSquad__list`/`.obsSummary__list`
+  zastąpione — zmiana stylu w jednym miejscu wchodzi wszędzie
+- **Kaskadowy wjazd wierszy**: po pokazaniu planszy wiersze `.teamList`
+  wsuwają się z lewej jeden po drugim (opóźnienie wg `--i` ustawianego
+  w PHP/JS; tylko transform+opacity — płynne w OBS; reset przy ukryciu
+  planszy; wyłączane przy `prefers-reduced-motion`); odświeżanie
+  podsumowania co 10 s pomija render przy niezmienionej treści, żeby nie
+  restartować animacji (cache klucza zdarzeń)
+- **Jedna stopka plansz** (`$sBoardFooter`): zdefiniowana raz na górze
+  page-live-overlay.php, echo we wszystkich planszach; uchwyty social
+  wyciągane z Konfiguracji → Social media (instagram/facebook/youtube) —
+  zmiana w panelu aktualizuje wszystkie plansze; ikony root-relative
+  (bez zahardkodowanej domeny)
+- Fix: brakujący `</div>` w planszy składu wciągał kolejne plansze do
+  wnętrza niewidocznej planszy (podsumowanie znikało z ekranu)
+- E2E: opóźnienia 0.25/0.32/0.39 s, wiersze kończą na opacity 1, listy
+  podsumowania w teamList z kwadracikami minut, stopka z configu na
+  9 planszach — zielone, zero błędów JS
+
 ## 2026-08-06 — Moduł „Drużyny" w panelu admina + filtr zawodników w panelu meczowym
 - **Nowy moduł panelu: Drużyny** (`?p=teams`, w menu w miejscu Sklepu; submenu
   Lista drużyn / Nowa drużyna):

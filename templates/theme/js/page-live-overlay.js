@@ -147,28 +147,42 @@
     }
 
     // ------------------------------------------------------------
-    // PODSUMOWANIE — pełna lista zdarzeń per drużyna
-    // (bez tabelki statystyk — wszystko widać na osi zdarzeń)
+    // PODSUMOWANIE — pełna lista zdarzeń per drużyna, renderowana
+    // do wspólnej ul.teamList (te same style co składy). Wiersze
+    // dostają --i pod kaskadową animację wjazdu; ponowny render
+    // z identyczną treścią jest pomijany, żeby odświeżanie co 10 s
+    // nie restartowało animacji.
     // ------------------------------------------------------------
+    var summaryCache = {};
+
     function renderSummary(events) {
-        // oś zdarzeń pokazuje tylko gole i kartki (zmiany ukryte — są w statystykach)
+        // oś zdarzeń pokazuje tylko gole i kartki (zmiany ukryte)
         var SUMMARY_ACTIONS = ['goal', 'own_goal', 'yellow_card', 'red_card'];
         [cfg.team1, cfg.team2].forEach(function (teamId, index) {
             var list = document.getElementById('obs-summary-' + (index + 1));
             if (!list) {
                 return;
             }
-            list.textContent = '';
             var teamEvents = events.filter(function (ev) {
                 return ev.team === teamId && SUMMARY_ACTIONS.indexOf(ev.action) !== -1;
             });
+
+            var cacheKey = teamEvents.map(function (ev) {
+                return ev.id + ':' + ev.action + ':' + ev.minute + ':' + ev.player.id;
+            }).join('|');
+            if (summaryCache[index] === cacheKey) {
+                return; // nic się nie zmieniło — nie restartuj animacji wierszy
+            }
+            summaryCache[index] = cacheKey;
+
+            list.textContent = '';
             if (!teamEvents.length) {
-                var empty = el('li', 'obsSummary__empty', cfg.labels.noEvents);
-                list.appendChild(empty);
+                list.appendChild(el('li', 'obsSummary__empty', cfg.labels.noEvents));
                 return;
             }
-            teamEvents.forEach(function (ev) {
+            teamEvents.forEach(function (ev, row) {
                 var item = el('li');
+                item.style.setProperty('--i', row);
                 item.appendChild(el('span', 'minute', ev.minute !== '' ? ev.minute + "'" : ''));
                 item.appendChild(iconFor(ev.action));
                 item.appendChild(el('span', '', ev.player.id > 0 ? ev.player.name : (cfg.actions[ev.action] || ev.action)));
