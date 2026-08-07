@@ -377,15 +377,15 @@ $fPitchBoard = function ($sBoard, $iTeam, $aTeam) use ($fLineup, $fFormation, $f
             <?php if ($aTeam1['logo'] !== ''): ?><img class="obsScorebar__logo" src="<?php echo $sFiles.html($aTeam1['logo']); ?>" alt="" /><?php endif; ?>
             <span class="obsScorebar__label">
                 <span><?php echo html($aTeam1['short']); ?></span>
-                <span class="obsScorebar__dots js-cards1"></span>
             </span>
+            <span class="obsScorebar__dots js-cards1"></span>
         </div>
         <div class="obsScorebar__score"><span class="js-score1">0</span><span>:</span><span class="js-score2">0</span></div>
         <div class="obsScorebar__team obsScorebar__team--away">
             <span class="obsScorebar__label obsScorebar__label--away">
                 <span><?php echo html($aTeam2['short']); ?></span>
-                <span class="obsScorebar__dots js-cards2"></span>
             </span>
+            <span class="obsScorebar__dots js-cards2"></span>
             <?php if ($aTeam2['logo'] !== ''): ?><img class="obsScorebar__logo" src="<?php echo $sFiles.html($aTeam2['logo']); ?>" alt="" /><?php endif; ?>
         </div>
         <div class="obsScorebar__clock js-clock-box">

@@ -96,6 +96,7 @@ img {
         background: rgba($brand-dark, 0.8);
 //        @include font-bold;
         text-transform: uppercase;
+        position: relative;
 
         &--home {
             border-radius: 10px 0 0 10px;
@@ -135,10 +136,16 @@ img {
             display: none;
         }
     }
+    .js-cards1{
+        right: $gutter;
+    }
+    .js-cards2{
+        left: $gutter;
+    }
 
     &__dot {
-        width: 10px;
-        height: 3px;
+        width: 5px;
+        height: 2px;
 
         &--yellow {
             background: $warning;
