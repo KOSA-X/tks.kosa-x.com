@@ -1,5 +1,5 @@
 @charset "UTF-8";
-@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Zalando+Sans+Expanded:ital,wght@0,200..900;1,200..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
 :root {
   --brand: #143582;
   --brand-light: #fff4f5;
@@ -67,7 +67,7 @@ body {
 }
 
 body {
-  font-family: "Zalando Sans Expanded", sans-serif;
+  font-family: "Roboto", sans-serif;
   color: #fff;
   background: #000f1b;
   -webkit-font-smoothing: antialiased;
@@ -111,7 +111,7 @@ img {
       -ms-flex-align: center;
           align-items: center;
   padding: 0 1rem 2.4rem;
-  font-family: "Oswald", sans-serif;
+  font-family: "Roboto", sans-serif;
   -webkit-transform: translate3d(0, 0, 0) scale(0.98);
           transform: translate3d(0, 0, 0) scale(0.98);
 }
@@ -309,7 +309,7 @@ img {
       -ms-flex-pack: center;
           justify-content: center;
   gap: 1.4rem;
-  font-family: "Oswald", sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 3.6rem;
   font-weight: 900;
   text-transform: uppercase;
@@ -328,7 +328,7 @@ img {
   -webkit-box-ordinal-group: 4;
       -ms-flex-order: 3;
           order: 3;
-  font-family: "Oswald", sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 4rem;
   font-weight: 900;
   line-height: 1.1;
@@ -486,7 +486,7 @@ img {
   gap: 1.2rem;
   padding: 1.2rem 2rem;
   background: #143582;
-  font-family: "Oswald", sans-serif;
+  font-family: "Roboto", sans-serif;
   -webkit-box-flex: 0;
       -ms-flex: 0 0 auto;
           flex: 0 0 auto;
@@ -552,7 +552,7 @@ img {
      object-fit: contain;
 }
 .tbMatchHead__team .name {
-  font-family: "Oswald", sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 2.2rem;
   font-weight: 900;
   text-transform: uppercase;
@@ -560,7 +560,7 @@ img {
   line-height: 1.15;
 }
 .tbMatchHead__score {
-  font-family: "Oswald", sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 8rem;
   font-weight: 900;
   font-variant-numeric: tabular-nums;
@@ -607,7 +607,7 @@ img {
   gap: 2.4rem;
 }
 .tbSquad__heading {
-  font-family: "Oswald", sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 1.5rem;
   font-weight: 900;
   text-transform: uppercase;
@@ -639,7 +639,7 @@ img {
           flex: 0 0 auto;
   min-width: 3rem;
   text-align: center;
-  font-family: "Oswald", sans-serif;
+  font-family: "Roboto", sans-serif;
   font-weight: 900;
   color: #143582;
   font-variant-numeric: tabular-nums;
@@ -690,7 +690,7 @@ img {
 .tbSummary__list li .minute {
   min-width: 3rem;
   text-align: right;
-  font-family: "Oswald", sans-serif;
+  font-family: "Roboto", sans-serif;
   font-weight: 900;
   color: #fff4f5;
   font-variant-numeric: tabular-nums;
@@ -828,7 +828,7 @@ img {
   border-radius: 0.8rem;
   background: rgba(0, 15, 27, 0.88);
   border-left: 0.5rem solid #143582;
-  font-family: "Oswald", sans-serif;
+  font-family: "Roboto", sans-serif;
   white-space: nowrap;
 }
 .tbVideo__caption[hidden] {

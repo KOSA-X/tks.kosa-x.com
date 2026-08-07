@@ -15,10 +15,10 @@
 // ----------------------------------------------------------
 // ----- TYPOGRAFIA
 // ----------------------------------------------------------
-@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Zalando+Sans+Expanded:ital,wght@0,200..900;1,200..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
-$font-h: "Oswald", sans-serif;    // nagłówki
-$font-p: "Zalando Sans Expanded", sans-serif;            // treść
+$font-h: "Roboto", sans-serif;    // nagłówki
+$font-p: "Roboto", sans-serif;         // treść
 
 
 // ----------------------------------------------------------
@@ -73,7 +73,7 @@ $social-tiktok:    linear-gradient(45deg, #25f4ee 0%, #000 50%, #fe2c55 100%);
 // ----------------------------------------------------------
 // ----- KSZTAŁT / ODSTĘPY
 // ----------------------------------------------------------
-$border-radius: 8px;
+$border-radius: 5px;
 
 $gutter:  20px;
 $gutter2: 40px;

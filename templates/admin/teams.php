@@ -194,7 +194,6 @@ if( $iTeam > 0 && ( $_GET['sOption'] ?? '' ) !== 'new-player' ){
             <h1 class="mainPage__title">Kadra — <?php echo html( $sTeamName ); ?></h1>
             <div class="mainPage__buttons d-flex justify-content-between">
                 <a href="?p=teams" class="button button-light mr-2">Wróć do drużyn</a>
-                <a href="?p=teams&amp;sOption=new-player&amp;iTeam=<?php echo $iTeam; ?>" class="button button-border mr-2">Nowy zawodnik</a>
                 <input type="submit" name="sOption" class="button" value="<?php echo html( $lang['save'] ); ?>" />
             </div>
         </header>
@@ -203,11 +202,10 @@ if( $iTeam > 0 && ( $_GET['sOption'] ?? '' ) !== 'new-player' ){
             <div class="alert alert-success mb-3"><?php echo $lang['Operation_completed']; ?></div>
         <?php endif; ?>
 
-        <div class="card mb-4">
-            <div class="card__wrapper"><div class="card__content">
-                <div class="form-item" style="max-width:360px">
-                    <label for="sFormation">Ustawienie taktyczne (plansza „Skład 3D")</label>
-                    <select name="sFormation" id="sFormation" class="form-control">
+        <div class="mb-4">
+                <div class="form-item" >
+                    <label for="sFormation">Ustawienie taktyczne</label>
+                    <select name="sFormation" id="sFormation" class="">
                         <option value="">— brak —</option>
                         <?php foreach( array_keys( $config['live_formations'] ) as $sFormationKey ): ?>
                             <option value="<?php echo html( $sFormationKey ); ?>"<?php echo $sTeamFormation === $sFormationKey ? ' selected="selected"' : ''; ?>><?php echo html( $sFormationKey ); ?></option>
@@ -215,14 +213,13 @@ if( $iTeam > 0 && ( $_GET['sOption'] ?? '' ) !== 'new-player' ){
                     </select>
                 </div>
                 <p class="mb-0" style="opacity:.7">Po zmianie formacji zapisz — etykiety pozycji (OBR/POM/ATAK) w tabeli dopasują się do nowego ustawienia.</p>
-            </div></div>
         </div>
 
         <?php if( empty( $aPlayers ) ): ?>
             <div class="alert alert-info mb-3">Brak zawodników — dodaj ich przez Import składu (Transmisja) albo jako podstrony drużyny.</div>
         <?php else: ?>
 
-        <div class="card mb-4">
+        <div class=" mb-4">
             <div class="table-responsive">
                 <table class="list pages table" cellpadding="0" cellspacing="0" border="0">
                     <thead>
@@ -230,7 +227,7 @@ if( $iTeam > 0 && ( $_GET['sOption'] ?? '' ) !== 'new-player' ){
                             <th style="width:100px">Numer</th>
                             <th>Imię i nazwisko</th>
                             <th style="width:320px">Skład meczowy</th>
-                            <th style="width:170px">Pozycja (Skład 3D)</th>
+                            <th style="width:170px">Pozycja</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -245,10 +242,12 @@ if( $iTeam > 0 && ( $_GET['sOption'] ?? '' ) !== 'new-player' ){
                                        class="form-control teamNumberInput" inputmode="numeric" maxlength="4" />
                             </td>
                             <th class="name">
+                               <div class="flex align-center">
                                 <?php if( (string) ( $aPlayer['sPhoto'] ?? '' ) !== '' ): ?>
                                     <img class="teamPlayerThumb" src="files/500/<?php echo html( (string) $aPlayer['sPhoto'] ); ?>" alt="" />
                                 <?php endif; ?>
                                 <a href="?p=pages-form&amp;iPage=<?php echo (int) $aPlayer['iPage']; ?>"><?php echo html( (string) $aPlayer['sName'] ); ?></a>
+                                </div>
                             </th>
                             <td>
                                 <span class="teamSquadToggle" data-player="<?php echo (int) $aPlayer['iPage']; ?>">
@@ -260,7 +259,7 @@ if( $iTeam > 0 && ( $_GET['sOption'] ?? '' ) !== 'new-player' ){
                                 </span>
                             </td>
                             <td>
-                                <select name="aLineup[<?php echo (int) $aPlayer['iPage']; ?>]" class="form-control teamLineupSelect">
+                                <select name="aLineup[<?php echo (int) $aPlayer['iPage']; ?>]" class="teamLineupSelect">
                                     <option value="0">—</option>
                                     <?php foreach( $aLineupLabels as $iSlot => $sSlotLabel ): ?>
                                         <option value="<?php echo $iSlot; ?>"<?php echo $iLineup === $iSlot ? ' selected="selected"' : ''; ?>><?php echo html( $sSlotLabel ); ?></option>
@@ -481,7 +480,6 @@ else{
                         <td><?php echo (int) $aTeam['iInSquad']; ?></td>
                         <td><?php echo (int) $aTeam['iPlayers']; ?></td>
                         <td>
-                            <a href="?p=teams&amp;iTeam=<?php echo (int) $aTeam['iPage']; ?>" class="button button-sm mr-2">Kadra</a>
                             <a href="?p=pages-form&amp;iPage=<?php echo (int) $aTeam['iPage']; ?>" class="button button-sm button-border">Edytuj stronę</a>
                         </td>
                     </tr>

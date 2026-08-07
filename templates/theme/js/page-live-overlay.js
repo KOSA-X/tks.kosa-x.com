@@ -12,7 +12,7 @@
         return;
     }
 
-    var EVENT_SHOW_MS = 8000;  // czas wyświetlania popupu zdarzenia
+    var EVENT_SHOW_MS = 10000;  // czas wyświetlania popupu zdarzenia
     var EVENT_ANIM_MS = 600;   // czas animacji wyjścia (musi >= transition w CSS)
 
     var sinceId = null;        // null = pierwszy odczyt (bez odtwarzania historii)
@@ -94,7 +94,7 @@
 
         var body = el('div', 'obsEvent__body');
         var label = el('div', 'obsEvent__label');
-        label.appendChild(iconFor(ev.action));
+//        label.appendChild(iconFor(ev.action));
         label.appendChild(el('span', '', cfg.actions[ev.action] || ev.action));
         if (ev.minute !== '') {
             label.appendChild(el('span', 'obsEvent__minute', ev.minute + "'"));

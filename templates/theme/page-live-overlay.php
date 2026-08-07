@@ -289,7 +289,7 @@ $fPitchBoard = function ($sBoard, $iTeam, $aTeam) use ($fLineup, $fFormation, $f
 
     $content  = '<div class="obsBoard obsBoardBig obsPitchBoard obsShow" data-board="'.html($sBoard).'">';
     $content .= '<header class="obsBoard__header">'
-        .'<span class="meta">'.html($aBoardLabels[$sBoard] ?? '').'</span>'
+        .'<span class="meta">SKŁAD</span>'
         .'<span class="title">'.($aTeam['logo'] !== '' ? '<img src="'.$sFiles.html($aTeam['logo']).'" alt="" />' : '').html($aTeam['name']).'</span>'
         .'<span class="meta">'.html($sFormation).'</span>'
         .'</header>';
@@ -436,7 +436,7 @@ $fPitchBoard = function ($sBoard, $iTeam, $aTeam) use ($fLineup, $fFormation, $f
     <?php if (!empty($aSponsorImages)): ?>
     <!-- PLANSZA: SPONSORZY — SLIDER (dolna banda reklamowa; te same loga co grid) -->
     <div class="obsSponsorTicker obsShow" data-board="sponsorzy_slider">
-        <div class="obsSponsorTicker__track" style="animation-duration: <?php echo max(24, count($aSponsorImages) * 4); ?>s">
+        <div class="obsSponsorTicker__track" style="animation-duration: <?php echo max(24, count($aSponsorImages) * 2); ?>s">
             <?php for ($i = 0; $i < 2; $i++): // 2x ta sama grupa = pętla bez szwu ?>
             <div class="obsSponsorTicker__group">
                 <?php foreach ($aSponsorImages as $sImage): ?>
@@ -464,7 +464,7 @@ $fPitchBoard = function ($sBoard, $iTeam, $aTeam) use ($fLineup, $fFormation, $f
     <?php endif; ?>
 
     <?php if ($sMatchSponsorLogo !== '' || $sMatchSponsorDesc !== ''): ?>
-    <!-- PLANSZA: SPONSOR MECZU (duże logo + opis pełny) -->
+    <!-- PLANSZA: WSPARCIE) -->
     <div class="obsBoard obsShow" data-board="sponsor_meczu">
         <header class="obsBoard__header"><span class="title"><?php echo html($aBoardLabels['sponsor_meczu'] ?? ''); ?></span></header>
         <div class="obsBoard__content">

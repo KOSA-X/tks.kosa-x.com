@@ -430,11 +430,11 @@ body.scroll-lock {
 // kafelki zawodników, arkusz akcji, lista zdarzeń.
 
 .livePanel {
-    padding: $gutter 0 $gutter3;
-    font-family: $font-p;
+    padding: $gutter 0;
+
 
     &__section {
-        margin-top: $gutter2;
+        margin-top: $gutter3;
     }
 
     &__sectionTitle {
@@ -442,8 +442,24 @@ body.scroll-lock {
         font-size: $font-size-md;
         font-weight: $font-bold;
         text-transform: uppercase;
-        letter-spacing: .06em;
-        margin-bottom: $gutter;
+//        letter-spacing: .06em;
+        margin-bottom: 10px;
+        padding-bottom: 10px;
+        @include border-bottom;
+        @include flexbox;
+        align-items: center;
+        
+        &-name{}
+        &-value{
+            margin-left: $gutter;
+            color: var(--brand);
+            @include font-xbold;
+        }
+        &-half{
+            @include font-light;
+            @include font-sm;
+            margin-left: $gutter; 
+        }
     }
 
     &__hint {
@@ -487,16 +503,14 @@ body.scroll-lock {
 
     // --- wynik + zegar (sticky, poniżej nagłówka strony) --------
     &__scoreboard {
-        position: sticky;
-        top: $header_mobile + 8px;
         z-index: 30;
-        display: grid;
-        grid-template-columns: 1fr auto 1fr;
+        @include flexbox;
+        justify-content: space-between;
         align-items: center;
         gap: 10px;
         padding: 12px;
         border-radius: $border-radius;
-        background: $brand2-dark;
+        background: $brand-dark;
         color: $white;
         box-shadow: 0 10px 30px var(--glow-brand);
     }
@@ -504,13 +518,14 @@ body.scroll-lock {
     &__scoreTeam {
         display: grid;
         gap: 8px;
-        justify-items: center;
+//        justify-items: center;
         min-width: 0;
     }
 
     &__scoreTeamName {
-        font-size: $font-size-sm;
-        font-weight: $font-medium;
+//        font-size: $font-size-sm;
+        @include font-bold;
+        @include font-md;
         max-width: 100%;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -523,29 +538,36 @@ body.scroll-lock {
     }
 
     &__scoreBtn {
-        min-width: 52px;
-        min-height: 48px;
-        font-size: $font-size-l;
-        font-weight: $font-bold;
-        padding: 0;
-        line-height: 1;
+//        min-width: 52px;
+//        min-height: 48px;
+//        font-size: $font-size-l;
+//        font-weight: $font-bold;
+//        padding: 0;
+//        line-height: 1;
     }
 
     &__scoreCenter {
         text-align: center;
     }
+    
+    &__scoreTeam2 {
+        text-align: right;
+        .livePanel__scoreTeamName{
+            
+        }
+    }
 
     &__scoreValue {
         font-family: $font-h;
-        font-size: $font-size-xxl;
+        font-size: $font-size-xl;
         font-weight: $font-xbold;
         line-height: 1;
     }
 
     &__clockValue {
         font-variant-numeric: tabular-nums;
-        font-size: $font-size-l;
-        font-weight: $font-bold;
+        font-size: $font-size-md;
+        font-weight: $font-medium;
         margin-top: 4px;
 
         &.is-extra {
@@ -557,60 +579,65 @@ body.scroll-lock {
         font-size: $font-size-sm;
         @include opacity(.7);
     }
+    
+    
+    @include media-up(lg){
+        &__scoreTeam{
+            @include flexbox;
+            align-items: center;
+        }
+        &__scoreTeamName{
+            order: 2;    
+        }
+        &__scoreButtons{
+            order: 1;
+            margin: 0 $gutter 0 0;
+        }
+        
+        &__scoreTeam2 {
+            .livePanel__scoreTeamName{
+                order: 1;    
+            }
+            .livePanel__scoreButtons{
+                order: 2;
+                margin: 0 0 0 $gutter;
+            }
+        }
+        
+    }
 
     // --- przyciski panelu ---------------------------------------
     // Bazowy .button motywu jest brandowy (czerwony) — w panelu operatora
     // domyślny stan musi być NEUTRALNY, żeby stany aktywne/danger były
     // widoczne na pierwszy rzut oka.
     .button {
-        background: var(--white);
-        border-color: var(--border-color);
-        color: var(--font-color);
-
-        &:hover {
-            background: var(--white);
-            border-color: $brand;
-            color: $brand;
-        }
+//        background: var(--white);
+//        border-color: var(--border-color);
+//        color: var(--font-color);
+//
+//        &:hover {
+//            background: var(--white);
+//            border-color: $brand;
+//            color: $brand;
+//        }
     }
 
     &__buttonRow {
         display: flex;
         flex-wrap: wrap;
-        gap: 10px;
+        gap: 5px;
 
         .button {
-            min-height: 48px; // wygodny cel dotykowy
         }
     }
 
-    &__board.is-active {
-        background: $brand;
-        border-color: $brand;
-        color: $white;
 
-        &:hover {
-            background: $brand;
-            border-color: $brand;
-            color: $white;
-        }
-    }
 
-    &__danger {
-        border-color: $danger;
-        color: $danger;
-
-        &:hover {
-            background: $danger;
-            border-color: $danger;
-            color: $white;
-        }
-    }
 
     // --- zawodnicy ----------------------------------------------
     &__teams {
-        display: grid;
-        gap: $gutter2;
+//        display: grid;
+//        gap: $gutter2;
     }
 
     &__teamName {
@@ -621,12 +648,11 @@ body.scroll-lock {
     }
 
     &__groupLabel {
-        margin: 14px 0 8px;
-        font-size: $font-size-sm;
-        font-weight: $font-medium;
+        margin: 25px 0 10px 0;
+        font-weight: $font-bold;
+        @include font-sm;
         text-transform: uppercase;
-        letter-spacing: .08em;
-        color: var(--gray);
+        color: var(--brand);
     }
 
     &__players {
@@ -800,9 +826,9 @@ body.scroll-lock {
         font-weight: $font-medium;
 
         input {
-            width: 90px;
-            text-align: center;
-            font-size: $font-size-md;
+//            width: 90px;
+//            text-align: center;
+//            font-size: $font-size-md;
         }
     }
 
@@ -886,6 +912,11 @@ body.scroll-lock {
 
     &__eventAction {
         font-weight: $font-bold;
+        @include flexbox;
+        align-items: center;
+        img{
+            width: 16px;
+        }
     }
 
     &__eventPlayer {

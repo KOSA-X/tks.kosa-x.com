@@ -2047,7 +2047,6 @@ form .form-select.selected {
 }
 
 .card {
-  overflow: hidden;
   background: var(--white);
   border-radius: 8px;
   border: 1px solid var(--border-color);
@@ -3552,7 +3551,7 @@ form .form-select.selected {
 }
 .chosen-container-single .chosen-search input[type=text] {
   margin: 1px 0;
-  width: 100%;
+  width: 100% !important;
   outline: 0;
   font-size: 1em;
   font-family: "Montserrat", sans-serif;

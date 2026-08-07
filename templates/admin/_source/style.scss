@@ -860,6 +860,7 @@ form {
         input[type="password"],
         input[type="date"],
         select,
+//        :not(.chosen-search-input),
         .chosen-container {
             width: calc(100% - 300px) !important;
             flex-basis: calc(100% - 300px) !important;
@@ -957,7 +958,7 @@ form {
 // Card (widget / box)
 // --------------------------------------------------------------------------
 .card {
-    overflow: hidden;
+//    overflow: hidden;
     background: var(--white);
 
     @include border-radius;
@@ -2700,7 +2701,7 @@ $chosen-tokens: (
 
         input[type="text"] {
             margin: 1px 0;
-            width: 100%;
+            width: 100% !important;
             outline: 0;
 
             font-size: 1em;

@@ -267,12 +267,12 @@ $config['anthropic_ocr_model'] = 'claude-opus-5';
 // @claude-note: słownik zdarzeń meczowych (live_events.sAction) — klucz w bazie,
 // etykieta w panelu operatora i na nakładce OBS. Obsługa: plugins/live/api.php.
 $config['live_actions'] = Array(
-  'goal'        => 'Gol',
-  'own_goal'    => 'Gol samobójczy',
-  'yellow_card' => 'Żółta kartka',
-  'red_card'    => 'Czerwona kartka',
-  'in'          => 'Wchodzi',
-  'out'         => 'Schodzi',
+  'goal'        => '⚽ GOL',
+  'yellow_card' => '🟨 Żółta kartka',
+  'red_card'    => '🟥 Czerwona kartka',
+  'in'          => '<img src="images/icons/in.png">Wchodzi',
+  'out'         => '<img src="images/icons/out.png">Schodzi',
+  'own_goal'    => 'Samobój',
 );
 
 // Krótkie etykiety zdarzeń — badge przy nazwisku w panelu operatora

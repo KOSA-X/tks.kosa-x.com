@@ -69,8 +69,10 @@ if (!$bLiveAdmin) {
             $aGroups[$sSquad][] = $aPlayer;
         }
 
-        $content = '<div class="livePanel__team" data-team="'.$iTeam.'">';
-        $content .= '<h3 class="livePanel__teamName">'.html($sTitle).'</h3>';
+        $content = '<div class="col-6">';
+//        $content = '<h2 class="">'.$lang['live_players'].'</h2>';
+        $content .= '<div class="livePanel__team" data-team="'.$iTeam.'">';
+        $content .= '<h3 class="livePanel__sectionTitle">'.html($sTitle).'</h3>';
 
         if ($iTeam <= 0) {
             $content .= '<p class="livePanel__hint">'.$lang['live_no_teams'].'</p></div>';
@@ -78,7 +80,7 @@ if (!$bLiveAdmin) {
         }
 
         // szybkie filtrowanie kafelków zawodników (na żywo, per drużyna)
-        $content .= '<div class="livePanel__search">'
+        $content .= '<div class="livePanel__search mb-3">'
             .'<input type="text" class="form-control lp-player-search" data-team="'.$iTeam.'"'
             .' placeholder="'.html($lang['live_search_player']).'" autocomplete="off" />'
             .'<button type="button" class="button lp-player-search-clear">'.html($lang['clear']).'</button>'
@@ -92,7 +94,7 @@ if (!$bLiveAdmin) {
             $content .= '<h4 class="livePanel__groupLabel">'.$aGroupLabels[$sSquad].'</h4>';
             $content .= '<div class="livePanel__players">';
             foreach ($aPlayers as $aPlayer) {
-                $content .= '<button type="button" class="livePanel__player'.($sSquad === '2' ? ' is-bench' : '').($sSquad === '' ? ' is-off' : '').'"'
+                $content .= '<button type="button" class="button livePanel__player'.($sSquad === '2' ? ' is-bench' : '').($sSquad === '' ? ' is-off' : '').'"'
                     .' data-player="'.(int) $aPlayer['iPage'].'"'
                     .' data-team="'.$iTeam.'"'
                     .' data-name="'.html((string) $aPlayer['sName']).'"'
@@ -106,6 +108,7 @@ if (!$bLiveAdmin) {
             $content .= '</div>';
         }
         $content .= '</div>';
+        $content .= '</div>';
         return $content;
     };
     ?>
@@ -118,7 +121,7 @@ if (!$bLiveAdmin) {
     <!-- WYNIK + ZEGAR (sticky na górze) -->
     <div class="livePanel__scoreboard">
         <div class="livePanel__scoreTeam">
-            <span class="livePanel__scoreTeamName"><?php echo html($aTeamOptions[$iTeam1] ?? '—'); ?></span>
+            <span class="livePanel__scoreTeamName"><?php echo getData($iTeam1, 'sDesc'); ?></span>
             <div class="livePanel__scoreButtons">
                 <button type="button" class="button livePanel__scoreBtn" data-score-team="1" data-delta="1">+</button>
                 <button type="button" class="button livePanel__scoreBtn" data-score-team="1" data-delta="-1">−</button>
@@ -126,11 +129,9 @@ if (!$bLiveAdmin) {
         </div>
         <div class="livePanel__scoreCenter">
             <div class="livePanel__scoreValue"><span id="lp-score1">0</span>:<span id="lp-score2">0</span></div>
-            <div class="livePanel__clockValue" id="lp-timer">00:00</div>
-            <div class="livePanel__clockHalf" id="lp-half"></div>
         </div>
-        <div class="livePanel__scoreTeam">
-            <span class="livePanel__scoreTeamName"><?php echo html($aTeamOptions[$iTeam2] ?? '—'); ?></span>
+        <div class="livePanel__scoreTeam livePanel__scoreTeam2">
+            <span class="livePanel__scoreTeamName"><?php echo getData($iTeam2, 'sDesc'); ?></span>
             <div class="livePanel__scoreButtons">
                 <button type="button" class="button livePanel__scoreBtn" data-score-team="2" data-delta="1">+</button>
                 <button type="button" class="button livePanel__scoreBtn" data-score-team="2" data-delta="-1">−</button>
@@ -140,15 +141,19 @@ if (!$bLiveAdmin) {
 
     <!-- STEROWANIE ZEGAREM -->
     <div class="livePanel__section">
-        <h2 class="livePanel__sectionTitle"><?php echo $lang['live_clock']; ?></h2>
+        <h2 class="livePanel__sectionTitle">
+        <span class="livePanel__sectionTitle-name"><?php echo $lang['live_clock']; ?> </span>
+        <span class="livePanel__sectionTitle-value" id="lp-timer">00:00</span>
+        <span class="livePanel__sectionTitle-half" id="lp-half"></span>
+        </h2>
         <div class="livePanel__buttonRow">
-            <button type="button" class="button" data-timer="start1"><?php echo $lang['live_half_1']; ?></button>
-            <button type="button" class="button" data-timer="start2"><?php echo $lang['live_half_2']; ?></button>
-            <button type="button" class="button" data-timer="pause" id="lp-pause" hidden><?php echo $lang['live_pause']; ?></button>
-            <button type="button" class="button" data-timer="resume" id="lp-resume"><?php echo $lang['live_resume']; ?></button>
+            <button type="button" class="button button-bold" data-timer="start1"><?php echo $lang['live_half_1']; ?></button>
+            <button type="button" class="button button-bold" data-timer="start2"><?php echo $lang['live_half_2']; ?></button>
+            <button type="button" class="button" data-timer="pause" id="lp-pause" hidden>▐▐</button>
+            <button type="button" class="button" data-timer="resume" id="lp-resume">▶</button>
             <button type="button" class="button" data-timer="plus"><?php echo $lang['live_plus_min']; ?></button>
             <button type="button" class="button" data-timer="minus"><?php echo $lang['live_minus_min']; ?></button>
-            <button type="button" class="button livePanel__danger" data-timer="reset"><?php echo $lang['live_reset']; ?></button>
+            <button type="button" class="button button-danger livePanel__danger" data-timer="reset">◼</button>
         </div>
     </div>
 
@@ -162,16 +167,18 @@ if (!$bLiveAdmin) {
             <?php endforeach; ?>
         </div>
         <div class="livePanel__buttonRow mt-2">
+<!--
             <button type="button" class="button" id="lp-scorebar-pos"
                     data-pos="<?php echo (int) ($aLive['iScorebarPos'] ?? 0); ?>"><?php echo $lang['live_scorebar_pos']; ?>: <span id="lp-scorebar-label">—</span></button>
+-->
             <button type="button" class="button livePanel__replay" id="lp-replay">▶ <?php echo $lang['live_replay_button']; ?></button>
         </div>
     </div>
 
     <!-- ZAWODNICY -->
     <div class="livePanel__section">
-        <h2 class="livePanel__sectionTitle"><?php echo $lang['live_players']; ?></h2>
-        <div class="livePanel__teams">
+        
+        <div class="row">
             <?php echo $fRenderTeam($iTeam1, $lang['live_team_home']); ?>
             <?php echo $fRenderTeam($iTeam2, $lang['live_team_away']); ?>
         </div>
@@ -197,7 +204,7 @@ if (!$bLiveAdmin) {
             </label>
             <div class="livePanel__sheetActions">
                 <?php foreach ($config['live_actions'] as $sKey => $sLabel): ?>
-                    <button type="button" class="button livePanel__sheetAction" data-action="<?php echo html($sKey); ?>"><?php echo html($sLabel); ?></button>
+                    <button type="button" class="button livePanel__sheetAction" data-action="<?php echo html($sKey); ?>"><?php echo $sLabel; ?></button>
                 <?php endforeach; ?>
             </div>
             <button type="button" class="button livePanel__sheetCancel" id="lp-sheet-cancel"><?php echo $lang['live_cancel']; ?></button>

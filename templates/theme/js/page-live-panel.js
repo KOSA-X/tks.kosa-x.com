@@ -162,7 +162,7 @@
             var $row = $('<div class="livePanel__event" data-event-action="' + ev.action + '">');
             var $minute = $('<input type="text" class="form-control livePanel__eventMinute" inputmode="numeric" maxlength="3">').val(ev.minute);
             $row.append($minute);
-            $row.append($('<span class="livePanel__eventAction">').text(actionLabel));
+            $row.append($('<span class="livePanel__eventAction">').html(actionLabel));
 
             // zawodnik edytowalny — select z kadry drużyny zdarzenia
             // (pomyłkowo wybrany zawodnik do poprawki bez kasowania wpisu)

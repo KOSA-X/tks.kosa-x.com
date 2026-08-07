@@ -128,7 +128,8 @@ require_once 'templates/admin/_menu.php';
         </h1>
 
         <div class="mainPage__buttons d-flex justify-content-between">
-            <a href="?p=pages" class="button button-light mr-2">Wróć do listy</a>
+<!--            <a href="?p=pages" class="button button-light mr-2">Wróć do listy</a>-->
+            <input type="submit" value="<?php echo html($lang['save_add_new']); ?>" name="sOptionAddNew" class="button button-border mr-2 mobile-hide" />
             <input type="submit" name="sOption" class="button" value="<?php echo html($lang['save']); ?>" />
         </div>
     </header>
@@ -189,7 +190,38 @@ require_once 'templates/admin/_menu.php';
             </div>
         </li>
 
-        <li class="short-description">
+        <li>
+           <div class="row">
+               <div class="col-6">
+                   <div class="form-item">
+                        <label for="sNumber">Numer zawodnika</label>
+                        <input type="text" name="sNumber" id="sNumber" value="<?php echo html($aData['sNumber'] ?? ''); ?>" class="numeric" size="3" maxlength="4" />
+                    </div>
+
+               </div>
+               <div class="col-6">
+                   
+                   <div class="form-item">
+                <label for="sSquad">Skład meczowy</label>
+                <?php $sSquad = (string) ($aData['sSquad'] ?? ''); ?>
+                <select name="sSquad" id="sSquad">
+                    <option value=""<?php echo $sSquad === '' ? ' selected="selected"' : ''; ?>>Poza kadrą</option>
+                    <?php foreach ($config['squad_types'] as $iKey => $sLabel): ?>
+                        <option value="<?php echo (int) $iKey; ?>"<?php echo $sSquad === (string) $iKey ? ' selected="selected"' : ''; ?>><?php echo html($sLabel); ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+              
+               </div>
+           </div>
+            
+        </li>
+
+        <li>
+            
+        </li>
+
+        <li class="short-description d-none">
             <div class="form-item">
                 <label for="sDescriptionShort"><?php echo html($lang['Short_description']); ?></label>
                 <?php echo getTextarea('sDescriptionShort', $aData['sDescriptionShort'] ?? null, ['iHeight' => '120']); ?>
@@ -306,27 +338,7 @@ require_once 'templates/admin/_menu.php';
             </div>
         </li>
 
-        <li><h5 class="form-separator">Transmisja live — zawodnik</h5></li>
-
-        <li>
-            <div class="form-item">
-                <label for="sNumber">Numer zawodnika</label>
-                <input type="text" name="sNumber" id="sNumber" value="<?php echo html($aData['sNumber'] ?? ''); ?>" class="numeric" size="3" maxlength="4" />
-            </div>
-        </li>
-
-        <li>
-            <div class="form-item">
-                <label for="sSquad">Skład meczowy</label>
-                <?php $sSquad = (string) ($aData['sSquad'] ?? ''); ?>
-                <select name="sSquad" id="sSquad">
-                    <option value=""<?php echo $sSquad === '' ? ' selected="selected"' : ''; ?>>Poza kadrą</option>
-                    <?php foreach ($config['squad_types'] as $iKey => $sLabel): ?>
-                        <option value="<?php echo (int) $iKey; ?>"<?php echo $sSquad === (string) $iKey ? ' selected="selected"' : ''; ?>><?php echo html($sLabel); ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-        </li>
+        
 
         <?php if (!empty($filters) && is_array($filters)): ?>
             <li>
