@@ -1,5 +1,35 @@
 # Changelog
 
+## 2026-08-07 — Nakładka v2: sort składów + (br), bez plakatu, płynny slider, ławka nad boiskiem 3D, badge sponsora meczu
+- **Plansza składu (zwykła)**: wyjściowa 11 ORAZ rezerwa posortowane
+  pozycyjnie jak w panelu admina (BR → OBR → POM → ATAK wg slotu+formacji,
+  w linii wg numeru; sort przeniesiony do wspólnego `liveSquad()` — telebim
+  dostaje go automatycznie); **bramkarz (slot 1) ma dopisek „(br)"** przy
+  nazwisku (skoro slot 1 jest unikatowy, dopisek dotyczy bramkarza
+  wyjściowej 11 — rezerwowy bramkarz bez przypisanego slotu go nie dostaje)
+- **Usunięta plansza „Plakat meczowy"** — markup nakładki i telebimu,
+  style `.obsPoster`/`.tbPoster`, wiersz w `live_boards`
+- **Sponsorzy — slider bez zacięcia**: przy małej liczbie log grupa była
+  węższa niż scena (1892 px < 1920 px) i przy zawinięciu pętli -50%
+  wjeżdżała pustka — stąd przeskok; JS po załadowaniu zdjęć dokłada PARY
+  grup, aż połowa tracku pokryje scenę, i skaluje czas animacji, żeby
+  prędkość w px/s została ta sama (pętla trafia w szew idealnie)
+- **Skład 3D: pasek nad boiskiem** — sztab szkoleniowy (opis drużyny)
+  po lewej + ławka rezerwowych po prawej (kompaktowa `teamList`
+  w 3 kolumnach z mniejszymi numerkami, posortowana pozycyjnie,
+  kaskadowy wjazd jak reszta list)
+- **Nowa plansza „Sponsor meczu"** (`sponsor_meczu`): narożny badge
+  w PRAWYM DOLNYM rogu (jak logo realizatora) — napis z etykiety planszy
+  + logo na białej karcie; logo = zdjęcie z zakładki SPONSORZY oznaczone
+  jako DOMYŚLNE (iDefault=1, gwiazdka w panelu); plansza NIEZALEŻNA od
+  pozostałych (wyjątek w api board_toggle jak „wynik") — może wisieć
+  równolegle z każdą planszą
+- **Stagger także w liniach 5-osobowych** — skrajni przesunięci do przodu
+  jak przy 3 i 4 (4-5-1 i 3-5-2 pomoc, 5-3-2 i 5-4-1 obrona)
+- E2E: XI z „(br)" przy Roczniaku i porządkiem 22-5-12-15…, badge sponsora
+  widoczny równolegle z planszą składu, ławka+sztab nad boiskiem 3D,
+  ticker 2→4 grupy (track 7568 px, czas 24→48 s = stała prędkość) — zielone
+
 ## 2026-08-07 — Paczka poprawek: wsparcie-grid, opisy log, sztab, pozycje wszędzie, sort pozycyjny, live-przeskok w panelu
 - **Plansza „Wsparcie"** (dawny sponsor_meczu, przemianowany w bazie):
   grid logotypów zakładki jak u sponsorów + `sDescriptionFull` POD gridem;

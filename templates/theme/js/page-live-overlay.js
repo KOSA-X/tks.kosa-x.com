@@ -316,6 +316,39 @@
             .catch(function () {}); // chwilowy brak sieci — zostaje ostatni stan
     }
 
+    // ------------------------------------------------------------
+    // SPONSORZY — SLIDER: gwarancja pętli bez szwu.
+    // Animacja translateX(-50%) zawija się płynnie tylko, gdy POŁOWA
+    // tracku jest szersza niż scena (1920) — przy małej liczbie log
+    // grupa bywa węższa i przy zawinięciu wjeżdżała pustka (przeskok).
+    // Dokładamy PARY grup (parzysta liczba = -50% dalej trafia w szew)
+    // i skalujemy czas animacji, żeby prędkość px/s została ta sama.
+    // ------------------------------------------------------------
+    function initTicker() {
+        var track = document.querySelector('.obsSponsorTicker__track');
+        if (!track) {
+            return;
+        }
+        var groups = track.querySelectorAll('.obsSponsorTicker__group');
+        if (groups.length < 2) {
+            return;
+        }
+        var groupWidth = groups[0].getBoundingClientRect().width;
+        if (!groupWidth) {
+            return;
+        }
+        var duration = parseFloat(getComputedStyle(track).animationDuration) || 60;
+        var speed = groupWidth / duration; // px/s dla oryginalnej pętli (1 grupa)
+        var stage = 1920;
+        while (track.scrollWidth / 2 < stage + 2 && track.children.length < 40) {
+            track.appendChild(groups[0].cloneNode(true));
+            track.appendChild(groups[1].cloneNode(true));
+        }
+        track.style.animationDuration = ((track.scrollWidth / 2) / speed) + 's';
+    }
+
+    window.addEventListener('load', initTicker); // po zdjęciach — realne szerokości
+
     poll();
     setInterval(poll, 1000);
     setInterval(tick, 250);

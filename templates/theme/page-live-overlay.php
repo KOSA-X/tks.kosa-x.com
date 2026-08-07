@@ -17,6 +17,9 @@ if (!defined('CUSTOMER_PAGE')) { exit; }
 $sRoot  = $config['base_path_with_slash'];
 $sFiles = $sRoot.'files/500/';
 
+// wspólne gettery modułu live (liveSquad z sortem pozycyjnym itd.)
+require_once 'plugins/live/view-helpers.php';
+
 // ------------------------------------------------------------
 // DANE
 // ------------------------------------------------------------
@@ -84,22 +87,17 @@ $fTeamData = function ($iTeam) use ($oSql, $fPageImage) {
     return $aData;
 };
 
-// skład: wyjściowa 11 + rezerwa (sSquad z importu protokołu)
-$fSquad = function ($iTeam) use ($oSql) {
-    $aGroups = Array('1' => Array(), '2' => Array());
-    if ($iTeam <= 0) {
-        return $aGroups;
-    }
-    $oQuery = $oSql->prepare(
-        'SELECT sName, sNumber, sSquad FROM pages
-         WHERE iPageParent = :team AND iStatus = 1 AND sSquad IN ("1","2")
-         ORDER BY iPosition ASC, sName COLLATE NOCASE ASC'
-    );
-    $oQuery->execute(Array(':team' => $iTeam));
-    while ($aRow = $oQuery->fetch(PDO::FETCH_ASSOC)) {
-        $aGroups[(string) $aRow['sSquad']][] = $aRow;
-    }
-    return $aGroups;
+// skład: wyjściowa 11 + rezerwa — wspólny getter modułu live (posortowany
+// pozycyjnie: BR → OBR → POM → ATAK, w linii wg numeru; ten sam co telebim)
+$fSquad = function ($iTeam) {
+    return liveSquad($iTeam);
+};
+
+// wiersz zawodnika w ul.teamList; bramkarz (slot 1) dostaje dopisek „(br)"
+$fPlayerRow = function ($aPlayer, $iRow) {
+    $sName = (string) $aPlayer['sName'].((int) ($aPlayer['sLineup'] ?? 0) === 1 ? ' (br)' : '');
+    return '<li style="--i:'.$iRow.'"><span class="number">'.html((string) $aPlayer['sNumber']).'</span>'
+        .'<span>'.html($sName).'</span></li>';
 };
 
 // sztab szkoleniowy = CAŁY opis pełny drużyny (importer zapisuje tam
@@ -122,7 +120,6 @@ $sMatchName  = (string) (getData($iMatch, 'sName') ?? '');
 $sMatchDate  = (string) (getData($iMatch, 'sDate') ?? '');
 $sMatchRound = (string) (getData($iMatch, 'sPrice') ?? ''); // kolejka (Transmisja → Konfiguracja)
 $sMatchDesc  = (string) (getData($iMatch, 'sDescriptionFull') ?? '');
-$sPoster     = $fPageImage($iMatch, 1);
 
 // belka plansz meczowych: „kolejka — data" (albo to, co jest wypełnione)
 $sMatchMeta = trim($sMatchRound.($sMatchRound !== '' && $sMatchDate !== '' ? ' — ' : '').$sMatchDate);
@@ -147,6 +144,18 @@ $sProductionTitle  = (string) (getData((int) ($config['live_production_page'] ??
 $iSupportPage   = (int) ($config['live_match_sponsor_page'] ?? 0);
 $aSupportImages = $iSupportPage > 0 ? $fPageImages($iSupportPage) : Array();
 $sSupportDesc   = $iSupportPage > 0 ? (string) (getData($iSupportPage, 'sDescriptionFull') ?? '') : '';
+
+// sponsor meczu: DOMYŚLNE zdjęcie (iDefault=1) z puli zakładki SPONSORZY —
+// badge w prawym dolnym rogu (jak logo realizatora, plansza „sponsor_meczu")
+$sMatchSponsorLogo = '';
+if ((int) ($config['live_sponsors_page'] ?? 0) > 0) {
+    $oQuery = $oSql->prepare(
+        'SELECT sFileName FROM files WHERE iPage = :page AND iSize > 0 AND iDefault = 1
+         ORDER BY iPosition ASC LIMIT 1'
+    );
+    $oQuery->execute(Array(':page' => (int) $config['live_sponsors_page']));
+    $sMatchSponsorLogo = (string) ($oQuery->fetchColumn() ?: '');
+}
 
 $sCssVer = @filemtime('templates/'.$config['skin'].'/css/live-overlay.css') ?: 1;
 $sJsVer  = @filemtime('templates/'.$config['skin'].'/js/page-live-overlay.js') ?: 1;
@@ -193,7 +202,7 @@ $fMatchHead = function () use ($aTeam1, $aTeam2, $sFiles) {
 // plansza składu jednej drużyny — lista w WSPÓLNEJ klasie ul.teamList
 // (te same style co oś zdarzeń w podsumowaniu); --i = kolejność wiersza
 // dla kaskadowej animacji wjazdu po pokazaniu planszy
-$fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($fSquad, $fStaffBlock, $aBoardLabels, $sFiles, $lang, $sMatchDate, $sBoardFooter) {
+$fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($fSquad, $fPlayerRow, $fStaffBlock, $aBoardLabels, $sFiles, $lang, $sMatchDate, $sBoardFooter) {
     $aGroups = $fSquad($iTeam);
     $sStaff  = $fStaffBlock($iTeam);
 
@@ -211,8 +220,7 @@ $fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($fSquad, $fStaffBlock, $a
     foreach (Array('1' => $lang['live_first_squad'], '2' => $lang['live_reserve']) as $sSquad => $sHeading) {
         $content .= '<div class="obsSquad-'.$sSquad.'"><h3 class="obsSquad__heading">'.$sHeading.'</h3><ul class="teamList'.($sSquad === '2' ? ' teamList--dark' : '').'">';
         foreach (array_values($aGroups[$sSquad]) as $iRow => $aPlayer) {
-            $content .= '<li style="--i:'.$iRow.'"><span class="number">'.html((string) $aPlayer['sNumber']).'</span>'
-                .'<span>'.html((string) $aPlayer['sName']).'</span></li>';
+            $content .= $fPlayerRow($aPlayer, $iRow);
         }
         $content .= '</ul></div>';
     }
@@ -278,10 +286,28 @@ $fFormation = function ($iTeam) use ($oSql, $config) {
 // okrągłe zdjęcia stojące na murawie (kontr-rotacja), pozycje ze
 // współrzędnych $config['live_formations'][formacja] (x wzdłuż boiska,
 // własna bramka z LEWEJ; y w poprzek). Kaskadowy wjazd chipów wg --i.
-$fPitchBoard = function ($sBoard, $iTeam, $aTeam) use ($fLineup, $fFormation, $fPageImage, $aBoardLabels, $sFiles, $config, $sBoardFooter) {
+$fPitchBoard = function ($sBoard, $iTeam, $aTeam) use ($fLineup, $fFormation, $fPageImage, $fSquad, $fPlayerRow, $fStaffBlock, $aBoardLabels, $sFiles, $config, $lang, $sBoardFooter) {
     $sFormation = $fFormation($iTeam);
     $aCoords    = $config['live_formations'][$sFormation];
     $aSlots     = $fLineup($iTeam);
+
+    // pasek nad boiskiem: sztab szkoleniowy (opis drużyny) + ławka rezerwowych
+    $aGroups = $fSquad($iTeam);
+    $sStaff  = $fStaffBlock($iTeam);
+    $sBench  = '';
+    foreach (array_values($aGroups['2']) as $iRow => $aPlayer) {
+        $sBench .= $fPlayerRow($aPlayer, $iRow);
+    }
+    $sPitchTop = '';
+    if ($sStaff !== '' || $sBench !== '') {
+        $sPitchTop = '<div class="obsPitchTop">'
+            .($sStaff !== '' ? '<div class="obsPitchTop__staff obsSquad__staff">'.$sStaff.'</div>' : '')
+            .($sBench !== ''
+                ? '<div class="obsPitchTop__bench"><h3 class="obsSquad__heading">'.$lang['live_reserve'].'</h3>'
+                    .'<ul class="teamList teamList--dark">'.$sBench.'</ul></div>'
+                : '')
+            .'</div>';
+    }
 
     // linie boiska: SVG w currentColor — kolor i poświatę nadaje SCSS (§10.0);
     // viewBox 1050x680 = proporcje boiska 105x68 m, własna bramka z lewej
@@ -308,7 +334,7 @@ $fPitchBoard = function ($sBoard, $iTeam, $aTeam) use ($fLineup, $fFormation, $f
         .'<span class="title">'.($aTeam['logo'] !== '' ? '<img src="'.$sFiles.html($aTeam['logo']).'" alt="" />' : '').html($aTeam['name']).'</span>'
         .'<span class="meta">'.html($sFormation).'</span>'
         .'</header>';
-    $content .= '<div class="obsBoard__content"><div class="obsPitch"><div class="obsPitch__scene"><div class="obsPitch__field">'.$sLines;
+    $content .= '<div class="obsBoard__content">'.$sPitchTop.'<div class="obsPitch"><div class="obsPitch__scene"><div class="obsPitch__field">'.$sLines;
 
     $iOrder = 0;
     foreach ($aCoords as $iSlot => $aXY) {
@@ -512,10 +538,12 @@ $fPitchBoard = function ($sBoard, $iTeam, $aTeam) use ($fLineup, $fFormation, $f
     </div>
     <?php endif; ?>
 
-    <?php if ($sPoster !== ''): ?>
-    <!-- PLANSZA: PLAKAT MECZOWY -->
-    <div class="obsBoard obsPoster obsShow" data-board="plakat">
-        <img src="<?php echo $sFiles.html($sPoster); ?>" alt="" />
+    <?php if ($sMatchSponsorLogo !== ''): ?>
+    <!-- PLANSZA: SPONSOR MECZU — badge w prawym dolnym rogu (jak logo
+         realizatora): domyślne zdjęcie (iDefault=1) z zakładki SPONSORZY -->
+    <div class="obsSponsorBadge obsShow" data-board="sponsor_meczu">
+        <span class="obsSponsorBadge__label"><?php echo html($aBoardLabels['sponsor_meczu'] ?? 'Sponsor meczu'); ?></span>
+        <span class="obsSponsorBadge__logo"><img src="<?php echo $sFiles.html($sMatchSponsorLogo); ?>" alt="" /></span>
     </div>
     <?php endif; ?>
 

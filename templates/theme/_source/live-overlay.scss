@@ -749,6 +749,51 @@ img {
     }
 }
 
+// pasek nad boiskiem 3D: sztab szkoleniowy (opis drużyny) po lewej,
+// ławka rezerwowych po prawej — kompaktowo, żeby boisko zostało bohaterem
+.obsPitchTop {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    padding: 8px 10px 14px;
+
+    // sztab w węższej kolumnie — role po 2 w wierszu zamiast 3
+    &__staff {
+        ul li {
+            flex-basis: 50%;
+            width: 50%;
+        }
+    }
+
+    &__bench {
+        .obsSquad__heading {
+            display: inline-block;
+            padding: 6px 16px;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        // ławka w 3 kolumnach z mniejszymi kwadracikami numerów
+        .teamList {
+            @include flexbox;
+            flex-wrap: wrap;
+            gap: 0 20px;
+
+            li {
+                flex: 0 0 auto;
+                width: calc(33.33% - 14px);
+                font-size: 15px;
+            }
+
+            .number {
+                width: 28px;
+                height: 24px;
+                font-size: 13px;
+            }
+        }
+    }
+}
+
 .obsPitch {
     position: relative;
     height: 640px;
@@ -1161,29 +1206,48 @@ img {
     }
 }
 
-// --- plakat (pełnoekranowy) ---------------------------------
-// neutralizuje CAŁE pozycjonowanie bazowej .obsBoard (left/top 50%,
-// width 1180px, translate -50%) — bez tego plakat ucieka w lewy górny róg
-.obsPoster {
+// --- sponsor meczu (narożny badge, plansza „sponsor_meczu") --
+// prawy dolny róg, jak logo realizatora: napis + logo na białej karcie;
+// niezależny od pozostałych plansz (wyjątek w api board_toggle)
+.obsSponsorBadge {
     position: absolute;
-    inset: 0;
-    width: auto;
-    max-height: none;
+    right: $gutter3;
+    bottom: $gutter2;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    background: rgba($black, .82);
-    transform: none;
+    gap: 8px;
+    filter: drop-shadow(0 10px 24px rgba($black, .45));
+    transform: translate3d(0, 24px, 0);
 
     &.is-visible {
-        transform: none;
+        transform: translate3d(0, 0, 0);
     }
 
-    img {
-        max-width: 82vw;
-        max-height: 88vh;
-        border-radius: 14px;
-        box-shadow: 0 30px 90px rgba($black, .7);
+    &__label {
+        padding: 5px 14px;
+        background: $brand-dark;
+        font-family: $font-h;
+        font-size: 14px;
+        font-weight: 800;
+        letter-spacing: .14em;
+        text-transform: uppercase;
+        color: $white;
+        @include border-radius;
+    }
+
+    &__logo {
+        display: block;
+        padding: 12px;
+        background: $white;
+        @include border-radius;
+
+        img {
+            height: 84px;
+            width: auto;
+            max-width: 220px;
+            object-fit: contain;
+        }
     }
 }
 

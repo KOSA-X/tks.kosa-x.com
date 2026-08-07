@@ -43,7 +43,6 @@ $aTeam2 = liveTeamData($iTeam2);
 $sMatchName = (string) (getData($iMatch, 'sName') ?? '');
 $sMatchDate = (string) (getData($iMatch, 'sDate') ?? '');
 $sMatchDesc = (string) (getData($iMatch, 'sDescriptionFull') ?? '');
-$sPoster    = livePageImage($iMatch, 1);
 
 // sędziowie: dedykowana zakładka (opis pełny + grid zdjęć strony);
 // fallback bez zakładki — opis SKRÓCONY strony meczu (stare zachowanie)
@@ -246,13 +245,6 @@ $fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($aBoardLabels, $lang, $sM
                 <?php endforeach; ?>
             </div>
         </div>
-    </div>
-    <?php endif; ?>
-
-    <?php if ($sPoster !== ''): ?>
-    <!-- PLANSZA: PLAKAT MECZOWY -->
-    <div class="tbBoard tbPoster tbShow" data-board="plakat">
-        <img src="<?php echo $sFiles.html($sPoster); ?>" alt="" />
     </div>
     <?php endif; ?>
 

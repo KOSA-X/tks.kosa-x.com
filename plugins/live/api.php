@@ -358,10 +358,11 @@ switch ($sAction) {
             liveApiError('Nieznana plansza.');
         }
 
-        // logika jak w starym systemie: naraz widoczna jedna plansza,
-        // pasek „wynik" jest niezależny
-        if ($iVisible === 1 && $sName !== 'wynik') {
-            $oSql->exec('UPDATE live_boards SET iVisible = 0 WHERE sName != "wynik"');
+        // logika jak w starym systemie: naraz widoczna jedna plansza;
+        // pasek „wynik" i narożny badge „sponsor_meczu" są NIEZALEŻNE —
+        // mogą wisieć razem z dowolną planszą (jak logo realizatora)
+        if ($iVisible === 1 && !in_array($sName, Array('wynik', 'sponsor_meczu'), true)) {
+            $oSql->exec('UPDATE live_boards SET iVisible = 0 WHERE sName NOT IN ("wynik", "sponsor_meczu")');
         }
         $oToggle = $oSql->prepare('UPDATE live_boards SET iVisible = :vis WHERE sName = :name');
         $oToggle->execute([':vis' => $iVisible, ':name' => $sName]);

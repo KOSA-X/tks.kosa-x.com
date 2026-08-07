@@ -657,19 +657,6 @@ img {
     }
 }
 
-// --- plakat (pełnoekranowy) ---------------------------------
-.tbPoster {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba($black, .94);
-
-    img {
-        max-width: 96vw;
-        max-height: 96vh;
-    }
-}
-
 // ----------------------------------------------------------
 // ----- WARSTWA WIDEO (cieszynki po golu + powtórki z OBS)
 // ----------------------------------------------------------

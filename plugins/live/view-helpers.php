@@ -57,7 +57,11 @@ function liveTeamData($iTeam)
     return $aData;
 }
 
-/** Skład drużyny: wyjściowa 11 + rezerwa (sSquad z importu protokołu). */
+/**
+ * Skład drużyny: wyjściowa 11 + rezerwa (sSquad z importu protokołu).
+ * Obie grupy w porządku pozycyjnym: bramkarz → obrona → pomoc → atak
+ * (linia ze slotu sLineup + formacji drużyny), w linii wg numeru.
+ */
 function liveSquad($iTeam)
 {
     $oSql    = Sql::getInstance();
@@ -66,7 +70,7 @@ function liveSquad($iTeam)
         return $aGroups;
     }
     $oQuery = $oSql->prepare(
-        'SELECT sName, sNumber, sSquad FROM pages
+        'SELECT sName, sNumber, sSquad, sLineup FROM pages
          WHERE iPageParent = :team AND iStatus = 1 AND sSquad IN ("1","2")
          ORDER BY iPosition ASC, sName COLLATE NOCASE ASC'
     );
@@ -74,6 +78,9 @@ function liveSquad($iTeam)
     while ($aRow = $oQuery->fetch(PDO::FETCH_ASSOC)) {
         $aGroups[(string) $aRow['sSquad']][] = $aRow;
     }
+    $sFormation = liveTeamFormation((int) $iTeam);
+    $aGroups['1'] = liveSortPlayers($aGroups['1'], $sFormation);
+    $aGroups['2'] = liveSortPlayers($aGroups['2'], $sFormation);
     return $aGroups;
 }
 
