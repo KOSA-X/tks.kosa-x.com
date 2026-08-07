@@ -48,8 +48,8 @@ $menu = [
         'label' => 'Drużyny',
         'icon'  => 'users.svg',
         'submenu' => [
-            ['id' => 'teams',             'label' => 'Lista drużyn'],
-            ['id' => 'teams&sOption=new', 'label' => 'Nowa drużyna'], // wyjątek: dodatkowy parametr
+            ['id' => 'teams',                    'label' => 'Lista drużyn'],
+            ['id' => 'teams&sOption=new-player', 'label' => 'Nowy zawodnik'], // wyjątek: dodatkowy parametr
         ],
     ],
     [

@@ -1,5 +1,28 @@
 # Changelog
 
+## 2026-08-07 — Drużyny: „Nowy zawodnik" zamiast „Nowej drużyny" + miniaturki w kadrze
+- **Usunięty skrót „Nowa drużyna"** (formularz, widok, przycisk, pozycja
+  submenu) — drużyny dodaje się przez Strony → Nowa strona (pełny formularz
+  z logo i opisem) z typem menu „Drużyny"; „+ Nowa drużyna…" przy imporcie
+  protokołu zostaje (inny przepływ — nowy przeciwnik w trakcie importu)
+- **Nowy formularz „Nowy zawodnik"** (`?p=teams&sOption=new-player`, submenu
+  Drużyny + przyciski w liście drużyn i nagłówku kadry z preselekcją drużyny):
+  Tytuł (imię i nazwisko), Przypisz do (drużyna), Numer na koszulce, Skład
+  meczowy, **Pozycja (Skład 3D)** — etykiety pozycji (BR/OBR/POM/ATAK)
+  podmieniają się na żywo wg formacji wybranej drużyny (mapa z PHP);
+  zapis przez `savePage` (iMenu dziedziczone po drużynie, sLineup/sNumber/
+  sSquad/iPosition od razu ustawione), walidacja drużyny i pustej nazwy
+  ze sticky polami; zdjęcie miniaturki — jak dotąd w pełnej edycji strony
+  zawodnika (wskazówka w formularzu)
+- **Miniaturki zdjęć w tabeli kadry**: okrągła miniatura (files/500,
+  domyślne/pierwsze zdjęcie podstrony zawodnika) przy nazwisku — od razu
+  widać, komu brakuje zdjęcia na planszę Skład 3D
+- Fix routingu: `?iTeam` w adresie new-player to preselekcja formularza,
+  a nie wejście do widoku kadry
+- E2E: formularz renderuje 5 pól z preselekcją drużyny, POST tworzy
+  podstronę drużyny (iMenu=4, sNumber/sSquad/sLineup/iPosition zapisane),
+  zła drużyna → błąd bez wpisu, miniaturka w kadrze — zielone
+
 ## 2026-08-06 — Kaskadowe wejście logotypów w galeriach i wierszy tabel
 - **Galerie plansz** (`.obsGallery`: sponsorzy, partnerzy główni, realizacja
   transmisji, zdjęcia sędziów) — logotypy wskakują jeden po drugim (pop od
