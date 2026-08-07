@@ -301,11 +301,12 @@ $fPitchBoard = function ($sBoard, $iTeam, $aTeam) use ($fLineup, $fFormation, $f
     $sPitchTop = '';
     if ($sStaff !== '' || $sBench !== '') {
         $sPitchTop = '<div class="obsPitchTop">'
-            .($sStaff !== '' ? '<div class="obsPitchTop__staff obsSquad__staff">'.$sStaff.'</div>' : '')
+            
             .($sBench !== ''
                 ? '<div class="obsPitchTop__bench"><h3 class="obsSquad__heading">'.$lang['live_reserve'].'</h3>'
                     .'<ul class="teamList teamList--dark">'.$sBench.'</ul></div>'
                 : '')
+            .($sStaff !== '' ? '<div class="obsPitchTop__staff obsSquad__staff"><h3 class="obsSquad__heading">Sztab szkoleniowy</h3>'.$sStaff.'</div>' : '')
             .'</div>';
     }
 

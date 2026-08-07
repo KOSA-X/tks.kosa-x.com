@@ -92,7 +92,7 @@ img {
         gap: 14px;
         padding: 0 $gutter;
         background: rgba($brand-dark, 0.8);
-        @include font-l;
+        @include font-md;
         @include font-bold;
         text-transform: uppercase;
 
@@ -107,8 +107,8 @@ img {
     }
 
     &__logo {
-        width: 42px;
-        height: 42px;
+        width: 38px;
+        height: 38px;
         object-fit: contain;
     }
 
@@ -154,7 +154,7 @@ img {
         gap: 3px;
         padding: 0 $gutter;
 //        background: $brand;
-         @include font-l;
+         @include font-md;
          @include font-bold;
          @include brand-bg;
 //        font-size: 34px;
@@ -169,15 +169,16 @@ img {
         justify-content: center;
         min-width: 118px;
         padding: 0 $gutter;
-        background: $white;
-        color: $brand-dark;
+        background: $brand-dark;
+//        @include brand-bg;
+//        color: $brand-dark;
         border-radius: 0 10px 10px 0;
         font-variant-numeric: tabular-nums;
         line-height: 1;
         transition: background .3s ease, color .3s ease;
 
         .clock {
-            @include font-l;
+            @include font-md;
             @include font-bold;
         }
 
@@ -614,6 +615,10 @@ img {
             padding: 10px 0;
             color: $white;
         }
+        .teamList .number{
+            background: $brand-dark;
+            color: $white;
+        }
     }
 }
 
@@ -635,6 +640,11 @@ img {
         @include font-bold;
         @include font-md;
         align-items: center;
+        
+        &:nth-child(2n){
+            background: rgba($brand-dark, 0.2);
+        }
+
     }
 
     .number,
@@ -644,8 +654,8 @@ img {
         height: 35px;
         font-family: $font-h;
         font-weight: 900;
-        background: $white;
-        color: $brand-dark;
+        background: $brand-dark;
+        color: $white;
         @include flexbox;
         align-items: center;
         justify-content: center;
@@ -755,7 +765,9 @@ img {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 30px;
-    padding: 8px 10px 14px;
+    margin-bottom: -30px;
+    padding-top: 20px;
+//    padding: 8px 10px 14px;
 
     // sztab w węższej kolumnie — role po 2 w wierszu zamiast 3
     &__staff {
@@ -764,14 +776,16 @@ img {
             width: 50%;
         }
     }
+    
+    .obsSquad__heading {
+        display: inline-block;
+        padding: 6px 16px;
+        margin-bottom: 8px;
+        font-size: 16px;
+    }
 
     &__bench {
-        .obsSquad__heading {
-            display: inline-block;
-            padding: 6px 16px;
-            margin-bottom: 8px;
-            font-size: 16px;
-        }
+        
 
         // ławka w 3 kolumnach z mniejszymi kwadracikami numerów
         .teamList {
@@ -782,13 +796,13 @@ img {
             li {
                 flex: 0 0 auto;
                 width: calc(33.33% - 14px);
-                font-size: 15px;
+//                font-size: 15px;
             }
 
             .number {
-                width: 28px;
-                height: 24px;
-                font-size: 13px;
+//                width: 28px;
+//                height: 24px;
+//                font-size: 13px;
             }
         }
     }
@@ -1228,7 +1242,7 @@ img {
         padding: 5px 14px;
         background: $brand-dark;
         font-family: $font-h;
-        font-size: 14px;
+        font-size: 15px;
         font-weight: 800;
         letter-spacing: .14em;
         text-transform: uppercase;
@@ -1243,9 +1257,9 @@ img {
         @include border-radius;
 
         img {
-            height: 84px;
+            height: 150px;
             width: auto;
-            max-width: 220px;
+//            max-width: 220px;
             object-fit: contain;
         }
     }
