@@ -221,7 +221,7 @@ $fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($fSquad, $fStaffBlock, $a
     // domyka: .obsSquad__columns zamknięte wyżej → .obsSquad, .obsBoard__content,
     // stopka, .obsBoard (licz diva przy każdej zmianie — brak jednego zamknięcia
     // wciąga kolejne plansze DO WNĘTRZA niewidocznej planszy składu)
-    return $content.'</div></div>'.$sBoardFooter.'</div>';
+    return $content.'</div></div></div>';
 };
 
 // ------------------------------------------------------------
@@ -330,7 +330,7 @@ $fPitchBoard = function ($sBoard, $iTeam, $aTeam) use ($fLineup, $fFormation, $f
     }
 
     // domyka: field, scene, pitch, content → stopka → obsBoard (licz divy!)
-    return $content.'</div></div></div></div>'.$sBoardFooter.'</div>';
+    return $content.'</div></div></div></div></div>';
 };
 ?><!doctype html>
 <html lang="pl">
@@ -440,7 +440,6 @@ $fPitchBoard = function ($sBoard, $iTeam, $aTeam) use ($fLineup, $fFormation, $f
                 <?php echo $fGalleryItems($aSponsorImages); ?>
             </ul>
         </div>
-        <?php echo $sBoardFooter; ?>
     </div>
     <?php endif; ?>
 
@@ -478,13 +477,12 @@ $fPitchBoard = function ($sBoard, $iTeam, $aTeam) use ($fLineup, $fFormation, $f
         <header class="obsBoard__header"><span class="title"><?php echo html($aBoardLabels['wsparcie'] ?? ''); ?></span></header>
         <div class="obsBoard__content">
             <?php if (!empty($aSupportImages)): ?>
-            <ul class="obsGallery obsGallery3">
+            <ul class="obsGallery">
                 <?php echo $fGalleryItems($aSupportImages); ?>
             </ul>
             <?php endif; ?>
-            <?php if ($sSupportDesc !== ''): ?><div class="obsMatchSponsor__desc"><?php echo parseShortcodes($sSupportDesc); ?></div><?php endif; ?>
+            <?php if ($sSupportDesc !== ''): ?><div class="obsSupport__desc"><?php echo parseShortcodes($sSupportDesc); ?></div><?php endif; ?>
         </div>
-        <?php echo $sBoardFooter; ?>
     </div>
     <?php endif; ?>
 

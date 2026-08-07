@@ -66,7 +66,7 @@ $config['telebim_page'] = "34";
 $config['live_referees_page'] = "38";
 $config['live_sponsors_page'] = "41";
 $config['live_partners_page'] = "44";
-$config['live_match_sponsor_page'] = "43";
+$config['live_match_sponsor_page'] = "73";
 $config['live_production_page'] = "39";
 
 // Strony TREŚCI używane w szablonach (dawniej magiczne ID w kodzie).
