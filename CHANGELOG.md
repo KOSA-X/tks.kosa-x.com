@@ -1,5 +1,22 @@
 # Changelog
 
+## 2026-08-06 — Kaskadowe wejście logotypów w galeriach i wierszy tabel
+- **Galerie plansz** (`.obsGallery`: sponsorzy, partnerzy główni, realizacja
+  transmisji, zdjęcia sędziów) — logotypy wskakują jeden po drugim (pop od
+  mniejszej skali, opóźnienie rosnące z `:nth-child`, pętla do 30 elementów;
+  elementy powyżej zakresu dostają maksymalne opóźnienie, więc nic nie
+  zostaje ukryte); obejmuje `<li>` z logo i gołe `<img>` (galeria sędziów)
+- **Wiersze tabel w treści plansz** (tabela sędziów, statystyki dnia
+  meczowego itp. z TinyMCE, wewnątrz `.obsBoard__content`) — wjazd z lewej
+  jak `ul.teamList`, opóźnienia też z `:nth-child` (w treści z edytora nie
+  da się ustawić `--i`), pętla do 15 wierszy
+- Jak cała reszta animacji plansz: tylko transform/opacity (GPU), reset przy
+  ukryciu planszy, wyłączane przy `prefers-reduced-motion`; zero zmian
+  w PHP/JS — czysty SCSS
+- E2E: grid 21 log w połowie kaskady (pierwsze w pełni, środek w trakcie,
+  ogon niewidoczny), wiersze tabeli sędziów z opóźnieniami 0.25/0.33/0.41 s,
+  galeria na ukrytej planszy czeka w stanie bazowym — zielone
+
 ## 2026-08-06 — Plansza „Skład 3D" (boisko w perspektywie, styl Ligi Mistrzów)
 - **Dwie nowe plansze** `sklad3d_gospodarza` / `sklad3d_goscia` (wiersze
   w `live_boards`): wyjściowa 11 na boisku pochylonym w 3D — płaszczyzna

@@ -655,6 +655,56 @@ img {
     }
 }
 
+// kaskada logotypów w galeriach plansz (sponsorzy / partnerzy główni /
+// realizacja / zdjęcia sędziów): pop od mniejszej skali, jeden po drugim.
+// obsGallery ma <li> (grid logo) albo gołe <img> (zdjęcia sędziów).
+// Opóźnienia z :nth-child (pętla niżej); elementy POWYŻEJ zakresu pętli
+// dostają maksymalne opóźnienie z reguły bazowej — nic nie zostaje ukryte.
+.obsBoard .obsGallery li,
+.obsBoard .obsGallery > img {
+    opacity: 0;
+    transform: scale(.7);
+}
+
+.obsBoard.is-visible .obsGallery li,
+.obsBoard.is-visible .obsGallery > img {
+    animation: obsLogoIn .4s cubic-bezier(.22, 1, .36, 1) forwards;
+    animation-delay: 1.7s;
+}
+
+@for $i from 1 through 30 {
+    .obsBoard.is-visible .obsGallery li:nth-child(#{$i}),
+    .obsBoard.is-visible .obsGallery > img:nth-child(#{$i}) {
+        animation-delay: .2s + ($i - 1) * .05s;
+    }
+}
+
+@keyframes obsLogoIn {
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+// kaskada wierszy tabel w treści plansz (tabela sędziów, statystyki dnia
+// meczowego itp. z TinyMCE) — wjazd z lewej jak teamList; w treści
+// z edytora nie da się ustawić --i, więc opóźnienia też z :nth-child
+.obsBoard .obsBoard__content table tr {
+    opacity: 0;
+    transform: translate3d(-28px, 0, 0);
+}
+
+.obsBoard.is-visible .obsBoard__content table tr {
+    animation: obsRowIn .45s cubic-bezier(.22, 1, .36, 1) forwards;
+    animation-delay: 1.45s;
+}
+
+@for $i from 1 through 15 {
+    .obsBoard.is-visible .obsBoard__content table tr:nth-child(#{$i}) {
+        animation-delay: .25s + ($i - 1) * .08s;
+    }
+}
+
 // ----------------------------------------------------------
 // ----- SKŁAD 3D (boisko w perspektywie, styl Ligi Mistrzów)
 // ----------------------------------------------------------
@@ -1089,7 +1139,10 @@ img {
         animation: none;
     }
 
-    .obsBoard .teamList li {
+    .obsBoard .teamList li,
+    .obsBoard .obsGallery li,
+    .obsBoard .obsGallery > img,
+    .obsBoard .obsBoard__content table tr {
         opacity: 1;
         transform: none;
         animation: none;
