@@ -30,6 +30,7 @@ body {
     overflow: hidden;
     width: 100%;
     height: 100%;
+    font-size: 20px;
 }
 
 body {
@@ -71,10 +72,11 @@ img {
     left: $gutter3;
     display: flex;
     align-items: stretch;
-    height: $gutter3;
-    font-family: $font-h;
+    height: 55px;
     filter: drop-shadow(0 10px 24px rgba($black, .45));
     transform: translate3d(0, -24px, 0);
+    line-height: 1;
+    @include font-medium;
 
     &.is-visible {
         transform: translate3d(0, 0, 0);
@@ -92,8 +94,7 @@ img {
         gap: 14px;
         padding: 0 $gutter;
         background: rgba($brand-dark, 0.8);
-        @include font-md;
-        @include font-bold;
+//        @include font-bold;
         text-transform: uppercase;
 
         &--home {
@@ -153,12 +154,8 @@ img {
         align-items: center;
         gap: 3px;
         padding: 0 $gutter;
-//        background: $brand;
-         @include font-md;
-         @include font-bold;
+        @include font-bold;
          @include brand-bg;
-//        font-size: 34px;
-//        font-weight: 900;
         font-variant-numeric: tabular-nums;
     }
 
@@ -170,15 +167,12 @@ img {
         min-width: 118px;
         padding: 0 $gutter;
         background: $brand-dark;
-//        @include brand-bg;
-//        color: $brand-dark;
         border-radius: 0 10px 10px 0;
         font-variant-numeric: tabular-nums;
-        line-height: 1;
+        
         transition: background .3s ease, color .3s ease;
 
         .clock {
-            @include font-md;
             @include font-bold;
         }
 
@@ -242,8 +236,8 @@ img {
 
     &__media {
         position: relative;
-        width: 135px;
-        height: 135px;
+        width: 140px;
+        height: 140px;
         flex: 0 0 auto;
 
         img {
@@ -268,34 +262,50 @@ img {
         display: flex;
         align-items: center;
         gap: 12px;
-        font-family: $font-h;
-        font-size: 17px;
-        font-weight: 800;
+        @include font-xs;
+        @include font-bold;
+//        font-size: 17px;
+        // font-weight: 800;
         text-transform: uppercase;
-//        letter-spacing: .12em;
-        color: $brand-light;
+        letter-spacing: .12em;
+        
+        & > span{
+            @include flexbox;
+            align-items: center;
+        }
+        img{
+            width: 16px;
+            margin-right: 10px;
+        }
     }
 
     &__minute {
         margin-left: auto;
         font-variant-numeric: tabular-nums;
-        font-size: 25px;
-        color: $white;
+        font-size: 20px;
+        @include font-medium;
+        color: $warning;
     }
 
     &__name {
-        margin-top: 6px;
-        font-size: 30px;
-        font-weight: 900;
+        margin-top: 10px;
+//        font-size: 30px;
+        // font-weight: 900;
+        @include font-l;
+        @include font-bold;
         @include flexbox;
         align-items: center;
 
         .number {
+//            @include font-md;
+            @include font-bold;
+            @include border-radius;
             color: $white;
-            background: $brand;
             font-size: 20px;
-            width: 35px;
-            height: 35px;
+            background: $brand;
+//            font-size: 20px;
+            width: 40px;
+            height: 40px;
             display: block;
             margin-right: 10px;
             @include flexbox;
@@ -306,9 +316,10 @@ img {
     }
 
     &__team {
-        margin-top: 8px;
-        font-size: 14px;
-        font-weight: 600;
+        margin-top: 10px;
+        @include font-xs;
+//        font-size: 14px;
+        // font-weight: 600;
         letter-spacing: .06em;
         text-transform: uppercase;
         opacity: .7;
@@ -322,7 +333,7 @@ img {
 
         &--goal::before {
             content: '\26BD'; // ⚽
-            font-size: 22px;
+            // font-size: 22px;
         }
 
         &--card {
@@ -345,13 +356,13 @@ img {
         &--in::before {
             content: '\25B2'; // ▲
             color: $success;
-            font-size: 20px;
+            // font-size: 20px;
         }
 
         &--out::before {
             content: '\25BC'; // ▼
             color: $danger;
-            font-size: 20px;
+            // font-size: 20px;
         }
     }
 
@@ -374,7 +385,6 @@ img {
     width: 1280px;
     max-height: 920px;
     transform: translate3d(-50%, -50%, 0) scale(.97);
-//    border-radius: 18px;
     @include border-radius;
     overflow: hidden;
     background: linear-gradient(160deg, rgba($brand-dark, .8) 0%, rgba($brand-dark, .9) 70%);
@@ -391,8 +401,7 @@ img {
         line-height: 1;
         padding: 30px $gutter3;
         @include brand-bg;
-        font-family: $font-h;
-        @include font-l;
+        @include font-md;
         @include font-medium;
         margin: 10px 10px 0 10px;
         @include border-radius;
@@ -408,8 +417,7 @@ img {
 
         .title {
             @include font-xbold;
-            @include font-xl;
-            
+            @include font-l;
             @include flexbox;
             align-items: center;
             justify-content: center;
@@ -436,13 +444,12 @@ img {
     }
 
     &__footer {
+        @include font-r;
         padding: $gutter $gutter2;
-        font-size: 13px;
         letter-spacing: .18em;
         text-transform: uppercase;
-        opacity: .7;
+        opacity: .8;
         text-align: center;
-        font-weight: 600;
         background: $brand-dark;
         @include flexbox;
         align-items: center;
@@ -482,17 +489,13 @@ img {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 16px;
+        gap: $gutter;
         text-align: center;
-
         img {
-//            width: 130px;
             height: 130px;
             object-fit: contain;
         }
-
         .name {
-            font-family: $font-h;
             @include font-xl;
             @include font-xbold;
             text-transform: uppercase;
@@ -500,48 +503,37 @@ img {
     }
 
     &__score {
-        font-family: $font-h;
-        font-size: 120px;
-        font-weight: 900;
+        font-size: 100px;
+        @include font-bold;
         font-variant-numeric: tabular-nums;
         color: $white;
 
         span {
-//            color: $brand;
             margin: 0 6px;
         }
     }
 }
 
 
-.obsMatchDesc, .obsReferees {
-    
-//    font-size: 19px;
-//    line-height: 1.55;
-    
-  
+.obsMatchDesc, .obsReferees {  
     table{
         width: 100%;
     }
     
     table,.table, td, tr, th{
         border: 0 ;
-        @include font-l;
-//        text-align: center;
+        
     }
     
     td, th{
-        @include font-bold;
+        @include font-medium;
+        @include font-md;
         padding: 20px 15px;
-//        border-bottom: 1px solid #000;
     }
     tr:nth-child(2n) td {
-//        @include b-black;
         background: rgba($brand-dark, 0.9);
      
     }
-    
-//    opacity: .85;
 
     p { margin: 0 0 10px; }
 }
@@ -553,31 +545,21 @@ img {
 // --- skład drużyny ------------------------------------------
 .obsSquad {
     &__head {
-        display: flex;
-        align-items: center;
-        gap: 26px;
-        margin-bottom: 28px;
-
-        img {
-            width: 96px;
-            height: 96px;
-            object-fit: contain;
-        }
+        margin-bottom: $gutter;
     }
 
     // sztab szkoleniowy = sDescriptionFull drużyny (importer zapisuje <ul>
     // z rolami) — lista rozkładana w poziomie, role przygaszone, nazwiska mocne
     &__staff {
-        @include font-md;
+//        @include font-md;
 
         p { margin: 0; }
-        strong { color: $brand-light; }
+        strong { }
 
         ul {
             @include list-style-no;
             @include flexbox;
             flex-wrap: wrap;
-            
         }
 
         li {
@@ -595,29 +577,28 @@ img {
     }
 
     &__heading {
-        font-family: $font-h;
-        @include font-l;
+        @include font-md;
         @include font-bold;
-        background: $white;
-        color: $brand-dark;
-        
+        @include border-radius;
+        background: $brand;
+        color: $white;
         text-transform: uppercase;
-//        letter-spacing: .14em;
-//        color: $brand-light;
-        padding: 10px 30px;
-        margin-bottom: 14px;
-//        border-bottom: 2px solid $brand;
+        padding: 10px $gutter;
+        margin-bottom: 15px;
     }
 
     &-2{
         .obsSquad__heading{
-            background: transparent;
-            padding: 10px 0;
-            color: $white;
+//            background: transparent;
+//            padding: 10px 0;
+//            color: $white;
+        }
+        .teamList li{
+            @include font-regular;
         }
         .teamList .number{
             background: $brand-dark;
-            color: $white;
+//            color: $white;
         }
     }
 }
@@ -637,10 +618,9 @@ img {
         padding: 2px 0;
         line-height: 1;
         @include flexbox;
-        @include font-bold;
-        @include font-md;
+        @include font-medium;
+//        @include font-md;
         align-items: center;
-        
         &:nth-child(2n){
             background: rgba($brand-dark, 0.2);
         }
@@ -651,12 +631,13 @@ img {
     .minute {
         flex: 0 0 auto;
         width: 40px;
-        height: 35px;
-        font-family: $font-h;
-        font-weight: 900;
-        background: $brand-dark;
+        line-height: 1;
+        height: 40px;
+        // font-weight: 900;
+        background: $brand;
         color: $white;
         @include flexbox;
+        @include border-radius;
         align-items: center;
         justify-content: center;
         text-align: center;
@@ -804,8 +785,7 @@ img {
     grid-template-columns: 1fr 1fr;
     gap: 30px;
     margin-bottom: -30px;
-    padding-top: 20px;
-//    padding: 8px 10px 14px;
+    padding-top: 10px;
 
     // sztab w węższej kolumnie — role po 2 w wierszu zamiast 3
     &__staff {
@@ -818,8 +798,8 @@ img {
     .obsSquad__heading {
         display: inline-block;
         padding: 6px 16px;
-        margin-bottom: 8px;
-        font-size: 16px;
+        margin-bottom: 10px;
+        // font-size: 16px;
     }
 
     &__bench {
@@ -939,9 +919,8 @@ img {
         @include flexbox;
         align-items: center;
         justify-content: center;
-        font-family: $font-h;
-        font-weight: 900;
-        font-size: 34px;
+        // font-weight: 900;
+        // font-size: 34px;
         color: $white;
     }
 
@@ -950,12 +929,13 @@ img {
         @include flexbox;
         align-items: stretch;
         line-height: 1;
-        font-family: $font-h;
         text-transform: uppercase;
         white-space: nowrap;
         background: $white;
         color: $brand-dark;
         box-shadow: 0 10px 24px rgba($black, .45);
+        font-size: 18px;
+        @include font-medium;
 
         .number {
             @include flexbox;
@@ -965,7 +945,7 @@ img {
             padding: 7px 6px;
             background: $brand;
             color: $white;
-            font-weight: 900;
+            // font-weight: 900;
             font-variant-numeric: tabular-nums;
         }
 
@@ -973,8 +953,8 @@ img {
             @include flexbox;
             align-items: center;
             padding: 7px 12px;
-            font-weight: 800;
-            font-size: 15px;
+            // font-weight: 800;
+            // font-size: 15px;
         }
     }
 }
@@ -1024,7 +1004,7 @@ img {
 
     &__empty {
         opacity: .5;
-        font-size: 17px;
+        // font-size: 17px;
     }
 }
 
@@ -1032,23 +1012,21 @@ img {
 // auto-fill: liczba kolumn dopasowuje się do liczby logotypów
 // (24 sponsorów zmieści się tak samo dobrze jak 4)
 .obsGallery {
-    
     gap: 5px;
     align-items: center;
-    
     @include list-style-no;
     @include flexbox;
     flex-wrap: wrap;
     
     li{
         background: $white;
+        @include border-radius;
         flex-basis: calc(16.66% - 5px);
         width: calc(16.66% - 5px);
     }
 
     img {
         width: 100%;
-//        max-height: 110px;
         object-fit: contain;
         padding: 20px;
     }
@@ -1058,10 +1036,11 @@ img {
         display: block;
         padding: 0  0 10px;
         text-align: center;
-        font-size: 15px;
-        font-weight: 600;
+         font-size: 15px;
+        // font-weight: 600;
         line-height: 1.3;
-        color: $brand-dark;
+        color: $gray;
+        transform: translateY(-10px);
     }
 
     &--big {
@@ -1084,45 +1063,21 @@ img {
 
 // --- sponsor meczu (duże logo + opis pełny) -----------------
 .obsSupport {
-//    display: flex;
-//    flex-direction: row;
-//    align-items: center;
-//    gap: 30px;
-////    text-align: center;
-//
-//    &__logo {
-//        max-width: 300px;
-////        max-height: 300px;
-//        object-fit: contain;
-//        background: $white;
-//        padding: $gutter;
-//    }
-//
+
     &__desc {
         line-height: 1;
-        
-        
         ul{
             @include list-style-no;
             @include flexbox;
             flex-wrap: wrap;
-            
             li{
-                @include font-md;
-                margin: 0 10px 10px 0;
-//                border: 1px solid $white;
-                padding: 10px 10px;
+                margin: 0 15px 15px 0;
+                padding: 10px 15px;
                 @include border-radius;
-                @include border;
+                background: $brand;
+                color: $white;
             }
         }
-//        max-width: 780px;
-//        font-size: 21px;
-//        line-height: 1.6;
-//        opacity: .9;
-
-//        p { margin: 0 0 10px; }
-//        strong { color: $brand-light; }
     }
 }
 
@@ -1153,13 +1108,13 @@ img {
         padding: 18px 34px;
         border-radius: 12px 12px 0 0;
         background: $brand;
-        font-family: $font-h;
         box-shadow: 0 16px 40px rgba($black, .5);
+        @include font-medium;
     }
 
     &__team {
-        font-size: 24px;
-        font-weight: 900;
+        // font-size: 24px;
+        // font-weight: 900;
 
         &--away {
             text-align: right;
@@ -1167,8 +1122,9 @@ img {
     }
 
     &__score {
-        font-size: 32px;
-        font-weight: 900;
+        // font-size: 32px;
+        // font-weight: 900;
+        @include font-bold;
         font-variant-numeric: tabular-nums;
     }
 
@@ -1190,10 +1146,7 @@ img {
             align-items: center;
             gap: 12px;
             padding: 5px 0;
-            font-size: 19px;
-            font-weight: 600;
             border-bottom: 1px solid rgba($white, .08);
-
             &:last-child {
                 border-bottom: 0;
             }
@@ -1201,16 +1154,16 @@ img {
             .minute {
                 min-width: 40px;
                 text-align: right;
-                font-family: $font-h;
-                font-weight: 900;
-                color: $brand-light;
+                // font-weight: 900;
+                @include font-bold;
+                text-align: center;
                 font-variant-numeric: tabular-nums;
             }
         }
 
         // mniejsze ikony goli niż w wielkich popupach
         .obsEvent__icon--goal::before {
-            font-size: 16px;
+            // font-size: 16px;
         }
     }
 }
@@ -1279,9 +1232,8 @@ img {
     &__label {
         padding: 5px 14px;
         background: $brand-dark;
-        font-family: $font-h;
-        font-size: 15px;
-        font-weight: 800;
+        // font-size: 15px;
+        // font-weight: 800;
         letter-spacing: .14em;
         text-transform: uppercase;
         color: $white;

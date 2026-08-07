@@ -12,7 +12,7 @@
         return;
     }
 
-    var EVENT_SHOW_MS = 10000;  // czas wyświetlania popupu zdarzenia
+    var EVENT_SHOW_MS = 100000;  // czas wyświetlania popupu zdarzenia
     var EVENT_ANIM_MS = 600;   // czas animacji wyjścia (musi >= transition w CSS)
 
     var sinceId = null;        // null = pierwszy odczyt (bez odtwarzania historii)

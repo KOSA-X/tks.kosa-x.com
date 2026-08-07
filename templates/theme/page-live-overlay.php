@@ -170,7 +170,7 @@ $fSocialHandle = function ($sUrl) {
     return $sHandle !== '' ? $sHandle : '';
 };
 $aFooterSocial = Array(
-    'instagram' => ($sH = $fSocialHandle($config['instagram'] ?? '')) !== '' ? '@'.ltrim($sH, '@') : '',
+    'instagram' => ($sH = $fSocialHandle($config['instagram'] ?? '')) !== '' ? ''.ltrim($sH, '') : '',
     'facebook'  => $fSocialHandle($config['facebook'] ?? ''),
     'youtube'   => $fSocialHandle($config['youtube'] ?? ''),
 );
@@ -434,7 +434,7 @@ $fPitchBoard = function ($sBoard, $iTeam, $aTeam) use ($fLineup, $fFormation, $f
             <?php echo $fMatchHead(); ?>
             <div class="obsSummary">
                 <ul class="teamList" id="obs-summary-1"></ul>
-                <ul class="teamList teamList--dark" id="obs-summary-2"></ul>
+                <ul class="teamList " id="obs-summary-2"></ul>
             </div>
         </div>
         <?php echo $sBoardFooter; ?>
@@ -494,7 +494,6 @@ $fPitchBoard = function ($sBoard, $iTeam, $aTeam) use ($fLineup, $fFormation, $f
                 <?php echo $fGalleryItems($aPartnerImages); ?>
             </ul>
         </div>
-        <?php echo $sBoardFooter; ?>
     </div>
     <?php endif; ?>
 
@@ -535,7 +534,7 @@ $fPitchBoard = function ($sBoard, $iTeam, $aTeam) use ($fLineup, $fFormation, $f
                 <?php echo $fGalleryItems(array_slice($aProductionImages, 0, 4)); ?>
             </ul>
         </div>
-        <?php echo $sBoardFooter; ?>
+        <footer class="obsBoard__footer">www.kosa-x.com</footer>
     </div>
     <?php endif; ?>
 
