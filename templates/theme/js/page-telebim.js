@@ -217,7 +217,10 @@
         var body = el('div', 'tbEvent__body');
         var label = el('div', 'tbEvent__label');
         label.appendChild(iconFor(ev.action));
-        label.appendChild(el('span', '', cfg.actions[ev.action] || ev.action));
+        // etykiety akcji z configu zawierają HTML (emoji / <img> ikony)
+        var actionSpan = el('span', '');
+        actionSpan.innerHTML = cfg.actions[ev.action] || ev.action;
+        label.appendChild(actionSpan);
         if (ev.minute !== '') {
             label.appendChild(el('span', 'tbEvent__minute', ev.minute + "'"));
         }

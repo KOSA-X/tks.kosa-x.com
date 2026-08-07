@@ -79,12 +79,17 @@ if( ( $_SERVER['REQUEST_METHOD'] ?? 'GET' ) === 'POST' && ( $_POST['sAction'] ??
     // w GET) z alertem $sOcrError
 }
 
+// etykiety slotów / formacje — helpery modułu live (ekran korekty + zapis)
+require_once 'plugins/live/view-helpers.php';
+
 // ============================================================
 // ZAPIS SKŁADU DO BAZY (z ekranu korekty)
-// Zawodnik = podstrona drużyny (PagesAdmin::savePage, sNumber + sSquad).
-// Dopasowanie po nazwisku — kolejny import AKTUALIZUJE zawodnika zamiast
-// tworzyć duplikat. Zawodnicy drużyny nieobecni w protokole dostają
-// sSquad = '' (poza kadrą meczową). Sztab → sDescriptionShort drużyny.
+// Zawodnik = podstrona drużyny (PagesAdmin::savePage, sNumber + sSquad +
+// sLineup = pozycja na boisku). Dopasowanie po nazwisku — kolejny import
+// AKTUALIZUJE zawodnika zamiast tworzyć duplikat. Zawodnicy drużyny
+// nieobecni w protokole dostają sSquad = '' (poza kadrą meczową).
+// Formacja z formularza → pages.sFormation drużyny; sztab → <ul> w
+// sDescriptionFull drużyny (NADPISUJE poprzednią zawartość pola).
 // ============================================================
 if( ( $_SERVER['REQUEST_METHOD'] ?? 'GET' ) === 'POST' && ( $_POST['sAction'] ?? '' ) === 'save' ){
 
@@ -112,11 +117,19 @@ if( ( $_SERVER['REQUEST_METHOD'] ?? 'GET' ) === 'POST' && ( $_POST['sAction'] ??
             continue;
         }
         $iSquad = (int) ( $aRow['sSquad'] ?? 0 );
+        $iSlot  = (int) ( $aRow['sLineup'] ?? 0 ); // pozycja na boisku: 1-11, 0 = brak
         $aPlayers[] = Array(
             'sNumber' => trim( (string) ( $aRow['sNumber'] ?? '' ) ),
             'sName'   => $sName,
             'sSquad'  => isset( $config['squad_types'][$iSquad] ) ? $iSquad : 2,
+            'sLineup' => ( $iSlot >= 1 && $iSlot <= 11 ) ? (string) $iSlot : '',
         );
+    }
+
+    // formacja drużyny z formularza korekty (tylko znana z live_formations)
+    $sFormation = (string) ( $_POST['sFormation'] ?? '' );
+    if( $sFormation !== '' && !isset( $config['live_formations'][$sFormation] ) ){
+        $sFormation = '';
     }
 
     $aStaff = Array( );
@@ -162,6 +175,7 @@ if( ( $_SERVER['REQUEST_METHOD'] ?? 'GET' ) === 'POST' && ( $_POST['sAction'] ??
             'sName'             => $aPlayer['sName'],
             'sNumber'           => $aPlayer['sNumber'],
             'sSquad'            => (string) $aPlayer['sSquad'],
+            'sLineup'           => (string) $aPlayer['sLineup'],
             'iPageParent'       => $iTeam, // bez tego savePage przepiąłby stronę do korzenia
             'iStatus'           => 1,
             'iPosition'         => (int) $aPlayer['sNumber'], // sortowanie listy wg numeru
@@ -188,35 +202,32 @@ if( ( $_SERVER['REQUEST_METHOD'] ?? 'GET' ) === 'POST' && ( $_POST['sAction'] ??
     }
 
     // zawodnicy drużyny nieobecni w tym protokole → poza kadrą meczową
+    // (i bez pozycji na boisku — stary slot nie może wisieć na planszy 3D)
     $sIds = implode( ',', array_map( 'intval', $aImportedIds ) );
     $oReset = $oSql->prepare(
-        'UPDATE pages SET sSquad = "" WHERE iPageParent = :team AND sSquad IS NOT NULL AND sSquad <> ""'
+        'UPDATE pages SET sSquad = "", sLineup = "" WHERE iPageParent = :team AND sSquad IS NOT NULL AND sSquad <> ""'
         .( $sIds !== '' ? ' AND iPage NOT IN ('.$sIds.')' : '' )
     );
     $oReset->execute( Array( ':team' => $iTeam ) );
     $iOff = (int) $oReset->rowCount( );
 
-    // sztab szkoleniowy → blok .teamStaff w sDescriptionShort drużyny
-    // (kolejny import PODMIENIA blok zamiast dopisywać kolejny)
+    // formacja strategiczna → pages.sFormation drużyny (plansza Skład 3D)
+    $oFormation = $oSql->prepare( 'UPDATE pages SET sFormation = :formation WHERE iPage = :id' );
+    $oFormation->execute( Array( ':formation' => $sFormation, ':id' => $iTeam ) );
+
+    // sztab szkoleniowy → lista <ul> w sDescriptionFull drużyny (formatowanie
+    // spójne z planszami składu; NADPISUJE poprzednią zawartość pola — opis
+    // drużyny to właśnie sztab)
     if( !empty( $aStaff ) ){
         $aStaffLines = Array( );
         foreach( $aStaff as $aMember ){
-            $aStaffLines[] = ( $aMember['sRole'] !== '' ? html( $aMember['sRole'] ).': ' : '' ).html( $aMember['sName'] );
+            $aStaffLines[] = '<li>'.( $aMember['sRole'] !== '' ? html( $aMember['sRole'] ).': ' : '' )
+                .'<strong>'.html( $aMember['sName'] ).'</strong></li>';
         }
-        $sStaffHtml = '<div class="teamStaff"><p><strong>Sztab szkoleniowy:</strong><br />'.implode( '<br />', $aStaffLines ).'</p></div>';
+        $sStaffHtml = '<ul>'.implode( "\n", $aStaffLines ).'</ul>';
 
-        $oDesc = $oSql->prepare( 'SELECT sDescriptionShort FROM pages WHERE iPage = :id' );
-        $oDesc->execute( Array( ':id' => $iTeam ) );
-        $sDesc = (string) $oDesc->fetchColumn( );
-
-        $iReplaced = 0;
-        $sNewDesc = preg_replace( '#<div class="teamStaff">.*?</div>#s', $sStaffHtml, $sDesc, 1, $iReplaced );
-        if( !$iReplaced ){
-            $sNewDesc = ( trim( $sDesc ) !== '' ) ? $sDesc."\n".$sStaffHtml : $sStaffHtml;
-        }
-
-        $oUpd = $oSql->prepare( 'UPDATE pages SET sDescriptionShort = :desc WHERE iPage = :id' );
-        $oUpd->execute( Array( ':desc' => $sNewDesc, ':id' => $iTeam ) );
+        $oUpd = $oSql->prepare( 'UPDATE pages SET sDescriptionFull = :desc WHERE iPage = :id' );
+        $oUpd->execute( Array( ':desc' => $sStaffHtml, ':id' => $iTeam ) );
     }
 
     // sprzątanie plików roboczych (zdjęcie protokołu = dane osobowe)
@@ -403,6 +414,45 @@ elseif( ( $_GET['sOption'] ?? '' ) === 'review' && $sReviewJson !== '' && is_fil
         }
         return $sOptions;
     };
+
+    // etykiety pozycji per formacja (JS podmienia je przy zmianie formacji)
+    $fFormationLabels = function( $sFormation ) use ( $config ){
+        $aSlotLines  = liveSlotLines( $sFormation );
+        $iAttackLine = $sFormation !== '' ? count( explode( '-', $sFormation ) ) : -1;
+        $aLabels = Array( );
+        foreach( $aSlotLines as $iSlot => $iLine ){
+            $sLineName = $iLine === 0 ? 'BR' : ( $iLine === 1 ? 'OBR' : ( $iLine === $iAttackLine ? 'ATAK' : ( $iLine === 9 ? '' : 'POM' ) ) );
+            $aLabels[$iSlot] = $iSlot.( $sLineName !== '' ? ' — '.$sLineName : '' );
+        }
+        return $aLabels;
+    };
+    $sTeamFormation   = liveTeamFormation( $iTeam );
+    $aFormationLabels = Array( '' => $fFormationLabels( '' ) );
+    foreach( array_keys( $config['live_formations'] ) as $sFormationKey ){
+        $aFormationLabels[$sFormationKey] = $fFormationLabels( $sFormationKey );
+    }
+
+    // prefill pozycji: obecne sloty zawodników drużyny wg klucza nazwiska
+    // (OCR zwraca same nazwiska — dopasowujemy jak przy zapisie)
+    $fNameKeyView = function( $sName ){
+        return mb_strtolower( trim( preg_replace( '/\s+/u', ' ', html_entity_decode( (string) $sName, ENT_QUOTES, 'UTF-8' ) ) ) );
+    };
+    $aKnownSlots = Array( );
+    $oKnown = $oSql->prepare( 'SELECT sName, sLineup FROM pages WHERE iPageParent = :team AND sLineup != ""' );
+    $oKnown->execute( Array( ':team' => $iTeam ) );
+    while( $aRow = $oKnown->fetch( PDO::FETCH_ASSOC ) ){
+        $aKnownSlots[$fNameKeyView( $aRow['sName'] )] = (int) $aRow['sLineup'];
+    }
+
+    // select pozycji dla wiersza zawodnika (etykiety wg formacji drużyny)
+    $fLineupSelect = function( $iSelected ) use ( $aFormationLabels, $sTeamFormation ){
+        $aLabels  = $aFormationLabels[$sTeamFormation] ?? $aFormationLabels[''];
+        $sOptions = '<option value="0">—</option>';
+        foreach( $aLabels as $iSlot => $sLabel ){
+            $sOptions .= '<option value="'.$iSlot.'"'.( (int) $iSelected === $iSlot ? ' selected="selected"' : '' ).'>'.html( $sLabel ).'</option>';
+        }
+        return $sOptions;
+    };
     ?>
 
     <header class="mainPage__header">
@@ -423,6 +473,24 @@ elseif( ( $_GET['sOption'] ?? '' ) === 'review' && $sReviewJson !== '' && is_fil
 
         <div class="card mb-4">
             <header class="card__header">
+                <h4 class="card__title">Ustawienie taktyczne</h4>
+            </header>
+            <div class="card__wrapper"><div class="card__content">
+                <div class="form-item" style="max-width:360px">
+                    <label for="sFormation">Formacja (plansza „Skład 3D")</label>
+                    <select name="sFormation" id="sFormation">
+                        <option value="">— brak —</option>
+                        <?php foreach( array_keys( $config['live_formations'] ) as $sFormationKey ): ?>
+                            <option value="<?php echo html( $sFormationKey ); ?>"<?php echo $sTeamFormation === $sFormationKey ? ' selected="selected"' : ''; ?>><?php echo html( $sFormationKey ); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <p class="mb-0" style="opacity:.7">Zmiana formacji od razu dopasowuje etykiety pozycji (OBR/POM/ATAK) w tabeli poniżej. Pozycje są opcjonalne — bez nich plansza Skład 3D ustawi pierwszą 11 wg numerów.</p>
+            </div></div>
+        </div>
+
+        <div class="card mb-4">
+            <header class="card__header">
                 <h4 class="card__title">Zawodnicy</h4>
             </header>
             <div class="table-responsive">
@@ -432,15 +500,19 @@ elseif( ( $_GET['sOption'] ?? '' ) === 'review' && $sReviewJson !== '' && is_fil
                             <th style="width:90px">Numer</th>
                             <th>Imię i nazwisko</th>
                             <th style="width:180px">Skład</th>
+                            <th style="width:160px">Pozycja</th>
                             <th style="width:70px"></th>
                         </tr>
                     </thead>
                     <tbody id="players-rows">
-                        <?php foreach( $aPlayers as $i => $aPlayer ): ?>
+                        <?php foreach( $aPlayers as $i => $aPlayer ):
+                            $iKnownSlot = $aKnownSlots[$fNameKeyView( (string) $aPlayer['name'] )] ?? 0;
+                        ?>
                         <tr>
                             <td><input type="text" name="aPlayers[<?php echo $i; ?>][sNumber]" value="<?php echo html( (string) $aPlayer['number'] ); ?>" class="form-control" maxlength="4" /></td>
                             <td><input type="text" name="aPlayers[<?php echo $i; ?>][sName]" value="<?php echo html( (string) $aPlayer['name'] ); ?>" class="form-control" maxlength="120" /></td>
                             <td><select name="aPlayers[<?php echo $i; ?>][sSquad]" class="form-control"><?php echo $fSquadSelect( $aPlayer['squad'] ); ?></select></td>
+                            <td><select name="aPlayers[<?php echo $i; ?>][sLineup]" class="form-control import-lineup-select"><?php echo $fLineupSelect( $iKnownSlot ); ?></select></td>
                             <td><button type="button" class="button button-sm row-remove" title="Usuń wiersz">&times;</button></td>
                         </tr>
                         <?php endforeach; ?>
@@ -509,12 +581,32 @@ elseif( ( $_GET['sOption'] ?? '' ) === 'review' && $sReviewJson !== '' && is_fil
             var iStaffIdx  = <?php echo count( $aStaff ); ?>;
             var sSquadOptions = '<?php echo str_replace( "'", "\\'", str_replace( ' selected="selected"', '', $fSquadSelect( 0 ) ) ); ?>';
 
+            // etykiety pozycji per formacja — zmiana formacji przepisuje
+            // opcje wszystkich selectów pozycji (wybrane sloty zostają)
+            var aFormationLabels = <?php echo json_encode( $aFormationLabels, JSON_UNESCAPED_UNICODE ); ?>;
+
+            function lineupOptions( sSelected ){
+                var aLabels = aFormationLabels[$( '#sFormation' ).val( )] || aFormationLabels[''];
+                var sOptions = '<option value="0">—</option>';
+                $.each( aLabels, function( iSlot, sLabel ){
+                    sOptions += '<option value="' + iSlot + '"' + ( String( sSelected ) === String( iSlot ) ? ' selected="selected"' : '' ) + '>' + sLabel + '</option>';
+                } );
+                return sOptions;
+            }
+
+            $( '#sFormation' ).on( 'change', function( ){
+                $( '.import-lineup-select' ).each( function( ){
+                    $( this ).html( lineupOptions( $( this ).val( ) ) );
+                } );
+            } );
+
             $( '#add-player' ).on( 'click', function( ){
                 $( '#players-rows' ).append(
                     '<tr>'
                     + '<td><input type="text" name="aPlayers[' + iPlayerIdx + '][sNumber]" class="form-control" maxlength="4" /></td>'
                     + '<td><input type="text" name="aPlayers[' + iPlayerIdx + '][sName]" class="form-control" maxlength="120" /></td>'
                     + '<td><select name="aPlayers[' + iPlayerIdx + '][sSquad]" class="form-control">' + sSquadOptions + '</select></td>'
+                    + '<td><select name="aPlayers[' + iPlayerIdx + '][sLineup]" class="form-control import-lineup-select">' + lineupOptions( 0 ) + '</select></td>'
                     + '<td><button type="button" class="button button-sm row-remove" title="Usuń wiersz">&times;</button></td>'
                     + '</tr>'
                 );

@@ -272,7 +272,10 @@ window.telebimConfig = <?php echo json_encode(Array(
     'api'       => $sRoot.'plugins/live/api.php',
     'filesUrl'  => $sFiles,
     'clipsUrl'  => $sClips,
-    'actions'   => $config['live_actions'],
+    'actions'   => array_map(function ($sLabel) use ($sRoot) {
+        // etykiety mogą mieć HTML (<img src="images/icons/…">) — ścieżki na root
+        return str_replace('src="images/', 'src="'.$sRoot.'images/', (string) $sLabel);
+    }, $config['live_actions']),
     'clips'     => $aClips,
     'replayUrl' => (string) ($config['live_replay_url'] ?? ''),
     'teams'     => Array(

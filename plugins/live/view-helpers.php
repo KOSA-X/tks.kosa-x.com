@@ -7,7 +7,8 @@
  * Wszystkie zapytania przez prepared statements (§15.2).
  */
 
-if (!defined('CUSTOMER_PAGE')) { exit; }
+// używane też w panelu admina (Drużyny, import składu) — stąd podwójny guard
+if (!defined('CUSTOMER_PAGE') && !defined('ADMIN_PAGE')) { exit; }
 
 /** Pierwszy obrazek strony (preferowany iType, potem domyślny). */
 function livePageImage($iPage, $iPreferType = 0)
@@ -76,17 +77,83 @@ function liveSquad($iTeam)
     return $aGroups;
 }
 
-/** Sztab: blok .teamStaff zapisany w opisie drużyny przez importer protokołu. */
+/**
+ * Sztab szkoleniowy = CAŁY opis pełny drużyny (importer zapisuje tam listę
+ * <ul> z rolami; wszystko z opisu drużyny pokazuje się nad składem).
+ */
 function liveStaffBlock($iTeam)
 {
     $oSql = Sql::getInstance();
     if ((int) $iTeam <= 0) {
         return '';
     }
-    $oQuery = $oSql->prepare('SELECT sDescriptionShort FROM pages WHERE iPage = :page');
+    $oQuery = $oSql->prepare('SELECT sDescriptionFull FROM pages WHERE iPage = :page');
     $oQuery->execute(Array(':page' => (int) $iTeam));
-    $sDesc = (string) ($oQuery->fetchColumn() ?: '');
-    return preg_match('#<div class="teamStaff">.*?</div>#s', $sDesc, $aMatch) ? $aMatch[0] : '';
+    $sDesc = trim((string) ($oQuery->fetchColumn() ?: ''));
+    return $sDesc !== '' ? parseShortcodes($sDesc) : '';
+}
+
+/**
+ * Mapa slot 1-11 → linia formacji: 0 = bramkarz, 1 = obrona, dalej kolejne
+ * człony nazwy formacji (ostatni = atak); 9 = slot poza znaną formacją.
+ */
+function liveSlotLines($sFormation)
+{
+    global $config;
+    $aLines = Array(1 => 0);
+    $iSlot  = 2;
+    if ((string) $sFormation !== '' && isset($config['live_formations'][$sFormation])) {
+        foreach (array_map('intval', explode('-', (string) $sFormation)) as $iIndex => $iCount) {
+            for ($i = 0; $i < $iCount && $iSlot <= 11; $i++) {
+                $aLines[$iSlot++] = $iIndex + 1;
+            }
+        }
+    }
+    for (; $iSlot <= 11; $iSlot++) {
+        $aLines[$iSlot] = 9;
+    }
+    return $aLines;
+}
+
+/**
+ * Sortowanie zawodników wg pozycji na boisku: bramkarz → obrona → pomoc →
+ * atak (linia ze slotu sLineup + formacji drużyny), w obrębie linii wg
+ * numeru na koszulce; bez przypisanej pozycji → za liniami, wg numeru.
+ * Wiersze muszą mieć klucze sLineup/sNumber/sName.
+ */
+function liveSortPlayers($aPlayers, $sFormation)
+{
+    $aLines = liveSlotLines($sFormation);
+    usort($aPlayers, function ($a, $b) use ($aLines) {
+        $iSlotA = (int) ($a['sLineup'] ?? 0);
+        $iSlotB = (int) ($b['sLineup'] ?? 0);
+        $iLineA = ($iSlotA >= 1 && $iSlotA <= 11) ? $aLines[$iSlotA] : 99;
+        $iLineB = ($iSlotB >= 1 && $iSlotB <= 11) ? $aLines[$iSlotB] : 99;
+        if ($iLineA !== $iLineB) {
+            return $iLineA <=> $iLineB;
+        }
+        $iNumA = (int) ($a['sNumber'] ?? 0) ?: 999;
+        $iNumB = (int) ($b['sNumber'] ?? 0) ?: 999;
+        if ($iNumA !== $iNumB) {
+            return $iNumA <=> $iNumB;
+        }
+        return strcasecmp((string) ($a['sName'] ?? ''), (string) ($b['sName'] ?? ''));
+    });
+    return $aPlayers;
+}
+
+/** Formacja drużyny (pages.sFormation) — pusta, gdy nieustawiona/nieznana. */
+function liveTeamFormation($iTeam)
+{
+    global $config;
+    $oSql = Sql::getInstance();
+    if ((int) $iTeam <= 0) {
+        return '';
+    }
+    $oQuery = $oSql->prepare('SELECT sFormation FROM pages WHERE iPage = :page');
+    $oQuery->execute(Array(':page' => (int) $iTeam));
+    $sFormation = (string) ($oQuery->fetchColumn() ?: '');
+    return isset($config['live_formations'][$sFormation]) ? $sFormation : '';
 }
 
 /**

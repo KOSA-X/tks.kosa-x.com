@@ -47,17 +47,35 @@ if (!$bLiveAdmin) {
         $aBoards[] = $aRow;
     }
 
-    // zawodnicy drużyny: wyjściowa 11 → rezerwa → poza kadrą
+    // sortowanie wg pozycji na boisku (bramkarz → obrona → pomoc → atak,
+    // w linii wg numeru) — helpery z modułu live
+    require_once 'plugins/live/view-helpers.php';
+
+    // zawodnicy drużyny: wyjściowa 11 → rezerwa → poza kadrą; w obrębie
+    // grupy porządek pozycyjny (BR → OBR → POM → ATAK, potem numer)
     $fTeamPlayers = function ($iTeam) use ($oSql) {
         if ($iTeam <= 0) {
             return Array();
         }
         $oQuery = $oSql->prepare(
-            'SELECT iPage, sName, sNumber, sSquad FROM pages WHERE iPageParent = :team AND iStatus = 1
+            'SELECT iPage, sName, sNumber, sSquad, sLineup FROM pages WHERE iPageParent = :team AND iStatus = 1
              ORDER BY CASE WHEN sSquad = "1" THEN 0 WHEN sSquad = "2" THEN 1 ELSE 2 END, iPosition ASC, sName COLLATE NOCASE ASC'
         );
         $oQuery->execute(Array(':team' => $iTeam));
-        return $oQuery->fetchAll(PDO::FETCH_ASSOC);
+        $aPlayers   = $oQuery->fetchAll(PDO::FETCH_ASSOC);
+        $sFormation = liveTeamFormation($iTeam);
+
+        // sortuj pozycyjnie WEWNĄTRZ grup składu (kolejność grup zostaje)
+        $aBySquad = Array('1' => Array(), '2' => Array(), '' => Array());
+        foreach ($aPlayers as $aPlayer) {
+            $sSquad = in_array((string) $aPlayer['sSquad'], Array('1', '2'), true) ? (string) $aPlayer['sSquad'] : '';
+            $aBySquad[$sSquad][] = $aPlayer;
+        }
+        return array_merge(
+            liveSortPlayers($aBySquad['1'], $sFormation),
+            liveSortPlayers($aBySquad['2'], $sFormation),
+            liveSortPlayers($aBySquad[''], $sFormation)
+        );
     };
 
     // kafelki zawodników jednej drużyny, pogrupowane wg składu
@@ -86,11 +104,11 @@ if (!$bLiveAdmin) {
             .'<button type="button" class="button lp-player-search-clear">'.html($lang['clear']).'</button>'
             .'</div>';
 
+        // wszystkie grupy renderowane ZAWSZE (puste ukryte) — JS przenosi
+        // kafelki między „Wyjściowa 11" a „Rezerwą" po zmianie in/out
         $aGroupLabels = Array('1' => $lang['live_first_squad'], '2' => $lang['live_reserve'], '' => $lang['live_off_squad']);
         foreach ($aGroups as $sSquad => $aPlayers) {
-            if (empty($aPlayers)) {
-                continue;
-            }
+            $content .= '<div class="livePanel__group" data-squad="'.html($sSquad).'"'.(empty($aPlayers) ? ' hidden' : '').'>';
             $content .= '<h4 class="livePanel__groupLabel">'.$aGroupLabels[$sSquad].'</h4>';
             $content .= '<div class="livePanel__players">';
             foreach ($aPlayers as $aPlayer) {
@@ -105,7 +123,8 @@ if (!$bLiveAdmin) {
                     .'<span class="livePanel__playerDot" data-state="" title="'.$lang['live_dot_title'].'"></span>'
                     .'</button>';
             }
-            $content .= '</div>';
+            $content .= '</div>';   // .livePanel__players
+            $content .= '</div>';   // .livePanel__group
         }
         $content .= '</div>';
         $content .= '</div>';
@@ -203,7 +222,14 @@ if (!$bLiveAdmin) {
                 <input type="text" id="lp-sheet-minute" class="form-control" inputmode="numeric" maxlength="3" />
             </label>
             <div class="livePanel__sheetActions">
-                <?php foreach ($config['live_actions'] as $sKey => $sLabel): ?>
+                <?php
+                // etykiety akcji mogą zawierać HTML (emoji, <img src="images/icons/…">) —
+                // względne ścieżki ikon przepinamy na root, bo panel żyje pod /panel-meczowy/
+                $aActionLabels = array_map(function ($sLabel) use ($config) {
+                    return str_replace('src="images/', 'src="'.$config['base_path_with_slash'].'images/', (string) $sLabel);
+                }, $config['live_actions']);
+                ?>
+                <?php foreach ($aActionLabels as $sKey => $sLabel): ?>
                     <button type="button" class="button livePanel__sheetAction" data-action="<?php echo html($sKey); ?>"><?php echo $sLabel; ?></button>
                 <?php endforeach; ?>
             </div>
@@ -237,7 +263,7 @@ window.livePanelConfig = <?php echo json_encode(Array(
     // root-relative (nie BASE_URL) — działa na każdej domenie/środowisku
     'api'     => $config['base_path_with_slash'].'plugins/live/api.php',
     'csrf'    => hash('sha256', 'csrf|'.$config['session_key_name']),
-    'actions' => $config['live_actions'],
+    'actions' => $aActionLabels, // HTML z root-owymi ścieżkami ikon (jak w arkuszu)
     'badges'  => $config['live_action_badges'],
     'teams'   => Array('1' => $iTeam1, '2' => $iTeam2),
     'players' => $aPlayersConfig,

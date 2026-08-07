@@ -298,68 +298,70 @@ $config['live_replay_url'] = 'http://localhost:8766/replay.mp4';
 // zapisywany w pages.sLineup zawodnika ('' = nieprzypisany). Etykiety linii
 // (OBR/POM/ATAK) panel admina wyprowadza z członów nazwy formacji.
 // @claude-extend: nowa formacja = kolejny wpis w tej mapie, zero zmian w kodzie.
+// W liniach 3- i 4-osobowych SKRAJNI zawodnicy są przesunięci kilka % do
+// przodu (wyższy x) — łamie to sztywną linię, jak na grafikach meczowych.
 $config['live_formations'] = Array(
   '4-4-2' => Array(
     1 => Array(6, 50),
-    2 => Array(22, 15), 3 => Array(22, 38), 4 => Array(22, 62), 5 => Array(22, 85),
-    6 => Array(48, 15), 7 => Array(48, 38), 8 => Array(48, 62), 9 => Array(48, 85),
+    2 => Array(26, 15), 3 => Array(22, 38), 4 => Array(22, 62), 5 => Array(26, 85),
+    6 => Array(52, 15), 7 => Array(48, 38), 8 => Array(48, 62), 9 => Array(52, 85),
     10 => Array(72, 38), 11 => Array(72, 62),
   ),
   '4-3-3' => Array(
     1 => Array(6, 50),
-    2 => Array(22, 15), 3 => Array(22, 38), 4 => Array(22, 62), 5 => Array(22, 85),
-    6 => Array(46, 28), 7 => Array(46, 50), 8 => Array(46, 72),
-    9 => Array(72, 18), 10 => Array(72, 50), 11 => Array(72, 82),
+    2 => Array(26, 15), 3 => Array(22, 38), 4 => Array(22, 62), 5 => Array(26, 85),
+    6 => Array(50, 28), 7 => Array(46, 50), 8 => Array(50, 72),
+    9 => Array(76, 18), 10 => Array(72, 50), 11 => Array(76, 82),
   ),
   '4-2-3-1' => Array(
     1 => Array(6, 50),
-    2 => Array(20, 15), 3 => Array(20, 38), 4 => Array(20, 62), 5 => Array(20, 85),
+    2 => Array(24, 15), 3 => Array(20, 38), 4 => Array(20, 62), 5 => Array(24, 85),
     6 => Array(38, 38), 7 => Array(38, 62),
-    8 => Array(56, 20), 9 => Array(56, 50), 10 => Array(56, 80),
+    8 => Array(60, 20), 9 => Array(56, 50), 10 => Array(60, 80),
     11 => Array(74, 50),
   ),
   '4-2-2-2' => Array(
     1 => Array(6, 50),
-    2 => Array(20, 15), 3 => Array(20, 38), 4 => Array(20, 62), 5 => Array(20, 85),
+    2 => Array(24, 15), 3 => Array(20, 38), 4 => Array(20, 62), 5 => Array(24, 85),
     6 => Array(40, 38), 7 => Array(40, 62),
     8 => Array(58, 25), 9 => Array(58, 75),
     10 => Array(74, 38), 11 => Array(74, 62),
   ),
   '4-5-1' => Array(
     1 => Array(6, 50),
-    2 => Array(22, 15), 3 => Array(22, 38), 4 => Array(22, 62), 5 => Array(22, 85),
+    2 => Array(26, 15), 3 => Array(22, 38), 4 => Array(22, 62), 5 => Array(26, 85),
     6 => Array(48, 12), 7 => Array(48, 31), 8 => Array(48, 50), 9 => Array(48, 69), 10 => Array(48, 88),
     11 => Array(74, 50),
   ),
   '4-1-4-1' => Array(
     1 => Array(6, 50),
-    2 => Array(20, 15), 3 => Array(20, 38), 4 => Array(20, 62), 5 => Array(20, 85),
+    2 => Array(24, 15), 3 => Array(20, 38), 4 => Array(20, 62), 5 => Array(24, 85),
     6 => Array(36, 50),
-    7 => Array(54, 15), 8 => Array(54, 38), 9 => Array(54, 62), 10 => Array(54, 85),
+    7 => Array(58, 15), 8 => Array(54, 38), 9 => Array(54, 62), 10 => Array(58, 85),
     11 => Array(74, 50),
   ),
   '3-5-2' => Array(
     1 => Array(6, 50),
-    2 => Array(22, 25), 3 => Array(22, 50), 4 => Array(22, 75),
+    2 => Array(26, 25), 3 => Array(22, 50), 4 => Array(26, 75),
     5 => Array(46, 10), 6 => Array(46, 32), 7 => Array(46, 50), 8 => Array(46, 68), 9 => Array(46, 90),
     10 => Array(72, 38), 11 => Array(72, 62),
   ),
   '3-4-3' => Array(
     1 => Array(6, 50),
-    2 => Array(22, 25), 3 => Array(22, 50), 4 => Array(22, 75),
-    5 => Array(46, 15), 6 => Array(46, 38), 7 => Array(46, 62), 8 => Array(46, 85),
-    9 => Array(72, 20), 10 => Array(72, 50), 11 => Array(72, 80),
+    2 => Array(26, 25), 3 => Array(22, 50), 4 => Array(26, 75),
+    5 => Array(50, 15), 6 => Array(46, 38), 7 => Array(46, 62), 8 => Array(50, 85),
+    9 => Array(76, 20), 10 => Array(72, 50), 11 => Array(76, 80),
   ),
   '5-3-2' => Array(
     1 => Array(6, 50),
     2 => Array(22, 10), 3 => Array(22, 30), 4 => Array(22, 50), 5 => Array(22, 70), 6 => Array(22, 90),
-    7 => Array(46, 28), 8 => Array(46, 50), 9 => Array(46, 72),
+    7 => Array(50, 28), 8 => Array(46, 50), 9 => Array(50, 72),
     10 => Array(72, 38), 11 => Array(72, 62),
   ),
   '5-4-1' => Array(
     1 => Array(6, 50),
     2 => Array(20, 10), 3 => Array(20, 30), 4 => Array(20, 50), 5 => Array(20, 70), 6 => Array(20, 90),
-    7 => Array(48, 15), 8 => Array(48, 38), 9 => Array(48, 62), 10 => Array(48, 85),
+    7 => Array(52, 15), 8 => Array(48, 38), 9 => Array(48, 62), 10 => Array(52, 85),
     11 => Array(74, 50),
   ),
 );

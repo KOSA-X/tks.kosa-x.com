@@ -202,8 +202,29 @@
         });
     }
 
+    // przeniesienie kafelka zawodnika do innej grupy składu (bez zapisu do
+    // bazy — sSquad zostaje protokołowy; to tylko widok operatora)
+    function movePlayerTile(playerId, targetSquad) {
+        var $tile = $('.livePanel__player[data-player="' + playerId + '"]');
+        if (!$tile.length) {
+            return;
+        }
+        var $team = $tile.closest('.livePanel__team');
+        var $group = $team.find('.livePanel__group[data-squad="' + targetSquad + '"]');
+        if (!$group.length || $group.find($tile).length) {
+            return; // brak celu albo kafelek już w tej grupie
+        }
+        $group.prop('hidden', false).find('.livePanel__players').append($tile);
+        $tile.toggleClass('is-bench', targetSquad === '2');
+        // grupy opróżnione przez przenosiny chowamy
+        $team.find('.livePanel__group').each(function () {
+            $(this).prop('hidden', $(this).find('.livePanel__player').length === 0);
+        });
+    }
+
     function applyOnPitch(events) {
         // ostatnie zdarzenie in/out zawodnika decyduje o oznaczeniu kafelka
+        // ORAZ o grupie: wszedł → „Wyjściowa 11", zszedł → „Rezerwa"
         $('.livePanel__player').removeClass('is-on is-out');
         var lastState = {};
         $.each(events, function (i, ev) {
@@ -214,6 +235,7 @@
         $.each(lastState, function (playerId, action) {
             $('.livePanel__player[data-player="' + playerId + '"]')
                 .addClass(action === 'in' ? 'is-on' : 'is-out');
+            movePlayerTile(playerId, action === 'in' ? '1' : '2');
         });
     }
 
@@ -390,7 +412,8 @@
             sAction: action,
             sMinute: $('#lp-sheet-minute').val()
         }, function () {
-            toast(cfg.actions[action] + ' — OK');
+            // etykiety akcji zawierają HTML (ikony) — do toastu sam tekst
+            toast($('<div>').html(cfg.actions[action] || action).text() + ' — OK');
             closeSheet();
             loadEvents(true);
         });

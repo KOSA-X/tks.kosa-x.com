@@ -95,7 +95,11 @@
         var body = el('div', 'obsEvent__body');
         var label = el('div', 'obsEvent__label');
 //        label.appendChild(iconFor(ev.action));
-        label.appendChild(el('span', '', cfg.actions[ev.action] || ev.action));
+        // etykiety akcji z configu zawierają HTML (emoji / <img> ikony) —
+        // innerHTML zamiast textContent, żeby ikona się wyrenderowała
+        var actionSpan = el('span', '');
+        actionSpan.innerHTML = cfg.actions[ev.action] || ev.action;
+        label.appendChild(actionSpan);
         if (ev.minute !== '') {
             label.appendChild(el('span', 'obsEvent__minute', ev.minute + "'"));
         }

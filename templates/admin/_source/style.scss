@@ -779,8 +779,11 @@ select {
     outline: none;
 }
 
-// select arrow
+// select arrow — własna strzałka z arrow-down.svg zamiast natywnej
+// (appearance:none zdejmuje systemową, żeby nie było dwóch naraz)
 select {
+    appearance: none;
+    -webkit-appearance: none;
     background-image: url(../img/arrow-down.svg);
     background-position: calc(100% - 15px) center;
     background-size: 16px;

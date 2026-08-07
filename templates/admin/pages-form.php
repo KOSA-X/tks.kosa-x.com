@@ -200,7 +200,7 @@ require_once 'templates/admin/_menu.php';
 
                </div>
                <div class="col-6">
-                   
+
                    <div class="form-item">
                 <label for="sSquad">Skład meczowy</label>
                 <?php $sSquad = (string) ($aData['sSquad'] ?? ''); ?>
@@ -211,14 +211,33 @@ require_once 'templates/admin/_menu.php';
                     <?php endforeach; ?>
                 </select>
             </div>
-              
+
                </div>
            </div>
-            
+
         </li>
 
         <li>
-            
+            <div class="form-item">
+                <label for="sLineup">Pozycja na boisku</label>
+                <?php
+                // etykiety slotów 1-11 wg formacji drużyny-rodzica (pages.sFormation);
+                // strona bez rodzica-drużyny → gołe numery slotów
+                require_once 'plugins/live/view-helpers.php';
+                $sTeamFormation = liveTeamFormation((int) ($iPageParent ?? 0));
+                $aSlotLines     = liveSlotLines($sTeamFormation);
+                $iAttackLine    = $sTeamFormation !== '' ? count(explode('-', $sTeamFormation)) : -1;
+                $iLineupValue   = (int) ($aData['sLineup'] ?? 0);
+                ?>
+                <select name="sLineup" id="sLineup">
+                    <option value="">—</option>
+                    <?php foreach ($aSlotLines as $iSlot => $iLine):
+                        $sLineName = $iLine === 0 ? 'BR' : ($iLine === 1 ? 'OBR' : ($iLine === $iAttackLine ? 'ATAK' : ($iLine === 9 ? '' : 'POM')));
+                    ?>
+                        <option value="<?php echo $iSlot; ?>"<?php echo $iLineupValue === $iSlot ? ' selected="selected"' : ''; ?>><?php echo $iSlot.($sLineName !== '' ? ' — '.$sLineName : ''); ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
         </li>
 
         <li class="short-description d-none">

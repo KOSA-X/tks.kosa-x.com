@@ -23,6 +23,9 @@ if( !defined( 'ADMIN_PAGE' ) ){
 $iTeamsMenu = (int) ( $config['teams_menu'] ?? 0 );
 $iTeam      = (int) ( $_GET['iTeam'] ?? 0 );
 
+// sortowanie pozycyjne kadry (BR → OBR → POM → ATAK) — helpery modułu live
+require_once 'plugins/live/view-helpers.php';
+
 // ============================================================
 // ZAPIS KADRY (zbiorczy: numery + składy)
 // ============================================================
@@ -173,6 +176,19 @@ if( $iTeam > 0 && ( $_GET['sOption'] ?? '' ) !== 'new-player' ){
     );
     $oPlayers->execute( Array( ':team' => $iTeam ) );
     $aPlayers = $oPlayers->fetchAll( PDO::FETCH_ASSOC );
+
+    // porządek pozycyjny WEWNĄTRZ grup składu: BR → OBR → POM → ATAK
+    // (linia ze slotu sLineup + formacji), w linii wg numeru na koszulce
+    $aBySquad = Array( '1' => Array( ), '2' => Array( ), '' => Array( ) );
+    foreach( $aPlayers as $aPlayer ){
+        $sKey = in_array( (string) $aPlayer['sSquad'], Array( '1', '2' ), true ) ? (string) $aPlayer['sSquad'] : '';
+        $aBySquad[$sKey][] = $aPlayer;
+    }
+    $aPlayers = array_merge(
+        liveSortPlayers( $aBySquad['1'], $sTeamFormation ),
+        liveSortPlayers( $aBySquad['2'], $sTeamFormation ),
+        liveSortPlayers( $aBySquad[''], $sTeamFormation )
+    );
 
     $aSquadButtons = Array( '1' => '11', '2' => 'Rezerwa', '' => 'Poza kadrą' );
     $aLineupLabels = $fLineupLabels( $sTeamFormation );

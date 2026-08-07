@@ -1,5 +1,56 @@
 # Changelog
 
+## 2026-08-07 — Paczka poprawek: wsparcie-grid, opisy log, sztab, pozycje wszędzie, sort pozycyjny, live-przeskok w panelu
+- **Plansza „Wsparcie"** (dawny sponsor_meczu, przemianowany w bazie):
+  grid logotypów zakładki jak u sponsorów + `sDescriptionFull` POD gridem;
+  markup przepięty na `data-board="wsparcie"` (po zmianie sName plansza
+  nie reagowała na przełącznik z panelu)
+- **Opisy w galeriach**: każde `<li>` w `.obsGallery` dostaje
+  `<span class="description">` z `files.sDescription` (tytuł loga) pod
+  zdjęciem — sponsorzy / partnerzy / realizacja / wsparcie / sędziowie
+  (galeria sędziów przepisana z gołych `<img>` na `<ul><li>`)
+- **Sztab nad składem**: plansze składów pokazują CAŁY `sDescriptionFull`
+  drużyny (wcześniej szukały bloku `.teamStaff`, którego już nie ma —
+  sztab się nie wyświetlał); styl dla listy `<ul>` (role przygaszone,
+  nazwiska mocne, rozkład poziomy); to samo w helperze telebimu
+- **Popup zdarzenia**: etykiety akcji renderowane jako HTML (emoji,
+  `<img>` ikony z configu) — wcześniej surowy HTML jako tekst; względne
+  `src="images/…"` przepinane na root we wszystkich widokach (nakładka,
+  panel — arkusz akcji + lista zdarzeń, telebim); toast w panelu
+  pokazuje samą treść tekstową
+- **Formacje ze staggerem**: w liniach 3- i 4-osobowych skrajni zawodnicy
+  przesunięci kilka % w stronę bramki przeciwnika (koordynaty w
+  `live_formations`) — skład 3D nie stoi w sztywnych liniach
+- **Pozycja wszędzie w adminie**: pole „Pozycja na boisku" w edycji strony
+  zawodnika (pages-form, etykiety wg formacji drużyny-rodzica, zapis przez
+  savePage) oraz w **imporcie protokołu** — ekran korekty ma select
+  formacji (zapis do `pages.sFormation`) i kolumnę Pozycja per wiersz
+  (prefill z obecnych slotów po nazwisku; zmiana formacji od razu
+  podmienia etykiety OBR/POM/ATAK; nowe wiersze też z selectem)
+- **Sztab z importu → `sDescriptionFull`** drużyny jako
+  `<ul><li>Rola: <strong>Nazwisko</strong></li></ul>` (NADPISUJE pole;
+  wcześniej blok `.teamStaff` w sDescriptionShort); zawodnicy spoza
+  protokołu tracą też slot pozycji (`sLineup=""`)
+- **Sort pozycyjny**: kadra w panelu admina i kafelki w Panelu Meczowym
+  sortowane bramkarz → obrona → pomoc → atak (linia ze slotu + formacji),
+  w obrębie linii wg numeru na koszulce; helpery `liveSlotLines()` /
+  `liveSortPlayers()` / `liveTeamFormation()` w plugins/live/view-helpers.php
+  (guard dopuszcza teraz także ADMIN_PAGE)
+- **Panel Meczowy — live przeskok 11 ↔ Rezerwa**: po akcji „wchodzi"
+  kafelek zawodnika od razu przeskakuje do grupy „Wyjściowa 11", po
+  „schodzi" — do „Rezerwy" (bez przeładowania; stan liczony z historii
+  in/out, więc po odświeżeniu strony układ się zgadza; sSquad w bazie
+  zostaje protokołowy); grupy renderowane zawsze (puste ukryte)
+- **Strzałka selectów w adminie**: brakował plik `img/arrow-down.svg`,
+  do którego CSS się odwołuje — dodany + `appearance:none` (bez dwóch
+  strzałek naraz)
+- E2E: sztab ul nad składem, popup „schodzi" z załadowaną ikoną
+  `/images/icons/out.png`, wsparcie grid+opis, opisy pod 11 logami
+  sponsorów, stagger 4-4-2, sort XI w panelu (22-BR, 5-9-12-15 OBR,
+  6-13-27-40 POM, 10-18 ATAK), kafelek rezerwowego w grupie „11" po
+  evencie in, pages-form/import z selectami pozycji, zapis importu
+  (formacja 3-5-2 + sloty + sztab-ul) — zielone
+
 ## 2026-08-07 — Drużyny: „Nowy zawodnik" zamiast „Nowej drużyny" + miniaturki w kadrze
 - **Usunięty skrót „Nowa drużyna"** (formularz, widok, przycisk, pozycja
   submenu) — drużyny dodaje się przez Strony → Nowa strona (pełny formularz

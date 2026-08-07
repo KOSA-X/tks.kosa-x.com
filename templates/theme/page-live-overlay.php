@@ -43,14 +43,27 @@ $fPageImage = function ($iPage, $iPreferType = 0) use ($oSql) {
     return (string) ($oQuery->fetchColumn() ?: '');
 };
 
-// wszystkie obrazki strony (galerie plansz)
+// wszystkie obrazki strony (galerie plansz) — plik + opis (tytuł loga)
 $fPageImages = function ($iPage) use ($oSql) {
     if ($iPage <= 0) {
         return Array();
     }
-    $oQuery = $oSql->prepare('SELECT sFileName FROM files WHERE iPage = :page AND iSize > 0 ORDER BY iPosition ASC');
+    $oQuery = $oSql->prepare('SELECT sFileName, sDescription FROM files WHERE iPage = :page AND iSize > 0 ORDER BY iPosition ASC');
     $oQuery->execute(Array(':page' => $iPage));
-    return $oQuery->fetchAll(PDO::FETCH_COLUMN);
+    return $oQuery->fetchAll(PDO::FETCH_ASSOC);
+};
+
+// pozycje galerii logotypów: <li> ze zdjęciem + opisem (files.sDescription)
+// pod spodem — jedna funkcja dla wszystkich plansz z obsGallery
+$fGalleryItems = function ($aImages) use ($sFiles) {
+    $content = '';
+    foreach ($aImages as $aImage) {
+        $sDesc = trim((string) ($aImage['sDescription'] ?? ''));
+        $content .= '<li><img src="'.$sFiles.html((string) $aImage['sFileName']).'" alt="" />'
+            .($sDesc !== '' ? '<span class="description">'.html($sDesc).'</span>' : '')
+            .'</li>';
+    }
+    return $content;
 };
 
 // dane drużyny: nazwa, skrót (sDesc lub 3 pierwsze litery), herb (iType=2 → logo)
@@ -89,15 +102,17 @@ $fSquad = function ($iTeam) use ($oSql) {
     return $aGroups;
 };
 
-// sztab: blok .teamStaff zapisany w opisie drużyny przez importer protokołu
+// sztab szkoleniowy = CAŁY opis pełny drużyny (importer zapisuje tam
+// listę <ul> z rolami; wszystko, co wpiszesz w opisie drużyny, pokaże
+// się nad składem — bez wyszukiwania specjalnego bloku)
 $fStaffBlock = function ($iTeam) use ($oSql) {
     if ($iTeam <= 0) {
         return '';
     }
     $oQuery = $oSql->prepare('SELECT sDescriptionFull FROM pages WHERE iPage = :page');
     $oQuery->execute(Array(':page' => $iTeam));
-    $sDesc = (string) ($oQuery->fetchColumn() ?: '');
-    return preg_match('#<div class="teamStaff">.*?</div>#s', $sDesc, $aMatch) ? $aMatch[0] : '';
+    $sDesc = trim((string) ($oQuery->fetchColumn() ?: ''));
+    return $sDesc !== '' ? parseShortcodes($sDesc) : '';
 };
 
 $aTeam1 = $fTeamData($iTeam1);
@@ -128,10 +143,10 @@ $aPartnerImages    = $fPageImages((int) ($config['live_partners_page'] ?? 0));
 $aProductionImages = $fPageImages((int) ($config['live_production_page'] ?? 0));
 $sProductionTitle  = (string) (getData((int) ($config['live_production_page'] ?? 0), 'sName') ?? '');
 
-// sponsor meczu: 1 duże logo (pierwszy obrazek zakładki) + opis pełny
-$iMatchSponsor     = (int) ($config['live_match_sponsor_page'] ?? 0);
-$sMatchSponsorLogo = $iMatchSponsor > 0 ? $fPageImage($iMatchSponsor) : '';
-$sMatchSponsorDesc = $iMatchSponsor > 0 ? (string) (getData($iMatchSponsor, 'sDescriptionFull') ?? '') : '';
+// wsparcie: grid logotypów zakładki (jak sponsorzy) + opis pełny pod gridem
+$iSupportPage   = (int) ($config['live_match_sponsor_page'] ?? 0);
+$aSupportImages = $iSupportPage > 0 ? $fPageImages($iSupportPage) : Array();
+$sSupportDesc   = $iSupportPage > 0 ? (string) (getData($iSupportPage, 'sDescriptionFull') ?? '') : '';
 
 $sCssVer = @filemtime('templates/'.$config['skin'].'/css/live-overlay.css') ?: 1;
 $sJsVer  = @filemtime('templates/'.$config['skin'].'/js/page-live-overlay.js') ?: 1;
@@ -407,11 +422,9 @@ $fPitchBoard = function ($sBoard, $iTeam, $aTeam) use ($fLineup, $fFormation, $f
         <div class="obsBoard__content">
             <?php if ($sReferees !== ''): ?><div class="obsReferees"><?php echo parseShortcodes($sReferees); ?></div><?php endif; ?>
             <?php if (!empty($aRefereeImages)): ?>
-            <div class="obsGallery">
-                <?php foreach ($aRefereeImages as $sImage): ?>
-                    <img src="<?php echo $sFiles.html($sImage); ?>" alt="" />
-                <?php endforeach; ?>
-            </div>
+            <ul class="obsGallery">
+                <?php echo $fGalleryItems($aRefereeImages); ?>
+            </ul>
             <?php endif; ?>
         </div>
         <?php echo $sBoardFooter; ?>
@@ -424,9 +437,7 @@ $fPitchBoard = function ($sBoard, $iTeam, $aTeam) use ($fLineup, $fFormation, $f
         <header class="obsBoard__header"><span class="title"><?php echo html($aBoardLabels['sponsorzy'] ?? ''); ?></span></header>
         <div class="obsBoard__content">
             <ul class="obsGallery">
-                <?php foreach ($aSponsorImages as $sImage): ?>
-                    <li><img src="<?php echo $sFiles.html($sImage); ?>" alt="" /></li>
-                <?php endforeach; ?>
+                <?php echo $fGalleryItems($aSponsorImages); ?>
             </ul>
         </div>
         <?php echo $sBoardFooter; ?>
@@ -439,8 +450,8 @@ $fPitchBoard = function ($sBoard, $iTeam, $aTeam) use ($fLineup, $fFormation, $f
         <div class="obsSponsorTicker__track" style="animation-duration: <?php echo max(24, count($aSponsorImages) * 2); ?>s">
             <?php for ($i = 0; $i < 2; $i++): // 2x ta sama grupa = pętla bez szwu ?>
             <div class="obsSponsorTicker__group">
-                <?php foreach ($aSponsorImages as $sImage): ?>
-                    <img src="<?php echo $sFiles.html($sImage); ?>" alt="" />
+                <?php foreach ($aSponsorImages as $aImage): ?>
+                    <img src="<?php echo $sFiles.html((string) $aImage['sFileName']); ?>" alt="" />
                 <?php endforeach; ?>
             </div>
             <?php endfor; ?>
@@ -454,24 +465,24 @@ $fPitchBoard = function ($sBoard, $iTeam, $aTeam) use ($fLineup, $fFormation, $f
         <header class="obsBoard__header"><span class="title"><?php echo html($aBoardLabels['partnerzy_glowni'] ?? ''); ?></span></header>
         <div class="obsBoard__content">
             <ul class="obsGallery obsGallery3">
-                <?php foreach ($aPartnerImages as $sImage): ?>
-                    <li><img src="<?php echo $sFiles.html($sImage); ?>" alt="" /></li>
-                <?php endforeach; ?>
+                <?php echo $fGalleryItems($aPartnerImages); ?>
             </ul>
         </div>
         <?php echo $sBoardFooter; ?>
     </div>
     <?php endif; ?>
 
-    <?php if ($sMatchSponsorLogo !== '' || $sMatchSponsorDesc !== ''): ?>
-    <!-- PLANSZA: WSPARCIE) -->
-    <div class="obsBoard obsShow" data-board="sponsor_meczu">
-        <header class="obsBoard__header"><span class="title"><?php echo html($aBoardLabels['sponsor_meczu'] ?? ''); ?></span></header>
+    <?php if (!empty($aSupportImages) || $sSupportDesc !== ''): ?>
+    <!-- PLANSZA: WSPARCIE (grid logotypów jak sponsorzy + opis pełny pod gridem) -->
+    <div class="obsBoard obsShow" data-board="wsparcie">
+        <header class="obsBoard__header"><span class="title"><?php echo html($aBoardLabels['wsparcie'] ?? ''); ?></span></header>
         <div class="obsBoard__content">
-            <div class="obsMatchSponsor">
-                <?php if ($sMatchSponsorLogo !== ''): ?><div class="obsMatchSponsor__logo"><img class="" src="<?php echo $sFiles.html($sMatchSponsorLogo); ?>" alt="" /></div><?php endif; ?>
-                <?php if ($sMatchSponsorDesc !== ''): ?><div class="obsMatchSponsor__desc"><?php echo parseShortcodes($sMatchSponsorDesc); ?></div><?php endif; ?>
-            </div>
+            <?php if (!empty($aSupportImages)): ?>
+            <ul class="obsGallery obsGallery3">
+                <?php echo $fGalleryItems($aSupportImages); ?>
+            </ul>
+            <?php endif; ?>
+            <?php if ($sSupportDesc !== ''): ?><div class="obsMatchSponsor__desc"><?php echo parseShortcodes($sSupportDesc); ?></div><?php endif; ?>
         </div>
         <?php echo $sBoardFooter; ?>
     </div>
@@ -496,9 +507,7 @@ $fPitchBoard = function ($sBoard, $iTeam, $aTeam) use ($fLineup, $fFormation, $f
         <header class="obsBoard__header"><span class="title"><?php echo html($sProductionTitle !== '' ? $sProductionTitle : ($aBoardLabels['realizacja_transmisji'] ?? '')); ?></span></header>
         <div class="obsBoard__content">
             <ul class="obsGallery obsGallery3">
-                <?php foreach (array_slice($aProductionImages, 0, 4) as $sImage): ?>
-                    <li><img src="<?php echo $sFiles.html($sImage); ?>" alt="" /></li>
-                <?php endforeach; ?>
+                <?php echo $fGalleryItems(array_slice($aProductionImages, 0, 4)); ?>
             </ul>
         </div>
         <?php echo $sBoardFooter; ?>
@@ -515,10 +524,17 @@ $fPitchBoard = function ($sBoard, $iTeam, $aTeam) use ($fLineup, $fFormation, $f
 </div>
 
 <script>
+<?php
+// etykiety akcji mogą zawierać HTML (emoji, <img src="images/icons/…">) —
+// względne ścieżki ikon przepinamy na root, bo nakładka żyje pod /nakladka-obs/
+$aActionLabels = array_map(function ($sLabel) use ($sRoot) {
+    return str_replace('src="images/', 'src="'.$sRoot.'images/', (string) $sLabel);
+}, $config['live_actions']);
+?>
 window.liveOverlayConfig = <?php echo json_encode(Array(
     'api'      => $sRoot.'plugins/live/api.php',
     'filesUrl' => $sFiles,
-    'actions'  => $config['live_actions'],
+    'actions'  => $aActionLabels,
     'teams'    => Array(
         (string) $iTeam1 => Array('name' => $aTeam1['name'], 'short' => $aTeam1['short'], 'logo' => $aTeam1['logo']),
         (string) $iTeam2 => Array('name' => $aTeam2['name'], 'short' => $aTeam2['short'], 'logo' => $aTeam2['logo']),
