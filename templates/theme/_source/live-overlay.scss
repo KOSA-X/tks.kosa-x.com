@@ -723,6 +723,25 @@ img {
     }
 }
 
+// kaskada sztabu szkoleniowego (ul z opisu drużyny — TinyMCE, bez --i):
+// wjazd z lewej jak teamList, opóźnienia z :nth-child; obejmuje sztab na
+// planszy składu ORAZ pasek nad boiskiem 3D (ta sama klasa)
+.obsBoard .obsSquad__staff li {
+    opacity: 0;
+    transform: translate3d(-28px, 0, 0);
+}
+
+.obsBoard.is-visible .obsSquad__staff li {
+    animation: obsRowIn .45s cubic-bezier(.22, 1, .36, 1) forwards;
+    animation-delay: 1.1s;
+}
+
+@for $i from 1 through 10 {
+    .obsBoard.is-visible .obsSquad__staff li:nth-child(#{$i}) {
+        animation-delay: .25s + ($i - 1) * .08s;
+    }
+}
+
 // kaskada wierszy tabel w treści plansz (tabela sędziów, statystyki dnia
 // meczowego itp. z TinyMCE) — wjazd z lewej jak teamList; w treści
 // z edytora nie da się ustawić --i, więc opóźnienia też z :nth-child
@@ -750,8 +769,27 @@ img {
 // postaci w głębi. Murawa CELOWO w granacie marki, nie w zieleni: scena
 // nakładki jest kluczowana chroma (zielone tło), zielone boisko OBS
 // wyciąłby z obrazu. Tylko transform/opacity — płynne w OBS.
+// rejestracja własności kąta pochylenia — bez @property przeglądarka nie
+// umie płynnie animować custom property (traktuje ją jak zwykły tekst)
+@property --pitch-tilt {
+    syntax: '<angle>';
+    inherits: true;
+    initial-value: 50deg;
+}
+
 .obsPitchBoard {
-    --pitch-tilt: 50deg;
+    // wejście planszy: boisko startuje bardziej "z góry" (34deg) i w trakcie
+    // kaskady zawodników płynnie kładzie się do docelowych 50deg; kontr-
+    // rotacja chipów czyta tę samą zmienną, więc zawodnicy stoją pionowo
+    // przez cały ruch. Ukrycie planszy wraca do 34deg = reset przed kolejnym
+    // pokazaniem.
+    --pitch-tilt: 34deg;
+    transition: opacity .35s ease, transform .45s cubic-bezier(.22, 1, .36, 1),
+        --pitch-tilt 2.2s cubic-bezier(.22, 1, .36, 1);
+
+    &.is-visible {
+        --pitch-tilt: 50deg;
+    }
 
     .obsBoard__content {
         padding: 10px 40px 0;
@@ -1281,10 +1319,16 @@ img {
     .obsBoard .teamList li,
     .obsBoard .obsGallery li,
     .obsBoard .obsGallery > img,
+    .obsBoard .obsSquad__staff li,
     .obsBoard .obsBoard__content table tr {
         opacity: 1;
         transform: none;
         animation: none;
+    }
+
+    .obsPitchBoard {
+        --pitch-tilt: 50deg; // bez animacji pochylania boiska
+        transition-duration: .01s;
     }
 
     .obsPitchBoard .obsPitch__inner {

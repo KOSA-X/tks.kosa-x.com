@@ -32,6 +32,20 @@
     var queue = [];
     var busy = false;
     var summaryFetchedAt = 0;
+    var pollInFlight = false;   // jedno żądanie stanu naraz (bez wyścigu odpowiedzi)
+
+    // OCHRONA PRZED POWTÓRKĄ KOMUNIKATÓW: id ostatniego pokazanego zdarzenia
+    // przeżywa odświeżenie/reset telebimu (localStorage) — zdarzenie raz
+    // zakolejkowane nigdy nie wróci
+    var STORAGE_KEY = 'tbLastShownEventId';
+    var lastShownId = parseInt(localStorage.getItem(STORAGE_KEY) || '0', 10) || 0;
+
+    function rememberShown(id) {
+        if (id > lastShownId) {
+            lastShownId = id;
+            try { localStorage.setItem(STORAGE_KEY, String(lastShownId)); } catch (e) {}
+        }
+    }
 
     // ------------------------------------------------------------
     // POMOCNICZE
@@ -399,21 +413,40 @@
         }
 
         // zdarzenia: pierwszy odczyt tylko ustawia kursor (bez historii),
-        // kolejne — do kolejki (gol z klipem = cieszynka wideo)
+        // kolejne — do kolejki (gol z klipem = cieszynka wideo).
+        // lastShownId (localStorage): zdarzenie raz zakolejkowane nie wraca —
+        // nawet po odświeżeniu telebimu albo wyścigu żądań bez kursora
+        var iLastId = parseInt(data.last_event_id, 10) || 0;
+        if (iLastId < lastShownId) {
+            // historia wyczyszczona (nowy mecz) — cofnij znacznik
+            lastShownId = iLastId;
+            try { localStorage.setItem(STORAGE_KEY, String(lastShownId)); } catch (e) {}
+        }
         if (sinceId === null) {
-            sinceId = data.last_event_id;
+            sinceId = iLastId;
+            rememberShown(iLastId); // stan zastany przy starcie nie jest "nowy"
         } else {
-            data.events.forEach(function (ev) { queue.push(ev); });
-            sinceId = data.last_event_id;
+            data.events.forEach(function (ev) {
+                if (ev.id > lastShownId) {
+                    queue.push(ev);
+                    rememberShown(ev.id);
+                }
+            });
+            sinceId = iLastId;
             processQueue();
         }
     }
 
     function poll() {
+        if (pollInFlight) {
+            return; // poprzednie żądanie jeszcze trwa — bez dubli kursora
+        }
+        pollInFlight = true;
         fetch(cfg.api + '?action=state' + (sinceId !== null ? '&since=' + sinceId : ''))
             .then(function (response) { return response.json(); })
             .then(applyState)
-            .catch(function () {}); // chwilowy brak sieci — zostaje ostatni stan
+            .catch(function () {}) // chwilowy brak sieci — zostaje ostatni stan
+            .finally(function () { pollInFlight = false; });
     }
 
     preloadClips();

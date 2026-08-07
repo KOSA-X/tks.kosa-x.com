@@ -1,5 +1,27 @@
 # Changelog
 
+## 2026-08-07 — Skład 3D: animacja pochylenia boiska + kaskada sztabu; ochrona przed powtórką popupów
+- **Animacja boiska przy wejściu planszy 3D**: plansza pokazuje się z kątem
+  34° i w trakcie kaskadowego wczytywania zawodników płynnie kładzie się
+  do docelowych 50° (2.2 s); `--pitch-tilt` zarejestrowany przez
+  `@property` (bez tego custom property nie da się animować), a kontr-
+  rotacja chipów czyta tę samą zmienną — zawodnicy stoją pionowo przez
+  cały ruch; ukrycie planszy cofa kąt (reset przed kolejnym pokazaniem);
+  `prefers-reduced-motion` pomija animację
+- **Kaskada sztabu szkoleniowego**: pozycje `<li>` sztabu (opis drużyny
+  z TinyMCE) wjeżdżają z lewej jeden po drugim (opóźnienia z :nth-child,
+  jak wiersze tabel) — na planszy składu i nad boiskiem 3D
+- **Ochrona przed powtórką komunikatów** (nakładka + telebim): id
+  ostatniego pokazanego zdarzenia w `localStorage` — po odświeżeniu/resecie
+  źródła w OBS raz pokazany GOL/ZMIANA itd. nie wraca do kolejki; do tego
+  blokada równoległych żądań stanu (wyścig dwóch odpowiedzi bez kursora
+  potrafił zakolejkować całą historię — to było źródło problemu) i
+  liczbowe zabezpieczenie kursora; wyczyszczenie historii (Nowy mecz)
+  cofa znacznik, więc kolejny mecz znowu pokazuje wszystko
+- E2E: kąt w trakcie animacji 44° → 50° po 2.2 s, sztab z opóźnieniami
+  0.25/0.33/0.41 s, popup po insercie zdarzenia pokazany raz, po
+  przeładowaniu strony 0 powtórek (znacznik w localStorage) — zielone
+
 ## 2026-08-07 — Nakładka v2: sort składów + (br), bez plakatu, płynny slider, ławka nad boiskiem 3D, badge sponsora meczu
 - **Plansza składu (zwykła)**: wyjściowa 11 ORAZ rezerwa posortowane
   pozycyjnie jak w panelu admina (BR → OBR → POM → ATAK wg slotu+formacji,
