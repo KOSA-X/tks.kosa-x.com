@@ -48,5 +48,5 @@ if( !defined( 'CUSTOMER_PAGE' ) && !defined( 'ADMIN_PAGE' ) ) { exit; }
 // $config['instagram_accounts']['main']['access_token'] = '';
 
 // --- Transmisja live (moduł meczowy TKS) ---
- $config['anthropic_api_key']  = '';   // vision OCR protokołu meczowego
+ $config['anthropic_api_key']  = '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';   // vision OCR protokołu meczowego
 // $config['elevenlabs_api_key'] = '';   // komunikaty głosowe (TTS)

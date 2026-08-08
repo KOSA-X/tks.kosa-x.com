@@ -924,6 +924,8 @@ img {
         width: 100%;
         height: 100%;
         @include flexbox;
+        @include font-l;
+        @include font-medium;
         align-items: center;
         justify-content: center;
         // font-weight: 900;
@@ -1241,7 +1243,7 @@ img {
         background: $brand-dark;
         // font-size: 15px;
         // font-weight: 800;
-        letter-spacing: .14em;
+//        letter-spacing: .14em;
         text-transform: uppercase;
         color: $white;
         @include border-radius;

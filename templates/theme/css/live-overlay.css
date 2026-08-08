@@ -2378,6 +2378,8 @@ img {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  font-size: 1.4em;
+  font-weight: 500;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
@@ -2699,7 +2701,6 @@ img {
 .obsSponsorBadge__label {
   padding: 5px 14px;
   background: #000f1b;
-  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: #fff;
   border-radius: 5px;
