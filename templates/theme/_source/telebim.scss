@@ -8,9 +8,12 @@
 // Build (razem z motywem):
 //   npx sass _source/telebim.scss css/telebim.css --style=compressed
 //
-// SKALOWANIE: projekt bazowy 768x512 → 1rem = 1/48 szerokości ekranu
-// (16px przy 768). Wszystkie wymiary w rem — layout rośnie z ekranem LED
-// niezależnie od jego fizycznej rozdzielczości.
+// SKALOWANIE: projekt bazowy 16:9 → 1rem = 1/48 szerokości ekranu,
+// ALE nie więcej niż 1/27 wysokości okna (to ta sama wartość przy pełnym
+// 16:9). Kiosk na macOS ma przycięte okno paskiem systemowym — wtedy
+// skala liczy się z realnej WYSOKOŚCI (dvh) i całość proporcjonalnie
+// maleje, zamiast wystawać poza ekran (scrollbar). Wszystkie wymiary
+// w rem — layout dopasowuje się do okna 720p, 1080p i każdego pomiędzy.
 //
 // ZASADA CZYTELNOŚCI (wzór: stary telebim w _old): widzowie patrzą
 // Z TRYBUN — wszystko jest OLBRZYMIE i uproszczone. Plansza „wynik" to
@@ -35,14 +38,22 @@
 }
 
 html {
-    font-size: calc(100vw / 48); // 16px @ 768 — baza skali rem
+    // baza skali rem: 1/48 szerokości, przycięte okno → 1/27 wysokości
+    // (przy pełnym 16:9 obie wartości są identyczne); dvh = realna
+    // wysokość okna, fallback vh dla starszych silników
+    font-size: min(calc(100vw / 48), calc(100vh / 27));
+    font-size: min(calc(100vw / 48), calc(100dvh / 27));
 }
 
 html,
 body {
-    overflow: hidden;
+    overflow: hidden; // telebim NIGDY nie scrolluje
     width: 100%;
     height: 100%;
+}
+
+body {
+    height: 100dvh;
 }
 
 body {

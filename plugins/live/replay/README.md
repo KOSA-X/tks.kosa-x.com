@@ -57,3 +57,16 @@ chrome.exe --kiosk --app=https://tks.kosa-x.com/telebim/ ^
 - `--window-position=1920,0` — otwarcie na drugim ekranie (podaj offset
   swojego głównego monitora).
 - Wyjście z kiosku: `Alt+F4`.
+
+## Rozmiar okna / rozdzielczość
+
+Layout telebimu jest ELASTYCZNY: skala liczy się z `min(szerokość/48,
+wysokość/27)`, więc dopasowuje się do KAŻDEGO okna — także przyciętego
+paskiem systemowym macOS (żadnego scrollbara; przy pełnym 16:9 wygląd
+jest 1:1 taki sam jak projekt).
+
+Rekomendacja: okno/ekran **1280×720**. Fizyczna matryca LED ma mniej
+pikseli niż Full HD, więc 1080p nie dodaje detalu, a kosztuje komputer
+więcej (kompozycja + dekodowanie wideo). Zdjęcia plansz lecą z miniatur
+500 px — w 720p wyglądają identycznie. Przełączenie na 1920×1080 nie
+wymaga żadnych zmian w kodzie.

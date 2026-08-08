@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-08-08 — Telebim Etap 1: elastyczny viewport pod kiosk (bez scrollbara)
+- **Skala rem liczona też z wysokości**: `min(100vw/48, 100dvh/27)` —
+  przy pełnym 16:9 wartości są identyczne (zero zmiany wyglądu), a gdy
+  pasek systemowy macOS przytnie okno, całość proporcjonalnie maleje
+  zamiast wystawać poza ekran; `overflow: hidden` + `100dvh` na body —
+  telebim nigdy nie scrolluje
+- Działa w każdym rozmiarze okna (720p, 1080p i pomiędzy) — zmierzone:
+  1920×1080 → rem 40 px (jak dotąd), 1920×1040 → 38.5 px, 1280×660 →
+  24.4 px, w żadnym scroll
+- README kiosku: rekomendacja okna 1280×720 (matryca LED < FHD — 1080p
+  nie dodaje detalu, a kosztuje; przełączenie na 1080p bez zmian w kodzie)
+
 ## 2026-08-08 — Sort zawodników wg slotu formacji (1-BR, 2-OBR…), potem numery
 - **Nowy porządek sortowania** (`liveSortPlayers()` w view-helpers —
   panel meczowy, kadra w adminie i plansze składów dziedziczą

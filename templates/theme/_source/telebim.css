@@ -51,12 +51,12 @@
 * {
   margin: 0;
   padding: 0;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 html {
-  font-size: 2.0833333333vw;
+  font-size: min(2.0833333333vw, 3.7037037037vh);
+  font-size: min(2.0833333333vw, 3.7037037037dvh);
 }
 
 html,
@@ -64,6 +64,10 @@ body {
   overflow: hidden;
   width: 100%;
   height: 100%;
+}
+
+body {
+  height: 100dvh;
 }
 
 body {
@@ -87,10 +91,7 @@ img {
 .tbShow {
   opacity: 0;
   pointer-events: none;
-  -webkit-transition: opacity 0.35s ease, -webkit-transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
-  transition: opacity 0.35s ease, -webkit-transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
   transition: opacity 0.35s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
-  transition: opacity 0.35s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), -webkit-transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .tbShow.is-visible {
   opacity: 1;
@@ -100,38 +101,23 @@ img {
   position: absolute;
   inset: 0;
   z-index: 1;
-  display: -ms-grid;
   display: grid;
-      grid-template-areas: "clock clock clock" "home  score away";
-  -ms-grid-columns: 1fr auto 1fr;
+  grid-template-areas: "clock clock clock" "home  score away";
   grid-template-columns: 1fr auto 1fr;
-  -ms-grid-rows: auto 1fr;
   grid-template-rows: auto 1fr;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  align-items: center;
   padding: 0 1rem 2.4rem;
   font-family: "Outfit", sans-serif;
-  -webkit-transform: translate3d(0, 0, 0) scale(0.98);
-          transform: translate3d(0, 0, 0) scale(0.98);
+  transform: translate3d(0, 0, 0) scale(0.98);
 }
 .tbScorebar.is-visible {
-  -webkit-transform: translate3d(0, 0, 0) scale(1);
-          transform: translate3d(0, 0, 0) scale(1);
+  transform: translate3d(0, 0, 0) scale(1);
 }
 .tbScorebar__clock {
-  -ms-grid-row: 1;
-  -ms-grid-column: 1;
-  -ms-grid-column-span: 3;
   grid-area: clock;
-  -ms-grid-column-align: center;
-      justify-self: center;
-  display: -webkit-box;
-  display: -ms-flexbox;
+  justify-self: center;
   display: flex;
-  -webkit-box-align: baseline;
-      -ms-flex-align: baseline;
-          align-items: baseline;
+  align-items: baseline;
   gap: 1rem;
   padding: 1.1rem 2.6rem 1.3rem;
   background: #fff;
@@ -139,8 +125,7 @@ img {
   border-radius: 0 0 1.4rem 1.4rem;
   font-variant-numeric: tabular-nums;
   line-height: 1;
-  -webkit-box-shadow: 0 0.8rem 2.4rem rgba(1, 1, 1, 0.5);
-          box-shadow: 0 0.8rem 2.4rem rgba(1, 1, 1, 0.5);
+  box-shadow: 0 0.8rem 2.4rem rgba(1, 1, 1, 0.5);
 }
 .tbScorebar__clock .clock {
   font-size: 4rem;
@@ -161,15 +146,9 @@ img {
   color: rgba(255, 255, 255, 0.75);
 }
 .tbScorebar__score {
-  -ms-grid-row: 2;
-  -ms-grid-column: 2;
   grid-area: score;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  align-items: center;
   gap: 1.4rem;
   font-size: 11rem;
   font-weight: 900;
@@ -181,16 +160,9 @@ img {
   font-size: 8rem;
 }
 .tbScorebar__team {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  flex-direction: column;
+  align-items: center;
   gap: 1.2rem;
   font-size: 3.2rem;
   font-weight: 900;
@@ -198,22 +170,16 @@ img {
   text-transform: uppercase;
 }
 .tbScorebar__team--home {
-  -ms-grid-row: 2;
-  -ms-grid-column: 1;
   grid-area: home;
 }
 .tbScorebar__team--away {
-  -ms-grid-row: 2;
-  -ms-grid-column: 3;
   grid-area: away;
 }
 .tbScorebar__logo {
   width: 11rem;
   height: 11rem;
-  -o-object-fit: contain;
-     object-fit: contain;
-  -webkit-filter: drop-shadow(0 0.8rem 2rem rgba(1, 1, 1, 0.55));
-          filter: drop-shadow(0 0.8rem 2rem rgba(1, 1, 1, 0.55));
+  object-fit: contain;
+  filter: drop-shadow(0 0.8rem 2rem rgba(1, 1, 1, 0.55));
 }
 
 .tbEvents {
@@ -226,35 +192,21 @@ img {
 .tbEvent {
   position: absolute;
   inset: 0;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   gap: 1.6rem;
   text-align: center;
   background: #000f1b;
   border: 1.1rem solid #143582;
   opacity: 0;
-  -webkit-transform: scale(1.05);
-          transform: scale(1.05);
-  -webkit-transition: opacity 0.4s ease, -webkit-transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-  transition: opacity 0.4s ease, -webkit-transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  transform: scale(1.05);
   transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-  transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), -webkit-transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .tbEvent.is-visible {
   opacity: 1;
-  -webkit-transform: scale(1);
-          transform: scale(1);
+  transform: scale(1);
 }
 .tbEvent::before {
   content: "";
@@ -264,13 +216,10 @@ img {
   opacity: 0;
 }
 .tbEvent--goal::before {
-  -webkit-animation: tbGoalFlash 0.9s ease-in-out infinite;
-          animation: tbGoalFlash 0.9s ease-in-out infinite;
+  animation: tbGoalFlash 0.9s ease-in-out infinite;
 }
 .tbEvent__media {
-  -webkit-box-ordinal-group: 3;
-      -ms-flex-order: 2;
-          order: 2;
+  order: 2;
   position: relative;
   width: 13rem;
   height: 13rem;
@@ -278,36 +227,25 @@ img {
   overflow: hidden;
   border: 0.45rem solid #143582;
   background: #143582;
-  -webkit-box-shadow: 0 1.2rem 3.2rem rgba(1, 1, 1, 0.55);
-          box-shadow: 0 1.2rem 3.2rem rgba(1, 1, 1, 0.55);
+  box-shadow: 0 1.2rem 3.2rem rgba(1, 1, 1, 0.55);
 }
 .tbEvent__media img {
   width: 100%;
   height: 100%;
-  -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
 }
 .tbEvent__media img.is-logo {
-  -o-object-fit: contain;
-     object-fit: contain;
+  object-fit: contain;
   padding: 1.6rem;
 }
 .tbEvent__body {
   display: contents;
 }
 .tbEvent__label {
-  -webkit-box-ordinal-group: 2;
-      -ms-flex-order: 1;
-          order: 1;
-  display: -webkit-box;
-  display: -ms-flexbox;
+  order: 1;
   display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  align-items: center;
+  justify-content: center;
   gap: 1.4rem;
   font-family: "Outfit", sans-serif;
   font-size: 3.6rem;
@@ -317,17 +255,14 @@ img {
   color: #fff;
 }
 .tbEvent--goal .tbEvent__label {
-  -webkit-animation: tbGoalPulse 1s ease-in-out infinite;
-          animation: tbGoalPulse 1s ease-in-out infinite;
+  animation: tbGoalPulse 1s ease-in-out infinite;
 }
 .tbEvent__minute {
   font-variant-numeric: tabular-nums;
   color: #fff4f5;
 }
 .tbEvent__name {
-  -webkit-box-ordinal-group: 4;
-      -ms-flex-order: 3;
-          order: 3;
+  order: 3;
   font-family: "Outfit", sans-serif;
   font-size: 4rem;
   font-weight: 900;
@@ -341,9 +276,7 @@ img {
   background: #143582;
 }
 .tbEvent__team {
-  -webkit-box-ordinal-group: 5;
-      -ms-flex-order: 4;
-          order: 4;
+  order: 4;
   font-size: 1.7rem;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -351,15 +284,9 @@ img {
   opacity: 0.65;
 }
 .tbEvent__icon {
-  display: -webkit-inline-box;
-  display: -ms-inline-flexbox;
   display: inline-flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  align-items: center;
+  justify-content: center;
 }
 .tbEvent__icon--goal::before {
   content: "⚽";
@@ -369,8 +296,7 @@ img {
   width: 2.4rem;
   height: 3.4rem;
   border-radius: 0.4rem;
-  -webkit-transform: rotate(8deg);
-          transform: rotate(8deg);
+  transform: rotate(8deg);
 }
 .tbEvent__icon--yellow_card {
   background: #ffdd00;
@@ -419,15 +345,6 @@ img {
   border-color: #c1121f;
 }
 
-@-webkit-keyframes tbGoalFlash {
-  0%, 100% {
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-
 @keyframes tbGoalFlash {
   0%, 100% {
     opacity: 0;
@@ -436,60 +353,35 @@ img {
     opacity: 1;
   }
 }
-@-webkit-keyframes tbGoalPulse {
-  0%, 100% {
-    -webkit-transform: scale(1);
-            transform: scale(1);
-  }
-  50% {
-    -webkit-transform: scale(1.12);
-            transform: scale(1.12);
-  }
-}
 @keyframes tbGoalPulse {
   0%, 100% {
-    -webkit-transform: scale(1);
-            transform: scale(1);
+    transform: scale(1);
   }
   50% {
-    -webkit-transform: scale(1.12);
-            transform: scale(1.12);
+    transform: scale(1.12);
   }
 }
 .tbBoard {
   position: absolute;
   inset: 0;
   z-index: 2;
-  -webkit-transform: translate3d(0, 0, 0) scale(0.97);
-          transform: translate3d(0, 0, 0) scale(0.97);
+  transform: translate3d(0, 0, 0) scale(0.97);
   overflow: hidden;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
+  flex-direction: column;
   background: linear-gradient(160deg, #143582 0%, #000f1b 70%);
 }
 .tbBoard.is-visible {
-  -webkit-transform: translate3d(0, 0, 0) scale(1);
-          transform: translate3d(0, 0, 0) scale(1);
+  transform: translate3d(0, 0, 0) scale(1);
 }
 .tbBoard__header {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-align: baseline;
-      -ms-flex-align: baseline;
-          align-items: baseline;
+  align-items: baseline;
   gap: 1.2rem;
   padding: 1.2rem 2rem;
   background: #143582;
   font-family: "Outfit", sans-serif;
-  -webkit-box-flex: 0;
-      -ms-flex: 0 0 auto;
-          flex: 0 0 auto;
+  flex: 0 0 auto;
 }
 .tbBoard__header .title {
   font-size: 2.4rem;
@@ -507,49 +399,28 @@ img {
 .tbBoard__content {
   padding: 1.6rem 2rem 1.8rem;
   overflow: hidden;
-  -webkit-box-flex: 1;
-      -ms-flex: 1 1 auto;
-          flex: 1 1 auto;
-  display: -webkit-box;
-  display: -ms-flexbox;
+  flex: 1 1 auto;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .tbMatchHead {
-  display: -ms-grid;
   display: grid;
-  -ms-grid-columns: 1fr 1.6rem auto 1.6rem 1fr;
   grid-template-columns: 1fr auto 1fr;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  align-items: center;
   gap: 1.6rem;
 }
 .tbMatchHead__team {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  flex-direction: column;
+  align-items: center;
   gap: 1rem;
 }
 .tbMatchHead__team img {
   width: 8.5rem;
   height: 8.5rem;
-  -o-object-fit: contain;
-     object-fit: contain;
+  object-fit: contain;
 }
 .tbMatchHead__team .name {
   font-family: "Outfit", sans-serif;
@@ -584,9 +455,7 @@ img {
 }
 
 [data-board=podsumowanie] .tbBoard__content {
-  -webkit-box-pack: start;
-      -ms-flex-pack: start;
-          justify-content: flex-start;
+  justify-content: flex-start;
 }
 [data-board=podsumowanie] .tbMatchHead__team img {
   width: 5.5rem;
@@ -600,9 +469,7 @@ img {
 }
 
 .tbSquad__columns {
-  display: -ms-grid;
   display: grid;
-  -ms-grid-columns: 1fr 2.4rem 1fr;
   grid-template-columns: 1fr 1fr;
   gap: 2.4rem;
 }
@@ -621,12 +488,8 @@ img {
   list-style: none;
 }
 .tbSquad__list li {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  align-items: center;
   gap: 1rem;
   padding: 0.3rem 0;
   font-size: 1.9rem;
@@ -634,9 +497,7 @@ img {
   line-height: 1.2;
 }
 .tbSquad__list .number {
-  -webkit-box-flex: 0;
-      -ms-flex: 0 0 auto;
-          flex: 0 0 auto;
+  flex: 0 0 auto;
   min-width: 3rem;
   text-align: center;
   font-family: "Outfit", sans-serif;
@@ -663,9 +524,7 @@ img {
 }
 
 .tbSummary {
-  display: -ms-grid;
   display: grid;
-  -ms-grid-columns: 1fr 2.4rem 1fr;
   grid-template-columns: 1fr 1fr;
   gap: 2.4rem;
   margin-top: 1rem;
@@ -676,12 +535,8 @@ img {
   list-style: none;
 }
 .tbSummary__list li {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  align-items: center;
   gap: 0.9rem;
   padding: 0.3rem 0;
   font-size: 1.6rem;
@@ -712,53 +567,39 @@ img {
 }
 
 .tbGallery {
-  display: -ms-grid;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
   gap: 1rem;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  align-items: center;
 }
 .tbGallery img {
   width: 100%;
   max-height: 6.5rem;
-  -o-object-fit: contain;
-     object-fit: contain;
+  object-fit: contain;
   border-radius: 0.6rem;
   background: rgba(255, 255, 255, 0.08);
   padding: 0.7rem;
 }
 .tbGallery--big {
-  -ms-grid-columns: (1fr)[2];
   grid-template-columns: repeat(2, 1fr);
 }
 .tbGallery--big img {
   max-height: 16rem;
-  -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
   padding: 0;
 }
 
 .tbMatchSponsor {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  flex-direction: column;
+  align-items: center;
   gap: 1.4rem;
   text-align: center;
 }
 .tbMatchSponsor__logo {
   max-width: 22rem;
   max-height: 13rem;
-  -o-object-fit: contain;
-     object-fit: contain;
+  object-fit: contain;
 }
 .tbMatchSponsor__desc {
   max-width: 40rem;
@@ -779,7 +620,6 @@ img {
   z-index: 10;
   background: #010101;
   opacity: 0;
-  -webkit-transition: opacity 0.3s ease;
   transition: opacity 0.3s ease;
 }
 .tbVideo.is-visible {
@@ -791,21 +631,15 @@ img {
 .tbVideo video {
   width: 100%;
   height: 100%;
-  -o-object-fit: contain;
-     object-fit: contain;
+  object-fit: contain;
 }
 .tbVideo__caption {
   position: absolute;
   left: 50%;
   bottom: 2rem;
-  -webkit-transform: translateX(-50%);
-          transform: translateX(-50%);
-  display: -webkit-box;
-  display: -ms-flexbox;
+  transform: translateX(-50%);
   display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  align-items: center;
   gap: 1.2rem;
   padding: 0.9rem 2rem;
   border-radius: 0.8rem;
@@ -836,12 +670,10 @@ img {
   .tbShow,
   .tbEvent,
   .tbVideo {
-    -webkit-transition-duration: 0.01s;
-            transition-duration: 0.01s;
+    transition-duration: 0.01s;
   }
   .tbEvent--goal::before,
   .tbEvent--goal .tbEvent__label {
-    -webkit-animation: none;
-            animation: none;
+    animation: none;
   }
 }
