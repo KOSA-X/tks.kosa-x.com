@@ -1,5 +1,22 @@
 # Changelog
 
+## 2026-08-08 — Fix: selecty pozycji w imporcie (Chosen) + klucz API usunięty z repo
+- **Naprawione selecty „Pozycja"/„Formacja" na ekranie korekty importu**:
+  rdzeń admina (`core/common-admin.js` → `onloadAdvancedSelect()`) zamienia
+  KAŻDY select panelu na widget Chosen, a przebudowany skin admina renderował
+  go jako rozwiniętą, martwą listę (mała pigułka + stale widoczne opcje).
+  Selecty modułu live dostały klasę `adv-select-none` — furtkę rdzenia,
+  przez którą Chosen je pomija — i renderują się natywnie (ze strzałką
+  z arrow-down.svg): ekran korekty importu (formacja, skład, pozycja,
+  także wiersze dodawane z JS), formularz uploadu (drużyna), kadra
+  (formacja + pozycje), Nowy zawodnik, pole Pozycja w edycji strony
+- **Klucz API Anthropic usunięty z database/config.php** — trafił do
+  publicznej historii gita; zgodnie z §15.1 prawdziwe klucze żyją TYLKO
+  w database/config.secrets.php (gitignore + htaccess). Klucz wymaga
+  ROTACJI w konsoli Anthropic (historia gita go pamięta)
+- E2E z aktywnym Chosen (jQuery podstawione lokalnie): 0 kontenerów
+  Chosen na ekranie korekty, selecty natywne, wybór pozycji działa
+
 ## 2026-08-07 — Skład 3D: animacja pochylenia boiska + kaskada sztabu; ochrona przed powtórką popupów
 - **Animacja boiska przy wejściu planszy 3D**: plansza pokazuje się z kątem
   34° i w trakcie kaskadowego wczytywania zawodników płynnie kładzie się

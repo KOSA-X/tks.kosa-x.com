@@ -258,7 +258,7 @@ $config['teams_menu'] = 4;
 // Klucze API modułu live — tu tylko PLACEHOLDERY. Prawdziwe klucze wstawiaj
 // w database/config.secrets.php (poza repo — patrz config.secrets.dist.php),
 // który ładuje się na końcu tego pliku i nadpisuje te wartości.
-$config['anthropic_api_key']  = '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';   // Etap 1: import składu z protokołu (vision OCR)
+$config['anthropic_api_key']  = '';   // Etap 1: OCR protokołu — PRAWDZIWY klucz TYLKO w database/config.secrets.php (§15.1)!
 $config['elevenlabs_api_key'] = '';   // Etap 2: komunikaty głosowe (TTS)
 
 // Model vision do OCR protokołu (plugins/live/ocr.php)

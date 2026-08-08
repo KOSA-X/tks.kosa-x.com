@@ -229,7 +229,7 @@ require_once 'templates/admin/_menu.php';
                 $iAttackLine    = $sTeamFormation !== '' ? count(explode('-', $sTeamFormation)) : -1;
                 $iLineupValue   = (int) ($aData['sLineup'] ?? 0);
                 ?>
-                <select name="sLineup" id="sLineup">
+                <select name="sLineup" id="sLineup" class="adv-select-none">
                     <option value="">—</option>
                     <?php foreach ($aSlotLines as $iSlot => $iLine):
                         $sLineName = $iLine === 0 ? 'BR' : ($iLine === 1 ? 'OBR' : ($iLine === $iAttackLine ? 'ATAK' : ($iLine === 9 ? '' : 'POM')));

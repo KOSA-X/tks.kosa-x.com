@@ -221,7 +221,7 @@ if( $iTeam > 0 && ( $_GET['sOption'] ?? '' ) !== 'new-player' ){
         <div class="mb-4">
                 <div class="form-item" >
                     <label for="sFormation">Ustawienie taktyczne</label>
-                    <select name="sFormation" id="sFormation" class="">
+                    <select name="sFormation" id="sFormation" class="adv-select-none">
                         <option value="">— brak —</option>
                         <?php foreach( array_keys( $config['live_formations'] ) as $sFormationKey ): ?>
                             <option value="<?php echo html( $sFormationKey ); ?>"<?php echo $sTeamFormation === $sFormationKey ? ' selected="selected"' : ''; ?>><?php echo html( $sFormationKey ); ?></option>
@@ -275,7 +275,7 @@ if( $iTeam > 0 && ( $_GET['sOption'] ?? '' ) !== 'new-player' ){
                                 </span>
                             </td>
                             <td>
-                                <select name="aLineup[<?php echo (int) $aPlayer['iPage']; ?>]" class="teamLineupSelect">
+                                <select name="aLineup[<?php echo (int) $aPlayer['iPage']; ?>]" class="teamLineupSelect adv-select-none">
                                     <option value="0">—</option>
                                     <?php foreach( $aLineupLabels as $iSlot => $sSlotLabel ): ?>
                                         <option value="<?php echo $iSlot; ?>"<?php echo $iLineup === $iSlot ? ' selected="selected"' : ''; ?>><?php echo html( $sSlotLabel ); ?></option>
@@ -377,7 +377,7 @@ elseif( ( $_GET['sOption'] ?? '' ) === 'new-player' ){
 
                 <div class="form-item">
                     <label for="iTeam">Przypisz do</label>
-                    <select name="iTeam" id="iTeam" class="form-control">
+                    <select name="iTeam" id="iTeam" class="form-control adv-select-none">
                         <option value="0">— wybierz drużynę —</option>
                         <?php foreach( $aTeams as $aTeam ): ?>
                             <option value="<?php echo (int) $aTeam['iPage']; ?>"<?php echo $iSelTeam === (int) $aTeam['iPage'] ? ' selected="selected"' : ''; ?>><?php echo html( (string) $aTeam['sName'] ); ?></option>
@@ -393,7 +393,7 @@ elseif( ( $_GET['sOption'] ?? '' ) === 'new-player' ){
 
                 <div class="form-item">
                     <label for="sSquad">Skład meczowy</label>
-                    <select name="sSquad" id="sSquad" class="form-control" style="max-width:240px">
+                    <select name="sSquad" id="sSquad" class="form-control adv-select-none" style="max-width:240px">
                         <option value=""<?php echo $sSelSquad === '' ? ' selected="selected"' : ''; ?>>Poza kadrą</option>
                         <?php foreach( $config['squad_types'] as $iValue => $sLabel ): ?>
                             <option value="<?php echo (int) $iValue; ?>"<?php echo $sSelSquad === (string) $iValue ? ' selected="selected"' : ''; ?>><?php echo html( $sLabel ); ?></option>
@@ -403,7 +403,7 @@ elseif( ( $_GET['sOption'] ?? '' ) === 'new-player' ){
 
                 <div class="form-item">
                     <label for="sLineup">Pozycja (Skład 3D)</label>
-                    <select name="sLineup" id="sLineup" class="form-control" style="max-width:240px">
+                    <select name="sLineup" id="sLineup" class="form-control adv-select-none" style="max-width:240px">
                         <option value="0">—</option>
                         <?php foreach( $aSelLabels as $iSlot => $sSlotLabel ): ?>
                             <option value="<?php echo $iSlot; ?>"<?php echo $iSelSlot === $iSlot ? ' selected="selected"' : ''; ?>><?php echo html( $sSlotLabel ); ?></option>

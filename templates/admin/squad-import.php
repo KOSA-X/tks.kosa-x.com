@@ -478,7 +478,7 @@ elseif( ( $_GET['sOption'] ?? '' ) === 'review' && $sReviewJson !== '' && is_fil
             <div class="card__wrapper"><div class="card__content">
                 <div class="form-item" >
                     <label for="sFormation">Formacja (plansza „Skład 3D")</label>
-                    <select name="sFormation" id="sFormation">
+                    <select name="sFormation" id="sFormation" class="adv-select-none">
                         <option value="">— brak —</option>
                         <?php foreach( array_keys( $config['live_formations'] ) as $sFormationKey ): ?>
                             <option value="<?php echo html( $sFormationKey ); ?>"<?php echo $sTeamFormation === $sFormationKey ? ' selected="selected"' : ''; ?>><?php echo html( $sFormationKey ); ?></option>
@@ -511,8 +511,8 @@ elseif( ( $_GET['sOption'] ?? '' ) === 'review' && $sReviewJson !== '' && is_fil
                         <tr>
                             <td><input type="text" name="aPlayers[<?php echo $i; ?>][sNumber]" value="<?php echo html( (string) $aPlayer['number'] ); ?>" class="form-control" maxlength="4" /></td>
                             <td><input type="text" name="aPlayers[<?php echo $i; ?>][sName]" value="<?php echo html( (string) $aPlayer['name'] ); ?>" class="form-control" maxlength="120" /></td>
-                            <td><select name="aPlayers[<?php echo $i; ?>][sSquad]" class="form-control"><?php echo $fSquadSelect( $aPlayer['squad'] ); ?></select></td>
-                            <td><select name="aPlayers[<?php echo $i; ?>][sLineup]" class="form-control import-lineup-select"><?php echo $fLineupSelect( $iKnownSlot ); ?></select></td>
+                            <td><select name="aPlayers[<?php echo $i; ?>][sSquad]" class="form-control adv-select-none"><?php echo $fSquadSelect( $aPlayer['squad'] ); ?></select></td>
+                            <td><select name="aPlayers[<?php echo $i; ?>][sLineup]" class="form-control import-lineup-select adv-select-none"><?php echo $fLineupSelect( $iKnownSlot ); ?></select></td>
                             <td><button type="button" class="button button-sm row-remove" title="Usuń wiersz">&times;</button></td>
                         </tr>
                         <?php endforeach; ?>
@@ -605,8 +605,8 @@ elseif( ( $_GET['sOption'] ?? '' ) === 'review' && $sReviewJson !== '' && is_fil
                     '<tr>'
                     + '<td><input type="text" name="aPlayers[' + iPlayerIdx + '][sNumber]" class="form-control" maxlength="4" /></td>'
                     + '<td><input type="text" name="aPlayers[' + iPlayerIdx + '][sName]" class="form-control" maxlength="120" /></td>'
-                    + '<td><select name="aPlayers[' + iPlayerIdx + '][sSquad]" class="form-control">' + sSquadOptions + '</select></td>'
-                    + '<td><select name="aPlayers[' + iPlayerIdx + '][sLineup]" class="form-control import-lineup-select">' + lineupOptions( 0 ) + '</select></td>'
+                    + '<td><select name="aPlayers[' + iPlayerIdx + '][sSquad]" class="form-control adv-select-none">' + sSquadOptions + '</select></td>'
+                    + '<td><select name="aPlayers[' + iPlayerIdx + '][sLineup]" class="form-control import-lineup-select adv-select-none">' + lineupOptions( 0 ) + '</select></td>'
                     + '<td><button type="button" class="button button-sm row-remove" title="Usuń wiersz">&times;</button></td>'
                     + '</tr>'
                 );
@@ -715,7 +715,7 @@ else{
 
                     <div class="form-item">
                         <label for="iTeam" class="form-label mb-1">Drużyna</label>
-                        <select name="iTeam" id="iTeam" class="form-control">
+                        <select name="iTeam" id="iTeam" class="form-control adv-select-none">
                             <option value="0">- wybierz -</option>
                             <?php echo $sTeamsOptions; ?>
                             <option value="-1"<?php echo ( $iOldTeam === -1 ? ' selected="selected"' : '' ); ?>>+ Nowa drużyna…</option>
