@@ -123,21 +123,26 @@ function liveSlotLines($sFormation)
 }
 
 /**
- * Sortowanie zawodników wg pozycji na boisku: bramkarz → obrona → pomoc →
- * atak (linia ze slotu sLineup + formacji drużyny), w obrębie linii wg
- * numeru na koszulce; bez przypisanej pozycji → za liniami, wg numeru.
+ * Sortowanie zawodników wg pozycji na boisku: NAJPIERW zawodnicy
+ * z przypisanym slotem sLineup w kolejności numeracji formacji
+ * (1-BR, 2-OBR, 3-OBR… 11), POTEM zawodnicy bez przypisanej pozycji —
+ * ci wg numeru na koszulce (na końcu bez numeru, alfabetycznie).
  * Wiersze muszą mieć klucze sLineup/sNumber/sName.
+ * Formacja nie wpływa już na porządek (slot sam niesie kolejność) —
+ * parametr zostaje dla zgodności wywołań.
  */
-function liveSortPlayers($aPlayers, $sFormation)
+function liveSortPlayers($aPlayers, $sFormation = '')
 {
-    $aLines = liveSlotLines($sFormation);
-    usort($aPlayers, function ($a, $b) use ($aLines) {
+    usort($aPlayers, function ($a, $b) {
         $iSlotA = (int) ($a['sLineup'] ?? 0);
         $iSlotB = (int) ($b['sLineup'] ?? 0);
-        $iLineA = ($iSlotA >= 1 && $iSlotA <= 11) ? $aLines[$iSlotA] : 99;
-        $iLineB = ($iSlotB >= 1 && $iSlotB <= 11) ? $aLines[$iSlotB] : 99;
-        if ($iLineA !== $iLineB) {
-            return $iLineA <=> $iLineB;
+        $bSlotA = ($iSlotA >= 1 && $iSlotA <= 11);
+        $bSlotB = ($iSlotB >= 1 && $iSlotB <= 11);
+        if ($bSlotA !== $bSlotB) {
+            return $bSlotA ? -1 : 1; // przypisani do slotu przed resztą
+        }
+        if ($bSlotA && $bSlotB && $iSlotA !== $iSlotB) {
+            return $iSlotA <=> $iSlotB; // porządek slotów formacji: 1, 2, 3…
         }
         $iNumA = (int) ($a['sNumber'] ?? 0) ?: 999;
         $iNumB = (int) ($b['sNumber'] ?? 0) ?: 999;

@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-08-08 — Sort zawodników wg slotu formacji (1-BR, 2-OBR…), potem numery
+- **Nowy porządek sortowania** (`liveSortPlayers()` w view-helpers —
+  panel meczowy, kadra w adminie i plansze składów dziedziczą
+  automatycznie): najpierw zawodnicy z PRZYPISANĄ pozycją, w kolejności
+  numeracji slotów formacji (1-BR, 2-OBR, 3-OBR… 11) — a nie, jak dotąd,
+  liniami z numerem koszulki wewnątrz linii; za nimi zawodnicy bez
+  przypisanej pozycji, sortowani wg numeru na koszulce (bez numeru —
+  na końcu, alfabetycznie)
+
 ## 2026-08-08 — Fix: selecty pozycji w imporcie (Chosen) + klucz API usunięty z repo
 - **Naprawione selecty „Pozycja"/„Formacja" na ekranie korekty importu**:
   rdzeń admina (`core/common-admin.js` → `onloadAdvancedSelect()`) zamienia
