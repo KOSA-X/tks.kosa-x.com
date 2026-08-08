@@ -57,10 +57,27 @@ $aPartnerImages    = livePageImages((int) ($config['live_partners_page'] ?? 0));
 $aProductionImages = livePageImages((int) ($config['live_production_page'] ?? 0));
 $sProductionTitle  = (string) (getData((int) ($config['live_production_page'] ?? 0), 'sName') ?? '');
 
-// sponsor meczu: 1 duże logo (pierwszy obrazek zakładki) + opis pełny
-$iMatchSponsor     = (int) ($config['live_match_sponsor_page'] ?? 0);
-$sMatchSponsorLogo = $iMatchSponsor > 0 ? livePageImage($iMatchSponsor) : '';
-$sMatchSponsorDesc = $iMatchSponsor > 0 ? (string) (getData($iMatchSponsor, 'sDescriptionFull') ?? '') : '';
+// wsparcie: grid logotypów zakładki + opis pełny pod gridem (jak nakładka)
+$iSupportPage   = (int) ($config['live_match_sponsor_page'] ?? 0);
+$aSupportImages = $iSupportPage > 0 ? livePageImages($iSupportPage) : Array();
+$sSupportDesc   = $iSupportPage > 0 ? (string) (getData($iSupportPage, 'sDescriptionFull') ?? '') : '';
+
+// sponsor meczu: DOMYŚLNE zdjęcie (iDefault=1) z zakładki SPONSORZY —
+// narożny badge, niezależny od pozostałych plansz (jak na nakładce)
+$sMatchSponsorLogo = liveDefaultImage((int) ($config['live_sponsors_page'] ?? 0));
+
+// pozycje galerii: <li> ze zdjęciem + opisem (files.sDescription) pod
+// spodem — wspólny wzorzec dla wszystkich plansz z tbGallery
+$fGalleryItems = function ($aImages) use ($sFiles) {
+    $content = '';
+    foreach ($aImages as $aImage) {
+        $sDesc = trim((string) ($aImage['sDescription'] ?? ''));
+        $content .= '<li><img src="'.$sFiles.html((string) $aImage['sFileName']).'" alt="" />'
+            .($sDesc !== '' ? '<span class="description">'.html($sDesc).'</span>' : '')
+            .'</li>';
+    }
+    return $content;
+};
 
 // cieszynki: mapa zawodnik → URL klipu (obie drużyny, preload w JS)
 $aClips = Array();
@@ -87,7 +104,9 @@ $fMatchHead = function () use ($aTeam1, $aTeam2, $sFiles) {
 };
 
 // plansza składu jednej drużyny — telebim pokazuje UPROSZCZONY widok:
-// sama lista z wielkim tekstem (bez sztabu i logo — nieczytelne z trybun)
+// sama lista z wielkim tekstem (bez sztabu i logo — nieczytelne z trybun);
+// porządek pozycyjny z liveSquad, bramkarz (slot 1) z dopiskiem „(br)",
+// --i = kolejność wiersza pod kaskadowy wjazd po pokazaniu planszy
 $fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($aBoardLabels, $lang, $sMatchDate) {
     $aGroups = liveSquad($iTeam);
 
@@ -99,9 +118,10 @@ $fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($aBoardLabels, $lang, $sM
     $content .= '<div class="tbSquad__columns">';
     foreach (Array('1' => $lang['live_first_squad'], '2' => $lang['live_reserve']) as $sSquad => $sHeading) {
         $content .= '<div><h3 class="tbSquad__heading">'.$sHeading.'</h3><ul class="tbSquad__list">';
-        foreach ($aGroups[$sSquad] as $aPlayer) {
-            $content .= '<li><span class="number">'.html((string) $aPlayer['sNumber']).'</span>'
-                .'<span>'.html((string) $aPlayer['sName']).'</span></li>';
+        foreach (array_values($aGroups[$sSquad]) as $iRow => $aPlayer) {
+            $sName = (string) $aPlayer['sName'].((int) ($aPlayer['sLineup'] ?? 0) === 1 ? ' (br)' : '');
+            $content .= '<li style="--i:'.$iRow.'"><span class="number">'.html((string) $aPlayer['sNumber']).'</span>'
+                .'<span>'.html($sName).'</span></li>';
         }
         $content .= '</ul></div>';
     }
@@ -183,11 +203,9 @@ $fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($aBoardLabels, $lang, $sM
         <div class="tbBoard__content">
             <?php if ($sReferees !== ''): ?><div class="tbReferees"><?php echo parseShortcodes($sReferees); ?></div><?php endif; ?>
             <?php if (!empty($aRefereeImages)): ?>
-            <div class="tbGallery">
-                <?php foreach ($aRefereeImages as $sImage): ?>
-                    <img src="<?php echo $sFiles.html($sImage); ?>" alt="" />
-                <?php endforeach; ?>
-            </div>
+            <ul class="tbGallery">
+                <?php echo $fGalleryItems($aRefereeImages); ?>
+            </ul>
             <?php endif; ?>
         </div>
     </div>
@@ -198,11 +216,25 @@ $fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($aBoardLabels, $lang, $sM
     <div class="tbBoard tbShow" data-board="sponsorzy">
         <header class="tbBoard__header"><span class="title"><?php echo html($aBoardLabels['sponsorzy'] ?? ''); ?></span></header>
         <div class="tbBoard__content">
-            <div class="tbGallery">
-                <?php foreach ($aSponsorImages as $sImage): ?>
-                    <img src="<?php echo $sFiles.html($sImage); ?>" alt="" />
+            <ul class="tbGallery">
+                <?php echo $fGalleryItems($aSponsorImages); ?>
+            </ul>
+        </div>
+    </div>
+    <?php endif; ?>
+
+    <?php if (!empty($aSponsorImages)): ?>
+    <!-- PLANSZA: SPONSORZY — SLIDER (dolna banda; loga płyną w lewo w pętli;
+         JS dokłada pary grup do pełnego pokrycia szerokości ekranu) -->
+    <div class="tbSponsorTicker tbShow" data-board="sponsorzy_slider">
+        <div class="tbSponsorTicker__track" style="animation-duration: <?php echo max(24, count($aSponsorImages) * 2); ?>s">
+            <?php for ($i = 0; $i < 2; $i++): ?>
+            <div class="tbSponsorTicker__group">
+                <?php foreach ($aSponsorImages as $aImage): ?>
+                    <img src="<?php echo $sFiles.html((string) $aImage['sFileName']); ?>" alt="" />
                 <?php endforeach; ?>
             </div>
+            <?php endfor; ?>
         </div>
     </div>
     <?php endif; ?>
@@ -212,39 +244,59 @@ $fSquadBoard = function ($sBoard, $iTeam, $aTeam) use ($aBoardLabels, $lang, $sM
     <div class="tbBoard tbShow" data-board="partnerzy_glowni">
         <header class="tbBoard__header"><span class="title"><?php echo html($aBoardLabels['partnerzy_glowni'] ?? ''); ?></span></header>
         <div class="tbBoard__content">
-            <div class="tbGallery">
-                <?php foreach ($aPartnerImages as $sImage): ?>
-                    <img src="<?php echo $sFiles.html($sImage); ?>" alt="" />
-                <?php endforeach; ?>
-            </div>
+            <ul class="tbGallery">
+                <?php echo $fGalleryItems($aPartnerImages); ?>
+            </ul>
         </div>
     </div>
     <?php endif; ?>
 
-    <?php if ($sMatchSponsorLogo !== '' || $sMatchSponsorDesc !== ''): ?>
-    <!-- PLANSZA: SPONSOR MECZU (duże logo + opis pełny) -->
-    <div class="tbBoard tbShow" data-board="sponsor_meczu">
-        <header class="tbBoard__header"><span class="title"><?php echo html($aBoardLabels['sponsor_meczu'] ?? ''); ?></span></header>
+    <?php if (!empty($aSupportImages) || $sSupportDesc !== ''): ?>
+    <!-- PLANSZA: WSPARCIE (grid logotypów + opis pełny pod gridem) -->
+    <div class="tbBoard tbShow" data-board="wsparcie">
+        <header class="tbBoard__header"><span class="title"><?php echo html($aBoardLabels['wsparcie'] ?? ''); ?></span></header>
         <div class="tbBoard__content">
-            <div class="tbMatchSponsor">
-                <?php if ($sMatchSponsorLogo !== ''): ?><img class="tbMatchSponsor__logo" src="<?php echo $sFiles.html($sMatchSponsorLogo); ?>" alt="" /><?php endif; ?>
-                <?php if ($sMatchSponsorDesc !== ''): ?><div class="tbMatchSponsor__desc"><?php echo parseShortcodes($sMatchSponsorDesc); ?></div><?php endif; ?>
-            </div>
+            <?php if (!empty($aSupportImages)): ?>
+            <ul class="tbGallery">
+                <?php echo $fGalleryItems($aSupportImages); ?>
+            </ul>
+            <?php endif; ?>
+            <?php if ($sSupportDesc !== ''): ?><div class="tbSupport__desc"><?php echo parseShortcodes($sSupportDesc); ?></div><?php endif; ?>
         </div>
     </div>
     <?php endif; ?>
+
+    <!-- PLANSZA: AKTUALNY WYNIK (wynik + strzelcy bramek per drużyna) -->
+    <div class="tbBoard tbShow" data-board="aktualny_wynik">
+        <header class="tbBoard__header"><span class="title"><?php echo html($aBoardLabels['aktualny_wynik'] ?? ''); ?></span></header>
+        <div class="tbBoard__content">
+            <?php echo $fMatchHead(); ?>
+            <div class="tbSummary">
+                <ul class="tbSummary__list" id="tb-goals-1"></ul>
+                <ul class="tbSummary__list" id="tb-goals-2"></ul>
+            </div>
+        </div>
+    </div>
 
     <?php if (!empty($aProductionImages)): ?>
     <!-- PLANSZA: REALIZACJA TRANSMISJI -->
     <div class="tbBoard tbShow" data-board="realizacja_transmisji">
         <header class="tbBoard__header"><span class="title"><?php echo html($sProductionTitle !== '' ? $sProductionTitle : ($aBoardLabels['realizacja_transmisji'] ?? '')); ?></span></header>
         <div class="tbBoard__content">
-            <div class="tbGallery tbGallery--big">
-                <?php foreach (array_slice($aProductionImages, 0, 4) as $sImage): ?>
-                    <img src="<?php echo $sFiles.html($sImage); ?>" alt="" />
-                <?php endforeach; ?>
-            </div>
+            <ul class="tbGallery tbGallery--big">
+                <?php echo $fGalleryItems(array_slice($aProductionImages, 0, 4)); ?>
+            </ul>
         </div>
+    </div>
+    <?php endif; ?>
+
+    <?php if ($sMatchSponsorLogo !== ''): ?>
+    <!-- PLANSZA: SPONSOR MECZU — narożny badge (jak na nakładce): napis +
+         DOMYŚLNE logo (iDefault=1) z zakładki SPONSORZY; niezależny od
+         pozostałych plansz (wyjątek w api board_toggle) -->
+    <div class="tbSponsorBadge tbShow" data-board="sponsor_meczu">
+        <span class="tbSponsorBadge__label"><?php echo html($aBoardLabels['sponsor_meczu'] ?? 'Sponsor meczu'); ?></span>
+        <span class="tbSponsorBadge__logo"><img src="<?php echo $sFiles.html($sMatchSponsorLogo); ?>" alt="" /></span>
     </div>
     <?php endif; ?>
 

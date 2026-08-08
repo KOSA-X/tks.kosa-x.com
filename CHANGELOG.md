@@ -1,5 +1,30 @@
 # Changelog
 
+## 2026-08-08 — Telebim Etap 2: synchronizacja plansz z nakładką (merytoryka)
+- **Nowe plansze na telebimie**: Wsparcie (grid logotypów + opis pełny pod
+  gridem), Aktualny wynik (herby + wynik + strzelcy per drużyna, samobóje
+  z „(sam.)"), Sponsorzy — slider (biała banda przy dolnej krawędzi,
+  pętla bez szwu — JS dokłada pary grup do pokrycia szerokości ekranu)
+- **Sponsor meczu = narożny badge** (napis + DOMYŚLNE logo iDefault=1
+  ze SPONSORÓW) — zamiast starej pełnoekranowej planszy, która po
+  przemianowaniu odpalała się od przełącznika badge'a; niezależny od
+  pozostałych plansz (wyjątek w api już był)
+- **Opisy pod logami**: galerie telebimu przepisane na <ul><li> — logo
+  na białej karcie + tytuł z files.sDescription (gruby, ciemny — czytelny
+  z trybun); `livePageImages()` zwraca teraz plik+opis, nowy helper
+  `liveDefaultImage()`
+- **Składy**: dopisek „(br)" przy bramkarzu (slot 1), porządek pozycyjny
+  ze wspólnego sortu; wiersze z --i pod kaskadowy wjazd
+- **Kaskadowe wjazdy** na planszach telebimu: wiersze składów i osi
+  zdarzeń (--i), logotypy galerii i wiersze tabel (:nth-child) — jak na
+  nakładce; podsumowanie z cache treści (odświeżanie co 10 s nie
+  restartuje animacji)
+- E2E: opisy pod 12 kartami sponsorów + badge równolegle, skład z (br)
+  i kaskadą, wsparcie, aktualny wynik ze strzelcem, ticker (2 grupy,
+  track 5931 px — połowa pokrywa ekran bez dokładania) — merytorycznie
+  zielone; wizualne przepełnienia (ucięte wiersze/karty przy dużej
+  liczbie pozycji) → do etapu szlifu widoków
+
 ## 2026-08-08 — Telebim Etap 1: elastyczny viewport pod kiosk (bez scrollbara)
 - **Skala rem liczona też z wysokości**: `min(100vw/48, 100dvh/27)` —
   przy pełnym 16:9 wartości są identyczne (zero zmiany wyglądu), a gdy

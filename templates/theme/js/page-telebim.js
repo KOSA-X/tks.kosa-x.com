@@ -328,9 +328,12 @@
     }
 
     // ------------------------------------------------------------
-    // PODSUMOWANIE — pełna lista zdarzeń per drużyna
-    // (bez tabelki statystyk — wszystko widać na osi zdarzeń)
+    // PODSUMOWANIE — pełna lista zdarzeń per drużyna. Wiersze dostają
+    // --i pod kaskadowy wjazd; ponowny render z identyczną treścią jest
+    // pomijany (cache), żeby odświeżanie co 10 s nie restartowało animacji.
     // ------------------------------------------------------------
+    var summaryCache = {};
+
     function renderSummary(events) {
         // oś zdarzeń pokazuje tylko gole i kartki (zmiany ukryte — są w statystykach)
         var SUMMARY_ACTIONS = ['goal', 'own_goal', 'yellow_card', 'red_card'];
@@ -339,19 +342,63 @@
             if (!list) {
                 return;
             }
-            list.textContent = '';
             var teamEvents = events.filter(function (ev) {
                 return ev.team === teamId && SUMMARY_ACTIONS.indexOf(ev.action) !== -1;
             });
+
+            var cacheKey = teamEvents.map(function (ev) {
+                return ev.id + ':' + ev.action + ':' + ev.minute + ':' + ev.player.id;
+            }).join('|');
+            if (summaryCache['s' + index] === cacheKey) {
+                return; // nic się nie zmieniło — nie restartuj animacji wierszy
+            }
+            summaryCache['s' + index] = cacheKey;
+
+            list.textContent = '';
             if (!teamEvents.length) {
                 list.appendChild(el('li', 'tbSummary__empty', cfg.labels.noEvents));
                 return;
             }
-            teamEvents.forEach(function (ev) {
+            teamEvents.forEach(function (ev, row) {
                 var item = el('li');
+                item.style.setProperty('--i', row);
                 item.appendChild(el('span', 'minute', ev.minute !== '' ? ev.minute + "'" : ''));
                 item.appendChild(iconFor(ev.action));
                 item.appendChild(el('span', '', ev.player.id > 0 ? ev.player.name : (cfg.actions[ev.action] || ev.action)));
+                list.appendChild(item);
+            });
+        });
+    }
+
+    // plansza „aktualny wynik": strzelcy bramek per drużyna (samobój
+    // przeciwnika = bramka dla tej drużyny, z dopiskiem „(sam.)")
+    function renderGoals(events) {
+        [cfg.team1, cfg.team2].forEach(function (teamId, index) {
+            var list = document.getElementById('tb-goals-' + (index + 1));
+            if (!list) {
+                return;
+            }
+            var otherId = teamId === cfg.team1 ? cfg.team2 : cfg.team1;
+            var goals = events.filter(function (ev) {
+                return (ev.action === 'goal' && ev.team === teamId)
+                    || (ev.action === 'own_goal' && ev.team === otherId);
+            });
+
+            var cacheKey = goals.map(function (ev) { return ev.id; }).join('|');
+            if (summaryCache['g' + index] === cacheKey) {
+                return;
+            }
+            summaryCache['g' + index] = cacheKey;
+
+            list.textContent = '';
+            goals.forEach(function (ev, row) {
+                var item = el('li');
+                item.style.setProperty('--i', row);
+                item.appendChild(el('span', 'minute', ev.minute !== '' ? ev.minute + "'" : ''));
+                item.appendChild(iconFor('goal'));
+                item.appendChild(el('span', '',
+                    (ev.player.id > 0 ? ev.player.name : (cfg.teams[String(ev.team)] || {}).name || '')
+                    + (ev.action === 'own_goal' ? ' (sam.)' : '')));
                 list.appendChild(item);
             });
         });
@@ -368,6 +415,7 @@
             .then(function (data) {
                 if (data.ok) {
                     renderSummary(data.events);
+                    renderGoals(data.events);
                 }
             })
             .catch(function () {});
@@ -399,7 +447,7 @@
             });
         });
 
-        if (data.boards.podsumowanie === 1) {
+        if (data.boards.podsumowanie === 1 || data.boards.aktualny_wynik === 1) {
             refreshSummary();
         }
 
@@ -448,6 +496,36 @@
             .catch(function () {}) // chwilowy brak sieci — zostaje ostatni stan
             .finally(function () { pollInFlight = false; });
     }
+
+    // ------------------------------------------------------------
+    // SPONSORZY — SLIDER: gwarancja pętli bez szwu (jak na nakładce).
+    // Połowa tracku musi pokrywać szerokość EKRANU — przy małej liczbie
+    // log dokładamy PARY grup i skalujemy czas animacji (stała prędkość).
+    // ------------------------------------------------------------
+    function initTicker() {
+        var track = document.querySelector('.tbSponsorTicker__track');
+        if (!track) {
+            return;
+        }
+        var groups = track.querySelectorAll('.tbSponsorTicker__group');
+        if (groups.length < 2) {
+            return;
+        }
+        var groupWidth = groups[0].getBoundingClientRect().width;
+        if (!groupWidth) {
+            return;
+        }
+        var duration = parseFloat(getComputedStyle(track).animationDuration) || 60;
+        var speed = groupWidth / duration; // px/s dla oryginalnej pętli (1 grupa)
+        var stage = window.innerWidth;     // telebim jest elastyczny — realna szerokość
+        while (track.scrollWidth / 2 < stage + 2 && track.children.length < 40) {
+            track.appendChild(groups[0].cloneNode(true));
+            track.appendChild(groups[1].cloneNode(true));
+        }
+        track.style.animationDuration = ((track.scrollWidth / 2) / speed) + 's';
+    }
+
+    window.addEventListener('load', initTicker); // po zdjęciach — realne szerokości
 
     preloadClips();
     poll();

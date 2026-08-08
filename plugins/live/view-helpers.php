@@ -25,16 +25,31 @@ function livePageImage($iPage, $iPreferType = 0)
     return (string) ($oQuery->fetchColumn() ?: '');
 }
 
-/** Wszystkie obrazki strony (galerie plansz). */
+/** Wszystkie obrazki strony (galerie plansz) — plik + opis (tytuł loga). */
 function livePageImages($iPage)
 {
     $oSql = Sql::getInstance();
     if ((int) $iPage <= 0) {
         return Array();
     }
-    $oQuery = $oSql->prepare('SELECT sFileName FROM files WHERE iPage = :page AND iSize > 0 ORDER BY iPosition ASC');
+    $oQuery = $oSql->prepare('SELECT sFileName, sDescription FROM files WHERE iPage = :page AND iSize > 0 ORDER BY iPosition ASC');
     $oQuery->execute(Array(':page' => (int) $iPage));
-    return $oQuery->fetchAll(PDO::FETCH_COLUMN);
+    return $oQuery->fetchAll(PDO::FETCH_ASSOC);
+}
+
+/** Domyślne zdjęcie strony (iDefault=1) — np. logo sponsora meczu. */
+function liveDefaultImage($iPage)
+{
+    $oSql = Sql::getInstance();
+    if ((int) $iPage <= 0) {
+        return '';
+    }
+    $oQuery = $oSql->prepare(
+        'SELECT sFileName FROM files WHERE iPage = :page AND iSize > 0 AND iDefault = 1
+         ORDER BY iPosition ASC LIMIT 1'
+    );
+    $oQuery->execute(Array(':page' => (int) $iPage));
+    return (string) ($oQuery->fetchColumn() ?: '');
 }
 
 /** Dane drużyny: nazwa, skrót (sDesc lub 3 pierwsze litery), herb (iType=2 → logo). */

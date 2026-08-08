@@ -615,21 +615,39 @@ img {
     }
 }
 
-// --- galerie (sponsorzy / realizacja / sędziowie) -----------
-// auto-fill: liczba kolumn dopasowuje się do liczby logotypów
+// --- galerie (sponsorzy / partnerzy / wsparcie / sędziowie) --
+// <ul> z <li>: logo na białej karcie + opis (files.sDescription) pod
+// spodem; auto-fill — liczba kolumn dopasowuje się do liczby logotypów
 .tbGallery {
+    list-style: none;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
     gap: 1rem;
-    align-items: center;
+    align-items: stretch;
+
+    li {
+        display: flex;
+        flex-direction: column;
+        background: $white;
+        border-radius: .6rem;
+        overflow: hidden;
+    }
 
     img {
         width: 100%;
         max-height: 6.5rem;
         object-fit: contain;
-        border-radius: .6rem;
-        background: rgba($white, .08);
         padding: .7rem;
+    }
+
+    // tytuł loga — czytelny z trybun: gruby, ciemny na białej karcie
+    .description {
+        padding: 0 .5rem .6rem;
+        text-align: center;
+        font-size: 1rem;
+        font-weight: 700;
+        line-height: 1.2;
+        color: $brand-dark;
     }
 
     &--big {
@@ -643,28 +661,175 @@ img {
     }
 }
 
-// --- sponsor meczu (duże logo + opis pełny) -----------------
-.tbMatchSponsor {
+// --- wsparcie (grid logotypów + opis pełny pod gridem) ------
+.tbSupport__desc {
+    margin-top: 1.6rem;
+    font-size: 1.7rem;
+    line-height: 1.5;
+    text-align: center;
+
+    p { margin: 0 0 .7rem; }
+    strong { color: $brand-light; }
+
+    ul {
+        list-style: none;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: .6rem 1.6rem;
+    }
+}
+
+// --- sponsor meczu — narożny badge (jak na nakładce) --------
+// prawy dolny róg: napis + DOMYŚLNE logo ze SPONSORÓW; niezależny
+// od pozostałych plansz, więc nad nimi (z-index 4, pod zdarzeniami)
+.tbSponsorBadge {
+    position: absolute;
+    right: 1.2rem;
+    bottom: 1.2rem;
+    z-index: 4;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1.4rem;
-    text-align: center;
+    gap: .5rem;
+    transform: translate3d(0, 1.2rem, 0);
 
-    &__logo {
-        max-width: 22rem;
-        max-height: 13rem;
-        object-fit: contain;
+    &.is-visible {
+        transform: translate3d(0, 0, 0);
     }
 
-    &__desc {
-        max-width: 40rem;
-        font-size: 1.5rem;
-        line-height: 1.6;
-        opacity: .9;
+    &__label {
+        padding: .3rem .9rem;
+        background: $brand;
+        border-radius: .4rem;
+        font-family: $font-h;
+        font-size: 1rem;
+        font-weight: 900;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+        color: $white;
+    }
 
-        p { margin: 0 0 .7rem; }
-        strong { color: $brand-light; }
+    &__logo {
+        display: block;
+        padding: .7rem;
+        background: $white;
+        border-radius: .6rem;
+
+        img {
+            height: 4.6rem;
+            width: auto;
+            max-width: 13rem;
+            object-fit: contain;
+        }
+    }
+}
+
+// --- sponsorzy: slider (dolna banda reklamowa) ---------------
+// biała banda przy dolnej krawędzi, loga płyną w lewo w pętli bez szwu
+// (track = pary identycznych grup, animacja translateX(-50%); JS dokłada
+// grupy do pełnego pokrycia szerokości ekranu — page-telebim.js)
+.tbSponsorTicker {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 3;
+    overflow: hidden;
+    padding: .8rem 0;
+    background: $white;
+
+    &__track {
+        display: flex;
+        width: max-content;
+        animation: tbTickerScroll 30s linear infinite; // czas nadpisany inline
+        will-change: transform;
+    }
+
+    &__group {
+        display: flex;
+        align-items: center;
+        gap: 3rem;
+        padding-right: 3rem; // odstęp między końcem a początkiem pętli
+    }
+
+    img {
+        height: 4rem;
+        width: auto;
+        max-width: 12rem;
+        object-fit: contain;
+    }
+}
+
+@keyframes tbTickerScroll {
+    to {
+        transform: translate3d(-50%, 0, 0);
+    }
+}
+
+// ----------------------------------------------------------
+// ----- KASKADOWE WJAZDY (po pokazaniu planszy)
+// ----------------------------------------------------------
+// wiersze list (składy — --i z PHP; podsumowanie/strzelcy — --i z JS):
+// wsuwają się z lewej jeden po drugim; ukrycie planszy resetuje animację
+.tbBoard .tbSquad__list li,
+.tbBoard .tbSummary__list li {
+    opacity: 0;
+    transform: translate3d(-1.6rem, 0, 0);
+}
+
+.tbBoard.is-visible .tbSquad__list li,
+.tbBoard.is-visible .tbSummary__list li {
+    animation: tbRowIn .45s cubic-bezier(.22, 1, .36, 1) forwards;
+    animation-delay: calc(.25s + var(--i, 0) * .06s);
+}
+
+@keyframes tbRowIn {
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+// logotypy galerii: pop od mniejszej skali, opóźnienia z :nth-child
+// (elementy powyżej pętli dostają maksymalne opóźnienie z reguły bazowej)
+.tbBoard .tbGallery li {
+    opacity: 0;
+    transform: scale(.7);
+}
+
+.tbBoard.is-visible .tbGallery li {
+    animation: tbLogoIn .4s cubic-bezier(.22, 1, .36, 1) forwards;
+    animation-delay: 1.7s;
+}
+
+@for $i from 1 through 30 {
+    .tbBoard.is-visible .tbGallery li:nth-child(#{$i}) {
+        animation-delay: .2s + ($i - 1) * .05s;
+    }
+}
+
+@keyframes tbLogoIn {
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+// wiersze tabel w treści plansz (sędziowie / statystyki z TinyMCE)
+.tbBoard .tbBoard__content table tr {
+    opacity: 0;
+    transform: translate3d(-1.6rem, 0, 0);
+}
+
+.tbBoard.is-visible .tbBoard__content table tr {
+    animation: tbRowIn .45s cubic-bezier(.22, 1, .36, 1) forwards;
+    animation-delay: 1.45s;
+}
+
+@for $i from 1 through 15 {
+    .tbBoard.is-visible .tbBoard__content table tr:nth-child(#{$i}) {
+        animation-delay: .25s + ($i - 1) * .08s;
     }
 }
 
@@ -743,6 +908,19 @@ img {
 
     .tbEvent--goal::before,
     .tbEvent--goal .tbEvent__label {
+        animation: none;
+    }
+
+    .tbSponsorTicker__track {
+        animation: none;
+    }
+
+    .tbBoard .tbSquad__list li,
+    .tbBoard .tbSummary__list li,
+    .tbBoard .tbGallery li,
+    .tbBoard .tbBoard__content table tr {
+        opacity: 1;
+        transform: none;
         animation: none;
     }
 }
