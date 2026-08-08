@@ -476,7 +476,7 @@ elseif( ( $_GET['sOption'] ?? '' ) === 'review' && $sReviewJson !== '' && is_fil
                 <h4 class="card__title">Ustawienie taktyczne</h4>
             </header>
             <div class="card__wrapper"><div class="card__content">
-                <div class="form-item" style="max-width:360px">
+                <div class="form-item" >
                     <label for="sFormation">Formacja (plansza „Skład 3D")</label>
                     <select name="sFormation" id="sFormation">
                         <option value="">— brak —</option>

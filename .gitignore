@@ -17,3 +17,4 @@ plugins/live/cache/protocols/
 
 # Bytecode Pythona (serwer powtórek uruchamiany lokalnie przy OBS)
 __pycache__/
+database/config.php
